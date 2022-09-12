@@ -1,5 +1,6 @@
 package com.andrey.controller;
 
+import com.andrey.repository.user.UserRepositoryInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,10 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping
-public class MainRestController {
+public class TestRestController {
+
+    private final UserRepositoryInterface userRepositoryInterface;
 
     @GetMapping("/ping")
     public ResponseEntity<Object> ping(){
-        return new ResponseEntity<>("pong", HttpStatus.OK);
+        return new ResponseEntity<>(userRepositoryInterface.findById(1L), HttpStatus.OK);
     }
 }
