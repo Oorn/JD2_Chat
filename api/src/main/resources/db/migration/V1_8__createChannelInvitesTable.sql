@@ -9,7 +9,7 @@ create table chat.channel_invites
     "channel_ID"      bigint                                       not null
         constraint channel_invites_channel_id_fk
             references chat.channels,
-    "invite_UUID"     varchar(32),
+    "invite_UUID"     varchar(36),
     invite_type       varchar(100) default 'DEFAULT_INVITE_TYPE'   not null,
     "target_user_ID"  bigint
         constraint channel_invites_users_id_fk_2

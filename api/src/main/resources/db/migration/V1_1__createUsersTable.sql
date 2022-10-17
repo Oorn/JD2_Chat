@@ -7,7 +7,7 @@ create table chat.users
     username          varchar(100) default 'DEFAULT_USERNAME' not null,
     email             varchar(100)                            not null,
     password_hash     varchar(100) default 'NO_PASSWORD'      not null,
-    UUID              varchar(32),
+    UUID              varchar(36),
     last_update_date  timestamp    default CURRENT_TIMESTAMP  not null,
     creation_date     timestamp    default CURRENT_TIMESTAMP  not null,
     modification_date timestamp    default CURRENT_TIMESTAMP  not null,
