@@ -1,5 +1,10 @@
 package com.andrey.controller;
 
+import com.andrey.db_entities.chat_profile.ChatProfile;
+import com.andrey.db_entities.chat_profile.ChatProfileRepository;
+import com.andrey.db_entities.chat_profile.ProfileStatus;
+import com.andrey.db_entities.chat_profile.ProfileVisibilityMatchmaking;
+import com.andrey.db_entities.chat_profile.ProfileVisibilityUserInfo;
 import com.andrey.repository.user.UserRepositoryInterface;
 import com.andrey.db_entities.chat_user.ChatUser;
 import com.andrey.db_entities.chat_user.ChatUserRepository;
@@ -24,6 +29,7 @@ public class TestRestController {
     private final UserRepositoryInterface userRepositoryInterface;
 
     private final ChatUserRepository chatUserRepository;
+    private final ChatProfileRepository chatProfileRepository;
 
     @GetMapping("/ping")
     public ResponseEntity<Object> ping(){
@@ -39,5 +45,19 @@ public class TestRestController {
                 .build();
         newUser = chatUserRepository.save(newUser);
         return new ResponseEntity<>(newUser, HttpStatus.OK);
+    }
+    @PostMapping("/postTestProfile")
+    public ResponseEntity<Object> postProfileT(@RequestBody String testBody){
+        ChatProfile newProfile= ChatProfile.builder()
+                .owner(chatUserRepository.findChatUserById(1L))
+                .profileName("testname "+testBody)
+                .profileDescription("testdescription "+testBody)
+                .formatVersion(1)
+                .profileVisibilityMatchmaking(ProfileVisibilityMatchmaking.VISIBLE)
+                .profileVisibilityUserInfo(ProfileVisibilityUserInfo.PUBLIC)
+                .status(ProfileStatus.OK)
+                .build();
+        newProfile = chatProfileRepository.save(newProfile);
+        return new ResponseEntity<>(newProfile, HttpStatus.OK);
     }
 }

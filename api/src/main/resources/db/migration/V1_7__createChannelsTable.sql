@@ -6,7 +6,7 @@ create table chat.channels
             primary key,
     channel_name      varchar(100) default 'DEFAULT_CHANNEL_NAME'   not null,
     channel_type      varchar(100) default 'DEFAULT_CHANNEL_TYPE'   not null,
-    "owner_ID"        bigint                                        not null
+    "owner_id"        bigint                                        not null
         constraint channels_users_id_fk
             references chat.users,
     last_update_date  timestamp    default CURRENT_TIMESTAMP  not null,
@@ -22,5 +22,5 @@ create unique index channels_id_uindex
 
 drop index if exists channels_owner_id_index;
 create index channels_owner_id_index
-    on chat.channels ("owner_ID");
+    on chat.channels ("owner_id");
 

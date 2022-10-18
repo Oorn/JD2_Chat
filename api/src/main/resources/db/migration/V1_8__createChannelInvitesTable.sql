@@ -3,15 +3,15 @@ create table chat.channel_invites
     ID                bigserial
         constraint channel_invites_pk
             primary key,
-    "sender_ID"       bigint                                       not null
+    "sender_id"       bigint                                       not null
         constraint channel_invites_users_id_fk
             references chat.users,
-    "channel_ID"      bigint                                       not null
+    "channel_id"      bigint                                       not null
         constraint channel_invites_channel_id_fk
             references chat.channels,
-    "invite_UUID"     varchar(36),
+    invite_UUID     varchar(36),
     invite_type       varchar(100) default 'DEFAULT_INVITE_TYPE'   not null,
-    "target_user_ID"  bigint
+    "target_user_id"  bigint
         constraint channel_invites_users_id_fk_2
             references chat.users,
     max_uses          int          default 1                       not null,
@@ -27,8 +27,8 @@ create unique index channel_invites_id_uindex
     on chat.channel_invites (ID);
 
 create index channel_invites_invite_uuid_index
-    on chat.channel_invites ("invite_UUID");
+    on chat.channel_invites (invite_UUID);
 
 create index channel_invites_target_user_id_index
-    on chat.channel_invites ("target_user_ID");
+    on chat.channel_invites ("target_user_id");
 

@@ -1,5 +1,7 @@
 package com.andrey.db_entities.chat_user;
 
+import com.andrey.db_entities.chat_profile.ChatProfile;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +15,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -21,9 +24,11 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -90,6 +95,10 @@ public class ChatUser {
 
     //@Column(name = "public_profile_ID")
     //private Long publicProfileID;
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"owner"})
+    private Set<ChatProfile> ownedProfiles;
 
     @Override
     public boolean equals(Object o) {

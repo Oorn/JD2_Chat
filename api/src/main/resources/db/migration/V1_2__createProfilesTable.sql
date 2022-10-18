@@ -4,7 +4,7 @@ create table chat.profiles
     ID                  bigserial
         constraint profiles_pk
             primary key,
-    "owner_user_ID"     bigint                                               not null,
+    owner_user_id     bigint                                               not null,
     profile_name        varchar(100)   default 'DEFAULT_PROFILE_NAME'        not null,
     profile_description varchar(10000) default 'DEFAULT_PROFILE_DESCRIPTION' not null,
     format_version      int            default 1                             not null,
@@ -15,7 +15,7 @@ create table chat.profiles
     creation_date       timestamp      default current_timestamp             not null,
     modification_date   timestamp      default current_timestamp             not null,
     constraint profiles_owner_id_id_fk
-        foreign key ("owner_user_ID") references chat.users (id)
+        foreign key ("owner_user_id") references chat.users (id)
 );
 
 drop index  if exists profiles_id_uindex;
@@ -24,5 +24,5 @@ create unique index profiles_id_uindex
 
 drop index  if exists profiles_owner_user_id_index;
 create index profiles_owner_user_id_index
-    on chat.profiles ("owner_user_ID");
+    on chat.profiles ("owner_user_id");
 
