@@ -88,8 +88,8 @@ public class ChatUser {
     @Column(name = "status_reason")
     private String statusReason;
 
-    @Column(name = "public_profile_ID")
-    private Long publicProfileID;
+    //@Column(name = "public_profile_ID")
+    //private Long publicProfileID;
 
     @Override
     public boolean equals(Object o) {

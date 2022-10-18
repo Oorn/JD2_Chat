@@ -33,7 +33,7 @@ public class TestRestController {
     public ResponseEntity<Object> post(@RequestBody String testBody){
         ChatUser newUser = ChatUser.builder()
                 .userName("test user "+ testBody)
-                .credentials(UserCredentials.builder().email("testMail " + String.valueOf(UUID.randomUUID())).passwordHash("testPass").build())
+                .credentials(UserCredentials.builder().email("testMail " + UUID.randomUUID()).passwordHash("testPass").build())
                 .status(UserStatus.REQUIRES_EMAIL_CONFIRMATION)
                 .uuid(String.valueOf(UUID.randomUUID()))
                 .build();

@@ -8,6 +8,8 @@ create table chat.profiles
     profile_name        varchar(100)   default 'DEFAULT_PROFILE_NAME'        not null,
     profile_description varchar(10000) default 'DEFAULT_PROFILE_DESCRIPTION' not null,
     format_version      int            default 1                             not null,
+    visibility_matchmaking varchar(100) default 'DEFAULT_PROFILE_SEARCH_VISIBILITY' not null,
+    visibility_user_info varchar(100)  default 'DEFAULT_PROFILE_USER_INFO_VISIBILITY' not null,
     status              varchar(100)   default 'DEFAULT_PROFILE_STATUS'      not null,
     status_reason       varchar(100),
     creation_date       timestamp      default current_timestamp             not null,
