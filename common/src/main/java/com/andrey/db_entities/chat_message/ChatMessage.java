@@ -1,8 +1,8 @@
-package com.andrey.db_entities.chat_channel;
+package com.andrey.db_entities.chat_message;
 
 import com.andrey.db_entities.ModificationDateUpdater;
-import com.andrey.db_entities.chat_channel_membership.ChatChannelMembership;
-import com.andrey.db_entities.chat_message.ChatMessage;
+import com.andrey.db_entities.chat_channel.ChannelLastUpdateInfo;
+import com.andrey.db_entities.chat_channel.ChatChannel;
 import com.andrey.db_entities.chat_user.ChatUser;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -14,11 +14,8 @@ import lombok.ToString;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -28,11 +25,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.util.Objects;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -41,31 +36,28 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "channels", schema = "chat")
-public class ChatChannel implements ModificationDateUpdater {
+@Table(name = "messages", schema = "chat")
+public class ChatMessage implements ModificationDateUpdater {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "channel_name")
-    private String channelName;
-
-    @Column(name = "channel_type")
-    @Enumerated(EnumType.STRING)
-    private ChannelType channelType;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "channel_id", nullable = false)
+    @JsonIgnoreProperties({"messages"})
+    @ToString.Exclude
+    private ChatChannel channel;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id", nullable = false)
-    @JsonIgnoreProperties({"ownedChannels"})
+    @JoinColumn(name = "sender_id", nullable = false)
     @ToString.Exclude
-    private ChatUser owner;
+    private ChatUser sender;
 
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "lastUpdateDate", column = @Column(name = "last_update_date")),
-            @AttributeOverride(name = "lastUpdateMessageID", column = @Column(name = "last_update_message_id"))
-    })
-    private ChannelLastUpdateInfo lastUpdateInfo;
+    @Column(name = "message_body")
+    private String messageBody;
+
+    @Column(name = "format_version")
+    private Integer formatVersion;
 
     @CreationTimestamp
     @Column(name = "creation_date")
@@ -77,26 +69,16 @@ public class ChatChannel implements ModificationDateUpdater {
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private ChannelStatus status;
+    private MessageStatus status;
 
     @Column(name = "status_reason")
     private String statusReason;
-
-    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnoreProperties({"channel"})
-    @ToString.Exclude
-    private Set<ChatChannelMembership> members;
-
-    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnoreProperties({"channel"})
-    @ToString.Exclude
-    private Set<ChatMessage> messages;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        ChatChannel that = (ChatChannel) o;
+        ChatMessage that = (ChatMessage) o;
         return id != null && Objects.equals(id, that.id);
     }
 
@@ -111,6 +93,19 @@ public class ChatChannel implements ModificationDateUpdater {
         if (then.after(now))
             return then;
         this.setModificationDate(now);
+
+        ChannelLastUpdateInfo lastUpdate = getChannel().getLastUpdateInfo();
+        //TODO use some kind of compareAndSwap?
+        //check if last update is already more recent than now
+        if (lastUpdate.getLastUpdateDate().after(now))
+            return now;
+        if ((lastUpdate.getLastUpdateDate().equals(now))
+                && (lastUpdate.getLastUpdateMessageID() > getId()))
+            return now;
+
+        //set new last update info, using clone to avoid potentially confusing JPA
+        getChannel().setLastUpdateInfo(new ChannelLastUpdateInfo((Timestamp) now.clone(), getId().longValue()));
+
         return now;
     }
 }

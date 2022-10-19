@@ -1,8 +1,7 @@
-package com.andrey.db_entities.chat_channel;
+package com.andrey.db_entities.chat_channel_invite;
 
 import com.andrey.db_entities.ModificationDateUpdater;
-import com.andrey.db_entities.chat_channel_membership.ChatChannelMembership;
-import com.andrey.db_entities.chat_message.ChatMessage;
+import com.andrey.db_entities.chat_channel.ChatChannel;
 import com.andrey.db_entities.chat_user.ChatUser;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -14,11 +13,8 @@ import lombok.ToString;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -28,11 +24,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.util.Objects;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -41,31 +35,43 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "channels", schema = "chat")
-public class ChatChannel implements ModificationDateUpdater {
+@Table(name = "channel_invites", schema = "chat")
+public class ChatChannelInvite implements ModificationDateUpdater {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "channel_name")
-    private String channelName;
-
-    @Column(name = "channel_type")
-    @Enumerated(EnumType.STRING)
-    private ChannelType channelType;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "sender_id", nullable = false)
+    @ToString.Exclude
+    private ChatUser sender;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id", nullable = false)
-    @JsonIgnoreProperties({"ownedChannels"})
+    @JoinColumn(name = "channel_id", nullable = false)
     @ToString.Exclude
-    private ChatUser owner;
+    private ChatChannel channel;
 
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "lastUpdateDate", column = @Column(name = "last_update_date")),
-            @AttributeOverride(name = "lastUpdateMessageID", column = @Column(name = "last_update_message_id"))
-    })
-    private ChannelLastUpdateInfo lastUpdateInfo;
+    @Column(name = "invite_uuid")
+    private String inviteUUID;
+
+    @Column(name = "invite_type")
+    @Enumerated(EnumType.STRING)
+    private ChannelInviteType inviteType;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "target_user_id", nullable = false)
+    @JsonIgnoreProperties({"receivedChannelInvites"})
+    @ToString.Exclude
+    private ChatUser targetUser;
+
+    @Column(name = "max_uses")
+    private Integer maxUses;
+
+    @Column(name = "times_used")
+    private Integer timesUsed;
+
+    @Column(name = "expiration_date")
+    private Timestamp expirationDate;
 
     @CreationTimestamp
     @Column(name = "creation_date")
@@ -77,26 +83,16 @@ public class ChatChannel implements ModificationDateUpdater {
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private ChannelStatus status;
+    private ChannelInviteStatus status;
 
     @Column(name = "status_reason")
     private String statusReason;
-
-    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnoreProperties({"channel"})
-    @ToString.Exclude
-    private Set<ChatChannelMembership> members;
-
-    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnoreProperties({"channel"})
-    @ToString.Exclude
-    private Set<ChatMessage> messages;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        ChatChannel that = (ChatChannel) o;
+        ChatChannelInvite that = (ChatChannelInvite) o;
         return id != null && Objects.equals(id, that.id);
     }
 

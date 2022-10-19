@@ -5,7 +5,7 @@ create table chat.friend_requests
         constraint friend_requests_pk
             primary key,
     "user_id_sender"  bigint                                            not null,
-    "user_id_receiver" bigint                                           not null,
+    "user_id_recipient" bigint                                           not null,
     "profile_id_sender" bigint                                          not null,
     status            varchar(100) default 'DEFAULT_FRIEND_REQUEST_STATUS' not null,
     status_reason     varchar(100),
@@ -14,7 +14,7 @@ create table chat.friend_requests
     constraint friend_requests_users_id_sender_id_fk
         foreign key ("user_id_sender") references chat.users (id),
     constraint friend_requests_users_id_receiver_id_fk
-            foreign key ("user_id_receiver") references chat.users (id),
+            foreign key ("user_id_recipient") references chat.users (id),
     constraint friend_requests_profiles_id_sender_id_fk
             foreign key ("profile_id_sender") references chat.profiles (id)
 );
@@ -29,7 +29,7 @@ create index friend_requests_user_id_sender_index
 
 drop index if exists  friend_requests_user_id_receiver_index;
 create index friend_requests_user_id_receiver_index
-    on chat.friend_requests ("user_id_receiver");
+    on chat.friend_requests (user_id_recipient);
 
 
 

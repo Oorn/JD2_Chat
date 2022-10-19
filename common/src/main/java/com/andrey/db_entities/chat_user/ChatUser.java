@@ -1,6 +1,12 @@
 package com.andrey.db_entities.chat_user;
 
+import com.andrey.db_entities.ModificationDateUpdater;
+import com.andrey.db_entities.chat_block.ChatBlock;
 import com.andrey.db_entities.chat_channel.ChatChannel;
+import com.andrey.db_entities.chat_channel_invite.ChatChannelInvite;
+import com.andrey.db_entities.chat_channel_membership.ChatChannelMembership;
+import com.andrey.db_entities.chat_friend_request.ChatFriendRequest;
+import com.andrey.db_entities.chat_friendship.ChatFriendship;
 import com.andrey.db_entities.chat_profile.ChatProfile;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -13,6 +19,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
+import org.springframework.cglib.core.Block;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -29,6 +36,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -41,7 +49,7 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "users", schema = "chat")
-public class ChatUser {
+public class ChatUser implements ModificationDateUpdater {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -108,6 +116,36 @@ public class ChatUser {
     @ToString.Exclude
     private Set<ChatChannel> ownedChannels;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"user"})
+    @ToString.Exclude
+    private Set<ChatChannelMembership> channelMemberships;
+
+    @OneToMany(mappedBy = "blockingUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"blockingUser"})
+    @ToString.Exclude
+    private Set<ChatBlock> blocks;
+
+    @OneToMany(mappedBy = "userWithLesserID", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"userWithLesserID"})
+    @ToString.Exclude
+    private Set<ChatFriendship> friendshipsWithLesserID;
+
+    @OneToMany(mappedBy = "userWithGreaterID", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"userWithGreaterID"})
+    @ToString.Exclude
+    private Set<ChatFriendship> friendshipsWithGreaterID;
+
+    @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"recipient"})
+    @ToString.Exclude
+    private Set<ChatFriendRequest> receivedFriendRequests;
+
+    @OneToMany(mappedBy = "targetUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"targetUser"})
+    @ToString.Exclude
+    private Set<ChatChannelInvite> receivedChannelInvites;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -119,5 +157,14 @@ public class ChatUser {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    @Override
+    public Timestamp UpdateModificationDate(Timestamp now) {
+        Timestamp then = this.getModificationDate();
+        if (then.after(now))
+            return then;
+        this.setModificationDate(now);
+        return now;
     }
 }

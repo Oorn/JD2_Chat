@@ -1,5 +1,6 @@
 package com.andrey.db_entities.chat_profile;
 
+import com.andrey.db_entities.ModificationDateUpdater;
 import com.andrey.db_entities.chat_user.ChatUser;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Objects;
 
 @Getter
@@ -35,7 +37,7 @@ import java.util.Objects;
 @Builder
 @Entity
 @Table(name = "profiles", schema = "chat")
-public class ChatProfile {
+public class ChatProfile implements ModificationDateUpdater {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,6 +45,7 @@ public class ChatProfile {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_user_ID", nullable = false)
     @JsonIgnoreProperties({"ownedProfiles"})
+    @ToString.Exclude
     private ChatUser owner;
 
     @Column(name = "profile_name")
@@ -88,5 +91,14 @@ public class ChatProfile {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    @Override
+    public Timestamp UpdateModificationDate(Timestamp now) {
+        Timestamp then = this.getModificationDate();
+        if (then.after(now))
+            return then;
+        this.setModificationDate(now);
+        return now;
     }
 }
