@@ -10,6 +10,9 @@ create table chat.channel_members
     "channel_id"      bigint                                                   not null
         constraint channel_members_channels_id_fk
             references chat.channels,
+    profile_id        bigint
+        constraint channel_members_profiles_id_fk
+            references chat.profiles,
     role              varchar(100) default 'DEFAULT_ROLE'                      not null,
     status            varchar(100) default 'DEFAULT_CHANNEL_MEMBERSHIP_STATUS' not null,
     status_reason     varchar(100),
