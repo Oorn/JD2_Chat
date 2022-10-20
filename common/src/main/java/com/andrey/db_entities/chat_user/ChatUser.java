@@ -8,6 +8,7 @@ import com.andrey.db_entities.chat_channel_membership.ChatChannelMembership;
 import com.andrey.db_entities.chat_friend_request.ChatFriendRequest;
 import com.andrey.db_entities.chat_friendship.ChatFriendship;
 import com.andrey.db_entities.chat_profile.ChatProfile;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -57,12 +58,21 @@ public class ChatUser implements ModificationDateUpdater {
     @Column(name = "username")
     private String userName;
 
+    /*
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "email", column = @Column(name = "email")),
             @AttributeOverride(name = "passwordHash", column = @Column(name = "password_hash"))
     })
-    private UserCredentials credentials;
+    private UserCredentials credentials;*/
+    //not used because Spring Data doesn't see fields of embedded objects :(
+
+    @Column(name = "email")
+    private String email;
+
+    @JsonIgnore
+    @Column(name = "password_hash")
+    private String passwordHash;
 
     //TODO more not working UUID experiments?
     /*@Column(name = "uuid", unique = true, insertable = false, updatable = false, nullable = false)

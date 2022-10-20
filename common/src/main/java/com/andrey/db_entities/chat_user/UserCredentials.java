@@ -6,8 +6,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Indexed;
 
 import javax.persistence.Embeddable;
+import javax.persistence.EmbeddedId;
 
 @Data
 @NoArgsConstructor
@@ -15,8 +17,10 @@ import javax.persistence.Embeddable;
 @Builder
 @Embeddable
 public class UserCredentials {
+
     private String email;
 
     @JsonIgnore
     private String passwordHash;
 }
+//not used because Spring Data doesn't see fields of embedded objects :(

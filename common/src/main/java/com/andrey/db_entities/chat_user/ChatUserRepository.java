@@ -11,4 +11,5 @@ public interface ChatUserRepository extends CrudRepository<ChatUser, Long>
         , PagingAndSortingRepository<ChatUser, Long> {
 
     ChatUser findChatUserById(Long id);
+    ChatUser findChatUserByEmail(String email);
 }

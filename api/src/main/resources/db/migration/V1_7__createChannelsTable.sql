@@ -10,6 +10,7 @@ create table chat.channels
         constraint channels_users_id_fk
             references chat.users,
     last_update_date  timestamp    default CURRENT_TIMESTAMP  not null,
+    last_update_message_id bigint,
     status            varchar(100) default 'DEFAULT_CHANNEL_STATUS' not null,
     status_reason     varchar(100),
     creation_date     timestamp    default current_timestamp        not null,
