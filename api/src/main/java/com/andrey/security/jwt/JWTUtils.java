@@ -3,6 +3,7 @@ package com.andrey.security.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -14,10 +15,13 @@ import java.util.Map;
 import static io.jsonwebtoken.Claims.SUBJECT;
 
 @Component
+@RequiredArgsConstructor
 public class JWTUtils {
     public static final String CREATION_DATE = "created";
     public static final String JWT = "JWT";
     public static final SignatureAlgorithm ALGORITHM = SignatureAlgorithm.HS512;
+
+    private final JWTPropertiesConfig jwtPropertiesConfig;
 
     private Map<String, Object> generateJWTHeaders() {
         Map<String, Object> jwtHeaders = new LinkedHashMap<>();
@@ -28,7 +32,7 @@ public class JWTUtils {
     }
 
     private Date generateExpirationDate() {
-        return new Date( new Date().getTime() + JWTProperties.TOKEN_LIFETIME_MILLIS);
+        return new Date( new Date().getTime() + jwtPropertiesConfig.getExpiration());
     }
 
     private String generateToken(Map<String, Object> claims) {
@@ -41,14 +45,14 @@ public class JWTUtils {
                 .setClaims(claims)
                 .setExpiration(generateExpirationDate())
                 /*Signature*/
-                .signWith(ALGORITHM, JWTProperties.SECRET)
+                .signWith(ALGORITHM, jwtPropertiesConfig.getSecret())
                 .compact();
     }
 
     private Claims getClaimsFromToken(String token) {
         return Jwts
                 .parser()
-                .setSigningKey(JWTProperties.SECRET)
+                .setSigningKey(jwtPropertiesConfig.getSecret())
                 .parseClaimsJws(token)
                 .getBody();
     }
