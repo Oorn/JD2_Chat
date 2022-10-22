@@ -1,8 +1,11 @@
 package com.andrey.controller;
 
 import com.andrey.requests.AuthenticationRequest;
+import com.andrey.security.jwt.JWTPropertiesConfig;
 import com.andrey.service.auth.AuthenticationService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections.map.SingletonMap;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 @RestController
@@ -28,7 +32,11 @@ public class AuthenticationController {
         if (response.isEmpty())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
-        return new ResponseEntity<>(response.get(), HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(JWTPropertiesConfig.AUTH_TOKEN_HEADER, response.get());
+        return new ResponseEntity<>(response.get(),
+                headers,
+                HttpStatus.OK);
     }
 
     @PostMapping("/refreshToken")
@@ -38,6 +46,10 @@ public class AuthenticationController {
         if (response.isEmpty())
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
-        return new ResponseEntity<>(response.get(), HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(JWTPropertiesConfig.AUTH_TOKEN_HEADER, response.get());
+        return new ResponseEntity<>(response.get(),
+                headers,
+                HttpStatus.OK);
     }
 }

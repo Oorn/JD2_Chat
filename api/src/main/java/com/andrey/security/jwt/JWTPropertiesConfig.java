@@ -11,7 +11,7 @@ public class JWTPropertiesConfig {
     private String secret; // = "6013fba8-50ec-4830-a6b6-1c2b7ef27b3a";
     private Long expiration;// = 3600000L;//1 hour
 
-    static final String AUTH_TOKEN_HEADER = "Auth-Token";
+    public static final String AUTH_TOKEN_HEADER = "Auth-Token";
 }
 
 

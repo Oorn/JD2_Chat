@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -44,6 +45,7 @@ public class JWTUtils {
                 .setHeader(generateJWTHeaders())
                 /*We create payload with user info, roles, expiration date of token*/
                 .setClaims(claims)
+                .setIssuedAt(new Date())
                 .setExpiration(generateExpirationDate())
                 /*Signature*/
                 .signWith(ALGORITHM, jwtPropertiesConfig.getSecret())
@@ -66,6 +68,10 @@ public class JWTUtils {
 
     public String getUsernameFromToken(String token) {
         return getClaimsFromToken(token).getSubject();
+    }
+
+    public Date getCreationDate(String token) {
+        return getClaimsFromToken(token).getIssuedAt();
     }
 
     public boolean validateToken(String token) {

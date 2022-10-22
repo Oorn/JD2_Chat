@@ -38,6 +38,7 @@ public class TestRestController {
 
     @GetMapping("/ping")
     public ResponseEntity<Object> ping(){
+
         return new ResponseEntity<>(chatUserRepository.findChatUserById(1L), HttpStatus.OK);
     }
     @GetMapping("/ping2")

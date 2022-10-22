@@ -29,8 +29,6 @@ spring:
         transport:
           protocol: smtp
         smtp:
-#          ssl:
-#            trust: "*"
           auth: true
           starttls:
             enable: true

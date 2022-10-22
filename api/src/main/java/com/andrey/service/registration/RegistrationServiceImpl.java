@@ -105,6 +105,7 @@ public class RegistrationServiceImpl implements RegistrationService{
                 return false;
 
             user.setPasswordHash(encryptor.passwordEncoder().encode(request.getNewPassword()));
+            user.setPasswordResetDate(new Timestamp(new Date().getTime()));
 
             return true;
         }

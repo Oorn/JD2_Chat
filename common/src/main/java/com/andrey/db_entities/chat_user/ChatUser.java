@@ -125,6 +125,10 @@ public class ChatUser implements ModificationDateUpdater {
     @Column(name = "password_reset_token_expiration_date")
     private Timestamp passwordResetTokenExpires;
 
+    @CreationTimestamp
+    @Column(name = "password_reset_date")
+    private Timestamp passwordResetDate;
+
     //@Column(name = "public_profile_ID")
     //private Long publicProfileID;
 

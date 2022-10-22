@@ -1,6 +1,7 @@
 package com.andrey.security;
 
 import com.andrey.db_entities.PasswordEncryptionConfiguration;
+import com.andrey.db_entities.chat_user.ChatUserRepository;
 import com.andrey.security.jwt.JWTFilter;
 import com.andrey.security.jwt.JWTUtils;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class WebSecurityConfiguration {
     private final JWTUtils jwtUtils;
 
     private final UserDetailsService userProvider;
+    private final ChatUserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -63,7 +65,7 @@ public class WebSecurityConfiguration {
 
         //JWT filter for authentication
         http
-                .addFilterBefore(new JWTFilter(jwtUtils, userProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JWTFilter(jwtUtils, userRepository), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -81,7 +83,7 @@ public class WebSecurityConfiguration {
     }
     @Bean
     public JWTFilter authenticationTokenFilterBean(AuthenticationManager authenticationManager) throws Exception {
-        JWTFilter authenticationTokenFilter = new JWTFilter(jwtUtils, userProvider);
+        JWTFilter authenticationTokenFilter = new JWTFilter(jwtUtils, userRepository);
         authenticationTokenFilter.setAuthenticationManager(authenticationManager);
         return authenticationTokenFilter;
     }

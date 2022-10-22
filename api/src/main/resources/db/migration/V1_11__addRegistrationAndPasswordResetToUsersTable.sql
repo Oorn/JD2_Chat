@@ -9,3 +9,6 @@ alter table chat.users
 
 alter table chat.users
     add password_reset_token_expiration_date timestamp;
+
+alter table chat.users
+    add password_reset_date timestamp;
