@@ -1,21 +1,21 @@
-package com.andrey.repository.user.jdbc;
+package com.andrey.test_repository.user.jdbc;
 
-import com.andrey.repository.user.User;
+import com.andrey.test_repository.user.User;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static com.andrey.repository.user.UsersTableColumns.CREATED;
-import static com.andrey.repository.user.UsersTableColumns.EMAIL;
-import static com.andrey.repository.user.UsersTableColumns.ID;
-import static com.andrey.repository.user.UsersTableColumns.MODIFIED;
-import static com.andrey.repository.user.UsersTableColumns.PASSWORD;
-import static com.andrey.repository.user.UsersTableColumns.STATUS;
-import static com.andrey.repository.user.UsersTableColumns.STATUS_REASON;
-import static com.andrey.repository.user.UsersTableColumns.USERNAME;
-import static com.andrey.repository.user.UsersTableColumns.VISITED;
+import static com.andrey.test_repository.user.UsersTableColumns.CREATED;
+import static com.andrey.test_repository.user.UsersTableColumns.EMAIL;
+import static com.andrey.test_repository.user.UsersTableColumns.ID;
+import static com.andrey.test_repository.user.UsersTableColumns.MODIFIED;
+import static com.andrey.test_repository.user.UsersTableColumns.PASSWORD;
+import static com.andrey.test_repository.user.UsersTableColumns.STATUS;
+import static com.andrey.test_repository.user.UsersTableColumns.STATUS_REASON;
+import static com.andrey.test_repository.user.UsersTableColumns.USERNAME;
+import static com.andrey.test_repository.user.UsersTableColumns.VISITED;
 
 @Component
 public class UserRowMapper implements RowMapper<User> {

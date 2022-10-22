@@ -6,5 +6,6 @@ public enum UserStatus {
     //DEFAULT_PROFILE_NOT_SET,
     OK,
     BANNED,
-    REMOVED
+    REMOVED,
+    EMAIL_RECLAIMED //user was deleted, then registered again from same email
 }

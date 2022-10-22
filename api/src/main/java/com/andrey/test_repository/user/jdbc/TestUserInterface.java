@@ -1,7 +1,7 @@
-package com.andrey.repository.user.jdbc;
+package com.andrey.test_repository.user.jdbc;
 
-import com.andrey.repository.user.User;
-import com.andrey.repository.user.UserRepositoryInterface;
+import com.andrey.test_repository.user.User;
+import com.andrey.test_repository.user.UserRepositoryInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

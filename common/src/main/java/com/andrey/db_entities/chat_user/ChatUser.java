@@ -113,6 +113,18 @@ public class ChatUser implements ModificationDateUpdater {
     @Column(name = "status_reason")
     private String statusReason;
 
+    @Column(name = "email_confirmation_token")
+    private String emailConfirmationToken;
+
+    @Column(name = "email_confirmation_token_expiration_date")
+    private Timestamp emailConfirmationTokenExpires;
+
+    @Column(name = "password_reset_token")
+    private String passwordResetToken;
+
+    @Column(name = "password_reset_token_expiration_date")
+    private Timestamp passwordResetTokenExpires;
+
     //@Column(name = "public_profile_ID")
     //private Long publicProfileID;
 

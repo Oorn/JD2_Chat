@@ -1,7 +1,8 @@
-package com.andrey.security;
+package com.andrey.security.jwt;
 
 import com.andrey.db_entities.chat_user.ChatUser;
 import com.andrey.db_entities.chat_user.ChatUserRepository;
+import com.andrey.db_entities.chat_user.UserStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,12 +10,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
-public class AuthenticationService implements UserDetailsService {
+public class JWTAuthenticationService implements UserDetailsService {
 
     private final ChatUserRepository userRepository;
 
@@ -38,5 +36,6 @@ public class AuthenticationService implements UserDetailsService {
             throw new UsernameNotFoundException("User with this login not found");
         }
     }
+
 
 }

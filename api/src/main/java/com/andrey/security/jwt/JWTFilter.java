@@ -31,6 +31,8 @@ public class JWTFilter extends UsernamePasswordAuthenticationFilter {
         String authToken = httpRequest.getHeader(JWTPropertiesConfig.AUTH_TOKEN_HEADER);
 
         if (authToken != null) {
+            if (!tokenUtils.validateToken(authToken))
+                chain.doFilter(request, response);
 
             String username = tokenUtils.getUsernameFromToken(authToken);
 

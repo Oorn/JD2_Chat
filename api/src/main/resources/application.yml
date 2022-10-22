@@ -18,6 +18,27 @@ spring:
     username: postgres
     password: postgres
     url: "jdbc:postgresql://localhost:5432/chatApp"
+  mail:
+    host: mail.inbox.lv
+    port: 587
+    username: jd2_chat@mail.lv
+    password: UJb!zTcU21
+    properties:
+      mail:
+        debug: true
+        transport:
+          protocol: smtp
+        smtp:
+#          ssl:
+#            trust: "*"
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
+
 server:
   port: 8080
 jwt:

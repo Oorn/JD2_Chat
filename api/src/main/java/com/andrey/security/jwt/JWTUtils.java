@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static io.jsonwebtoken.Claims.SUBJECT;
 
@@ -67,7 +68,7 @@ public class JWTUtils {
         return getClaimsFromToken(token).getSubject();
     }
 
-    public Boolean validateToken(String token) {
+    public boolean validateToken(String token) {
         try {
             getUsernameFromToken(token);
             return true;
@@ -77,6 +78,25 @@ public class JWTUtils {
             return false;
         }
     }
+
+    public Optional<String> refreshToken (String token) {
+        try {
+            Claims claims = getClaimsFromToken(token);
+
+            return Optional.of(Jwts
+                    .builder()
+                    .setHeader(generateJWTHeaders())
+                    .setClaims(claims)
+                    .setExpiration(generateExpirationDate())
+                    .signWith(ALGORITHM, jwtPropertiesConfig.getSecret())
+                    .compact());
+        }
+        catch (Exception e)
+        {
+            return Optional.empty();
+        }
+    }
+
 
 
 

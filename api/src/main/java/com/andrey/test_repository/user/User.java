@@ -1,4 +1,4 @@
-package com.andrey.repository.user;
+package com.andrey.test_repository.user;
 
 import lombok.Builder;
 import lombok.Data;

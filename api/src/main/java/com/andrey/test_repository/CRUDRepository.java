@@ -1,4 +1,4 @@
-package com.andrey.repository;
+package com.andrey.test_repository;
 
 import java.util.List;
 import java.util.Optional;
