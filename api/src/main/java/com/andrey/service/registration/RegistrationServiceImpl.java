@@ -25,8 +25,9 @@ public class RegistrationServiceImpl implements RegistrationService{
 
     private void reclaimUserEmail(ChatUser oldUser) {
         oldUser.setEmail(oldUser.getEmail() + " " + UUID.randomUUID());
-        oldUser.setStatusReason("reclaimed during create newUserRequest at " + new Date() + " from status " + oldUser.getStatus());
+        oldUser.setStatusReason("reclaimed on newUserRequest at " + new Date());
         oldUser.setStatus(UserStatus.EMAIL_RECLAIMED);
+        userRepository.saveAndFlush(oldUser);
     }
 
     @Override
@@ -55,7 +56,7 @@ public class RegistrationServiceImpl implements RegistrationService{
                         .emailConfirmationToken(String.valueOf(UUID.randomUUID()))
                         .emailConfirmationTokenExpires(new Timestamp(new Date().getTime() + Constants.EMAIL_CONFIRM_TIMEOUT_MILLIS))
                         .build();
-        newUser = userRepository.save(newUser);
+        newUser = userRepository.saveAndFlush(newUser);
 
 
         return Optional.of(newUser);

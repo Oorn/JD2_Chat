@@ -66,6 +66,7 @@ public class RegistrationController {
     }
 
     @PostMapping("/sendPasswordRecovery")
+    @Transactional
     public ResponseEntity<Object> sendPasswordRecovery(@RequestBody String email){
         Optional<String> resetToken = registrationService.createPasswordResetToken(email);
         if (resetToken.isEmpty())
@@ -78,6 +79,7 @@ public class RegistrationController {
 
     }
     @PostMapping("/resetPassword")
+    @Transactional
     public ResponseEntity<Object> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest){
         if (!resetPasswordRequest.isValid())
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
