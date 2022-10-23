@@ -11,6 +11,7 @@ import com.andrey.service.registration.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,11 +20,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/registration")
+@Validated
 public class RegistrationController {
 
     private final RegistrationService registrationService;
@@ -32,7 +35,7 @@ public class RegistrationController {
 
     @PostMapping("/createNewUser")
     @Transactional
-    public ResponseEntity<Object> createNewUser(@RequestBody ChatUserCreateRequest createRequest){
+    public ResponseEntity<Object> createNewUser(@RequestBody @Valid ChatUserCreateRequest createRequest){
         if (!createRequest.isValid())
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         Optional<ChatUser> optionalUser = registrationService.createNewUser(createRequest);

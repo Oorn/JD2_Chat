@@ -55,7 +55,7 @@ public class WebSecurityConfiguration {
                 .and()
                 .authorizeRequests()
                 //ant matchers
-                .antMatchers("/swagger-resources/**","/swagger-ui/**").permitAll()
+                .antMatchers("/swagger-ui.html", "/swagger-resources/**","/swagger-ui/**", "/v3/api-docs/**","/configuration/ui/**", "/configuration/security/**", "/webjars/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/registration/**").permitAll()
