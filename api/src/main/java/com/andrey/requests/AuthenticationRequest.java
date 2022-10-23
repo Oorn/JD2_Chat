@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthenticationRequest implements ValidRequest{
+public class AuthenticationRequest {
 
     @NotBlank
     @NotNull
@@ -24,14 +24,4 @@ public class AuthenticationRequest implements ValidRequest{
     @NotNull
     String password;
 
-    @Override
-    public boolean isValid() {
-        if (email == null)
-            return false;
-
-        if (password == null)
-            return false;
-
-        return true;
-    }
 }

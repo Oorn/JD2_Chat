@@ -16,7 +16,7 @@ import javax.validation.constraints.Size;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConfirmEmailRequest implements ValidRequest{
+public class ConfirmEmailRequest{
     @NotBlank
     @NotNull
     String userEmail;
@@ -25,14 +25,4 @@ public class ConfirmEmailRequest implements ValidRequest{
     @NotNull
     String confirmationToken;
 
-    @Override
-    public boolean isValid() {
-        if (userEmail == null)
-            return false;
-
-        if (confirmationToken == null)
-            return false;
-
-        return true;
-    }
 }

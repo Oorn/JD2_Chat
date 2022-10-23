@@ -1,9 +1,11 @@
 package com.andrey.db_entities.chat_message;
 
+import com.andrey.db_entities.Interactable;
 import com.andrey.db_entities.ModificationDateUpdater;
 import com.andrey.db_entities.chat_channel.ChannelLastUpdateInfo;
 import com.andrey.db_entities.chat_channel.ChatChannel;
 import com.andrey.db_entities.chat_user.ChatUser;
+import com.andrey.db_entities.chat_user.UserStatus;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,7 +39,7 @@ import java.util.Objects;
 @Builder
 @Entity
 @Table(name = "messages", schema = "chat")
-public class ChatMessage implements ModificationDateUpdater {
+public class ChatMessage implements ModificationDateUpdater, Interactable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -107,5 +109,9 @@ public class ChatMessage implements ModificationDateUpdater {
         getChannel().setLastUpdateInfo(new ChannelLastUpdateInfo((Timestamp) now.clone(), getId().longValue()));
 
         return now;
+    }
+    @Override
+    public boolean isInteractable() {
+        return !status.equals(MessageStatus.REMOVED);
     }
 }

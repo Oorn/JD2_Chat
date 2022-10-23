@@ -1,5 +1,6 @@
 package com.andrey.db_entities.chat_user;
 
+import com.andrey.db_entities.Interactable;
 import com.andrey.db_entities.ModificationDateUpdater;
 import com.andrey.db_entities.chat_block.ChatBlock;
 import com.andrey.db_entities.chat_channel.ChatChannel;
@@ -50,7 +51,7 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "users", schema = "chat")
-public class ChatUser implements ModificationDateUpdater {
+public class ChatUser implements ModificationDateUpdater, Interactable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -192,5 +193,10 @@ public class ChatUser implements ModificationDateUpdater {
             return then;
         this.setModificationDate(now);
         return now;
+    }
+
+    @Override
+    public boolean isInteractable() {
+        return !status.equals(UserStatus.REMOVED);
     }
 }

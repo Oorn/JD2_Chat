@@ -1,7 +1,9 @@
 package com.andrey.db_entities.chat_friendship;
 
+import com.andrey.db_entities.Interactable;
 import com.andrey.db_entities.ModificationDateUpdater;
 import com.andrey.db_entities.chat_user.ChatUser;
+import com.andrey.db_entities.chat_user.UserStatus;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,7 +37,7 @@ import java.util.Objects;
 @Builder
 @Entity
 @Table(name = "friend_list", schema = "chat")
-public class ChatFriendship implements ModificationDateUpdater {
+public class ChatFriendship implements ModificationDateUpdater, Interactable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -87,5 +89,9 @@ public class ChatFriendship implements ModificationDateUpdater {
             return then;
         this.setModificationDate(now);
         return now;
+    }
+    @Override
+    public boolean isInteractable() {
+        return !status.equals(FriendshipStatus.REMOVED);
     }
 }

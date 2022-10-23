@@ -16,7 +16,7 @@ import javax.validation.constraints.Size;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResetPasswordRequest implements ValidRequest{
+public class ResetPasswordRequest{
 
     @NotBlank
     @NotNull
@@ -31,19 +31,4 @@ public class ResetPasswordRequest implements ValidRequest{
     @Size(min = Constants.MIN_PASSWORD_LENGTH, max = Constants.MAX_PASSWORD_LENGTH)
     String newPassword;
 
-    @Override
-    public boolean isValid() {
-        if (userEmail == null)
-            return false;
-
-        if (resetToken == null)
-            return false;
-
-        if (newPassword == null)
-            return false;
-        if (newPassword.length() > Constants.MAX_PASSWORD_LENGTH)
-            return false;
-
-        return true;
-    }
 }

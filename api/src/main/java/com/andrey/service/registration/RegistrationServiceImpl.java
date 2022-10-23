@@ -70,6 +70,8 @@ public class RegistrationServiceImpl implements RegistrationService{
                 return false;
             if (!user.getEmailConfirmationToken().equals(request.getConfirmationToken())) //wrong token
                 return false;
+            if (!user.getStatus().equals(UserStatus.REQUIRES_EMAIL_CONFIRMATION))
+                return false; //wrong state for verification
 
             user.setStatus(UserStatus.OK);
             user.setStatusReason("confirmed email at " + new Date());
@@ -86,6 +88,8 @@ public class RegistrationServiceImpl implements RegistrationService{
     public Optional<String> createPasswordResetToken(String userEmail) {
         try {
             ChatUser user = userRepository.findChatUserByEmail(userEmail);
+            if (!user.isInteractable())
+                return Optional.empty();
             user.setPasswordResetToken(String.valueOf(UUID.randomUUID()));
             user.setPasswordResetTokenExpires(new Timestamp(new Date().getTime() + Constants.PASSWORD_RESET_TIMEOUT_MILLIS));
             return Optional.of(user.getPasswordResetToken());
@@ -103,6 +107,8 @@ public class RegistrationServiceImpl implements RegistrationService{
             if (user.getPasswordResetTokenExpires().before(new Date()))
                 return false;
             if (!user.getPasswordResetToken().equals(request.getResetToken()))
+                return false;
+            if (!user.isInteractable())
                 return false;
 
             user.setPasswordHash(encryptor.passwordEncoder().encode(request.getNewPassword()));

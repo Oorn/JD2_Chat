@@ -3,6 +3,7 @@ package com.andrey.controller;
 import com.andrey.requests.AuthenticationRequest;
 import com.andrey.security.jwt.JWTPropertiesConfig;
 import com.andrey.service.auth.AuthenticationService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections.map.SingletonMap;
 import org.springframework.http.HttpHeaders;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -23,9 +26,8 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/generateToken")
+    @Operation(summary = "generates authentication JWT token")
     public ResponseEntity<Object> getAuthToken(@RequestBody AuthenticationRequest authRequest){
-        if (!authRequest.isValid())
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         Optional<String> response = authenticationService.generateAuthToken(authRequest);
 
@@ -40,7 +42,9 @@ public class AuthenticationController {
     }
 
     @PostMapping("/refreshToken")
-    public ResponseEntity<Object> refreshAuthToken(@RequestBody String token){
+    @Operation(summary = "refreshes expiration date on JWT token. Every request requiring authentication automatically refreshes token in header")
+    public ResponseEntity<Object> refreshAuthToken(@RequestBody
+                                                       @NotBlank @NotNull String token){
         Optional<String> response = authenticationService.refreshAuthToken(token);
 
         if (response.isEmpty())
