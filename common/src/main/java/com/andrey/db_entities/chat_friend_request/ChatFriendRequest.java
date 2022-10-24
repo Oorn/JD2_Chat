@@ -43,7 +43,7 @@ public class ChatFriendRequest implements ModificationDateUpdater, Interactable 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id_sender", nullable = false)
     @ToString.Exclude
     private ChatUser sender;

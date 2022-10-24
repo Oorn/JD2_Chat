@@ -4,13 +4,13 @@ import com.andrey.Constants;
 import com.andrey.db_entities.chat_user.ChatUser;
 import com.andrey.db_entities.chat_user.ChatUserRepository;
 import com.andrey.db_entities.chat_user.UserStatus;
+
+import com.andrey.security.AuthenticatedChatUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.AuthorityUtils;
+
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
@@ -26,8 +26,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class JWTFilter extends UsernamePasswordAuthenticationFilter {
     private final JWTUtils tokenUtils;
+    private final JWTAuthenticationService jwtAuthenticationService;
 
-    //private final UserDetailsService userDetailsService;
     private final ChatUserRepository userRepository;
 
 
@@ -44,18 +44,14 @@ public class JWTFilter extends UsernamePasswordAuthenticationFilter {
             if (tokenUtils.validateToken(authToken)) {
                 String username = tokenUtils.getUsernameFromToken(authToken);
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    //UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                    ChatUser user = userRepository.findChatUserByEmail(username);
+                    AuthenticatedChatUserDetails authUser = (AuthenticatedChatUserDetails) jwtAuthenticationService.loadUserByUsername(username);
+                    ChatUser user = authUser.getChatUser();
                     if (user.getPasswordResetDate()
                             .before(tokenUtils
                                     .getCreationDate(authToken))
                     && (user.getStatus().equals(UserStatus.OK))) {
-                        UserDetails userDetails = new User(
-                                user.getEmail(),
-                                user.getPasswordHash(),
-                                AuthorityUtils.NO_AUTHORITIES);
                         UsernamePasswordAuthenticationToken authentication =
-                                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                                new UsernamePasswordAuthenticationToken(authUser, null, authUser.getAuthorities());
                         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
                         SecurityContextHolder.getContext().setAuthentication(authentication);
 

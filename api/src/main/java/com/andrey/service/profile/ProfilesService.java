@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface ProfilesService {
 
-    Optional<ChatProfile> createNewProfile(ChatProfile request, String userEmail);
+    Optional<ChatProfile> createNewProfile(ChatProfile request, ChatUser user);
 }

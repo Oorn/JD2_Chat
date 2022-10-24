@@ -3,7 +3,9 @@ package com.andrey.controller;
 import com.andrey.controller.requests.ChatUserCreateRequest;
 import com.andrey.controller.requests.profile_requests.CreateProfileRequest;
 import com.andrey.db_entities.chat_profile.ChatProfile;
+
 import com.andrey.db_entities.chat_user.ChatUser;
+import com.andrey.security.AuthenticatedChatUserDetails;
 import com.andrey.security.jwt.JWTPropertiesConfig;
 import com.andrey.service.profile.ProfilesService;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -20,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,9 +55,9 @@ public class ProfileController {
     public ResponseEntity<Object> createNewUser(@RequestBody @Valid CreateProfileRequest createRequest
             , @Parameter(hidden = true) Authentication auth){
 
-        String userEmail = auth.getName();
+        ChatUser authUser = ((AuthenticatedChatUserDetails) auth.getPrincipal()).getChatUser();
         ChatProfile newProfile = converter.convert(createRequest, ChatProfile.class);
-        Optional<ChatProfile> result = profilesService.createNewProfile(newProfile, userEmail);
+        Optional<ChatProfile> result = profilesService.createNewProfile(newProfile, authUser);
         if (result.isEmpty())
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 

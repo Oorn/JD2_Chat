@@ -44,7 +44,7 @@ public class ChatProfile implements ModificationDateUpdater, Interactable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_user_ID", nullable = false)
     @JsonIgnoreProperties({"ownedProfiles"})
     @ToString.Exclude

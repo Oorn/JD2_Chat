@@ -50,7 +50,7 @@ public class ChatMessage implements ModificationDateUpdater, Interactable {
     @ToString.Exclude
     private ChatChannel channel;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id", nullable = false)
     @ToString.Exclude
     private ChatUser sender;

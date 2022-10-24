@@ -43,7 +43,7 @@ public class ChatBlock implements ModificationDateUpdater, Interactable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "blocking_user_id", nullable = false)
     @JsonIgnoreProperties({"blocks"})
     @ToString.Exclude

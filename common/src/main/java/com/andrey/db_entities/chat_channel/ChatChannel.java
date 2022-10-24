@@ -56,7 +56,7 @@ public class ChatChannel implements ModificationDateUpdater, Interactable {
     @Enumerated(EnumType.STRING)
     private ChannelType channelType;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
     @JsonIgnoreProperties({"ownedChannels"})
     @ToString.Exclude

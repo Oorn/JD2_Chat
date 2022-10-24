@@ -20,14 +20,14 @@ public class ProfilesServiceImpl implements ProfilesService{
     private final ChatProfileRepository profileRepository;
 
     @Override
-    public Optional<ChatProfile> createNewProfile(ChatProfile newProfile, String userEmail) {
+    public Optional<ChatProfile> createNewProfile(ChatProfile newProfile, ChatUser user) {
 
         if (newProfile.getProfileVisibilityMatchmaking() == ProfileVisibilityMatchmaking.DEFAULT_PROFILE_SEARCH_VISIBILITY)
             return Optional.empty();
         if (newProfile.getProfileVisibilityUserInfo() == ProfileVisibilityUserInfo.DEFAULT_PROFILE_USER_INFO_VISIBILITY)
             return Optional.empty();
 
-        ChatUser user = userRepository.findChatUserByEmail(userEmail);
+        userRepository.save(user);
         newProfile.setOwner(user);
 
         newProfile = profileRepository.saveAndFlush(newProfile);

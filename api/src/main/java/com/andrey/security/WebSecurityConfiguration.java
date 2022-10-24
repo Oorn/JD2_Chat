@@ -2,6 +2,7 @@ package com.andrey.security;
 
 import com.andrey.db_entities.PasswordEncryptionConfiguration;
 import com.andrey.db_entities.chat_user.ChatUserRepository;
+import com.andrey.security.jwt.JWTAuthenticationService;
 import com.andrey.security.jwt.JWTFilter;
 import com.andrey.security.jwt.JWTUtils;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +15,13 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -31,6 +34,8 @@ public class WebSecurityConfiguration {
 
     private final UserDetailsService userProvider;
     private final ChatUserRepository userRepository;
+
+    private final JWTAuthenticationService jwtAuthenticationService;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -55,7 +60,7 @@ public class WebSecurityConfiguration {
                 .and()
                 .authorizeRequests()
                 //ant matchers
-                .antMatchers("/swagger-ui.html", "/swagger-resources/**","/swagger-ui/**", "/v3/api-docs/**","/configuration/ui/**", "/configuration/security/**", "/webjars/**").permitAll()
+                .antMatchers("/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**","/swagger-ui/**", "/v3/api-docs/**","/configuration/ui/**", "/configuration/security/**", "/webjars/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/registration/**").permitAll()
@@ -65,26 +70,8 @@ public class WebSecurityConfiguration {
 
         //JWT filter for authentication
         http
-                .addFilterBefore(new JWTFilter(jwtUtils, userRepository), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JWTFilter(jwtUtils, jwtAuthenticationService, userRepository), BasicAuthenticationFilter.class);
 
         return http.build();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
-
-    @Autowired
-    public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        authenticationManagerBuilder
-                .userDetailsService(userProvider)
-                .passwordEncoder(passwordEncoder);
-    }
-    @Bean
-    public JWTFilter authenticationTokenFilterBean(AuthenticationManager authenticationManager) throws Exception {
-        JWTFilter authenticationTokenFilter = new JWTFilter(jwtUtils, userRepository);
-        authenticationTokenFilter.setAuthenticationManager(authenticationManager);
-        return authenticationTokenFilter;
     }
 }

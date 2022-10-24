@@ -2,9 +2,10 @@ package com.andrey.security.jwt;
 
 import com.andrey.db_entities.chat_user.ChatUser;
 import com.andrey.db_entities.chat_user.ChatUserRepository;
-import com.andrey.db_entities.chat_user.UserStatus;
+
+import com.andrey.security.AuthenticatedChatUserDetails;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.authority.AuthorityUtils;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,14 +21,14 @@ public class JWTAuthenticationService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         try {
             /*Find user in DB*/
-            ChatUser searchResult = userRepository.findChatUserByEmail(email);
+            ChatUser searchResult = userRepository.findChatUserByEmailWithFriendshipsAndChatMemberships(email);
 
             if (searchResult != null) {
 
-                return new org.springframework.security.core.userdetails.User(
+                return new AuthenticatedChatUserDetails(
+                        searchResult,
                         searchResult.getEmail(),
-                        searchResult.getPasswordHash(),
-                        AuthorityUtils.NO_AUTHORITIES
+                        searchResult.getPasswordHash()
                 );
             } else {
                 throw new UsernameNotFoundException(String.format("No user found with login '%s'.", email));
