@@ -37,9 +37,7 @@ public class RegistrationController implements WebMvcConfigurer {
 
     private final MailSenderService mailSenderService;
 
-    @Autowired
-    @Lazy
-    private ConversionService converter;
+    private final ConversionService converter;
 
     @PostMapping("/createNewUser")
     @Transactional
