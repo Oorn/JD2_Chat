@@ -1,4 +1,4 @@
-package com.andrey.requests;
+package com.andrey.controller.requests;
 
 import com.andrey.Constants;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -33,7 +33,6 @@ public class ChatUserCreateRequest {
     @Size(max = Constants.MAX_EMAIL_LENGTH)
     @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}",
             flags = Pattern.Flag.CASE_INSENSITIVE)
-
     String email;
 
     @NotBlank

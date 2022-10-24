@@ -4,12 +4,13 @@ import com.andrey.db_entities.PasswordEncryptionConfiguration;
 import com.andrey.db_entities.chat_user.ChatUser;
 import com.andrey.db_entities.chat_user.ChatUserRepository;
 import com.andrey.db_entities.chat_user.UserStatus;
-import com.andrey.requests.AuthenticationRequest;
+import com.andrey.controller.requests.AuthenticationRequest;
 import com.andrey.security.jwt.JWTUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -20,7 +21,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 
     private final ChatUserRepository userRepository;
 
-    private final PasswordEncryptionConfiguration encryptor;
+    private final PasswordEncoder encryptor;
 
     private final JWTUtils utils;
 
@@ -48,7 +49,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
         if (user == null)
             return Optional.empty();
 
-        if (!encryptor.passwordEncoder().matches(request.getPassword(), user.getPasswordHash()))
+        if (!encryptor.matches(request.getPassword(), user.getPasswordHash()))
             return Optional.empty();
 
         if (!user.getStatus().equals(UserStatus.OK))

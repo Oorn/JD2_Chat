@@ -1,4 +1,4 @@
-package com.andrey.requests;
+package com.andrey.controller.requests;
 
 import com.andrey.Constants;
 import lombok.AllArgsConstructor;

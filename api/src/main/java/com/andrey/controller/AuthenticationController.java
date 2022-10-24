@@ -1,11 +1,10 @@
 package com.andrey.controller;
 
-import com.andrey.requests.AuthenticationRequest;
+import com.andrey.controller.requests.AuthenticationRequest;
 import com.andrey.security.jwt.JWTPropertiesConfig;
 import com.andrey.service.auth.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.collections.map.SingletonMap;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.HashMap;
 import java.util.Optional;
 
 @RestController

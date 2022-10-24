@@ -1,6 +1,6 @@
 package com.andrey.service.auth;
 
-import com.andrey.requests.AuthenticationRequest;
+import com.andrey.controller.requests.AuthenticationRequest;
 
 import java.util.Optional;
 

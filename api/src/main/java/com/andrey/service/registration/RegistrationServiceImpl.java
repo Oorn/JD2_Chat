@@ -5,10 +5,11 @@ import com.andrey.db_entities.PasswordEncryptionConfiguration;
 import com.andrey.db_entities.chat_user.ChatUser;
 import com.andrey.db_entities.chat_user.ChatUserRepository;
 import com.andrey.db_entities.chat_user.UserStatus;
-import com.andrey.requests.ChatUserCreateRequest;
-import com.andrey.requests.ConfirmEmailRequest;
-import com.andrey.requests.ResetPasswordRequest;
+import com.andrey.controller.requests.ChatUserCreateRequest;
+import com.andrey.controller.requests.ConfirmEmailRequest;
+import com.andrey.controller.requests.ResetPasswordRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -21,7 +22,7 @@ import java.util.UUID;
 public class RegistrationServiceImpl implements RegistrationService{
     private final ChatUserRepository userRepository;
 
-    private final PasswordEncryptionConfiguration encryptor;
+    private final PasswordEncoder encryptor;
 
     private void reclaimUserEmail(ChatUser oldUser) {
         oldUser.setEmail(oldUser.getEmail() + " " + UUID.randomUUID());
@@ -30,7 +31,7 @@ public class RegistrationServiceImpl implements RegistrationService{
         userRepository.saveAndFlush(oldUser);
     }
 
-    @Override
+    @Override //deprecated
     public Optional<ChatUser> createNewUser(ChatUserCreateRequest request) {
 
         ChatUser newUser;
@@ -50,7 +51,7 @@ public class RegistrationServiceImpl implements RegistrationService{
                 ChatUser.builder()
                         .userName(request.getUsername())
                         .email(request.getEmail())
-                        .passwordHash(encryptor.passwordEncoder().encode(request.getPassword()))
+                        .passwordHash(encryptor.encode(request.getPassword()))
                         .status(UserStatus.REQUIRES_EMAIL_CONFIRMATION)
                         .uuid(String.valueOf(UUID.randomUUID()))
                         .emailConfirmationToken(String.valueOf(UUID.randomUUID()))
@@ -59,6 +60,25 @@ public class RegistrationServiceImpl implements RegistrationService{
         newUser = userRepository.saveAndFlush(newUser);
 
 
+        return Optional.of(newUser);
+    }
+    @Override //deprecated
+    public Optional<ChatUser> createNewUser(ChatUser newUser) {
+
+
+        if (Boolean.TRUE.equals(userRepository.existsByEmail(newUser.getEmail()))) {
+            ChatUser oldUser = userRepository.findChatUserByEmail(newUser.getEmail());
+            if (oldUser.getStatus().equals(UserStatus.REMOVED) //registering from previously deleted email
+                    || (oldUser.getStatus().equals(UserStatus.REQUIRES_EMAIL_CONFIRMATION) &&
+                    oldUser.getEmailConfirmationTokenExpires().before(new Date()))) //registering from email that wasn't confirmed in time
+                reclaimUserEmail(oldUser);
+            else
+                return Optional.empty(); //registering from active email impossible
+            //TODO more verbose response for registering on active email
+        }
+
+
+        newUser = userRepository.saveAndFlush(newUser);
         return Optional.of(newUser);
     }
 
@@ -111,7 +131,7 @@ public class RegistrationServiceImpl implements RegistrationService{
             if (!user.isInteractable())
                 return false;
 
-            user.setPasswordHash(encryptor.passwordEncoder().encode(request.getNewPassword()));
+            user.setPasswordHash(encryptor.encode(request.getNewPassword()));
             user.setPasswordResetToken(null);
             user.setPasswordResetDate(new Timestamp(new Date().getTime()));
 

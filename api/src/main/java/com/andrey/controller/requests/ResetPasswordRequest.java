@@ -1,5 +1,6 @@
-package com.andrey.requests;
+package com.andrey.controller.requests;
 
+import com.andrey.Constants;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,20 +9,26 @@ import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Data
 @Builder
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthenticationRequest {
+public class ResetPasswordRequest{
 
     @NotBlank
     @NotNull
-    String email;
+    String userEmail;
 
     @NotBlank
     @NotNull
-    String password;
+    String resetToken;
+
+    @NotBlank
+    @NotNull
+    @Size(min = Constants.MIN_PASSWORD_LENGTH, max = Constants.MAX_PASSWORD_LENGTH)
+    String newPassword;
 
 }
