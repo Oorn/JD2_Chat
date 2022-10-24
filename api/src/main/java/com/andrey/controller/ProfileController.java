@@ -52,7 +52,7 @@ public class ProfileController {
                     , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
                     , content = @Content(schema = @Schema(type = "string")))
     })
-    public ResponseEntity<Object> createNewUser(@RequestBody @Valid CreateProfileRequest createRequest
+    public ResponseEntity<Object> createNewProfile(@RequestBody @Valid CreateProfileRequest createRequest
             , @Parameter(hidden = true) Authentication auth){
 
         ChatUser authUser = ((AuthenticatedChatUserDetails) auth.getPrincipal()).getChatUser();

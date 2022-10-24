@@ -1,5 +1,6 @@
 package com.andrey.test_controller;
 
+import com.andrey.db_entities.chat_friendship.ChatFriendshipRepository;
 import com.andrey.db_entities.chat_profile.ChatProfile;
 import com.andrey.db_entities.chat_profile.ChatProfileRepository;
 import com.andrey.db_entities.chat_profile.ProfileStatus;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +37,8 @@ public class TestRestController {
     private final ChatProfileRepository chatProfileRepository;
 
     private final JWTUtils tokenUtils;
+
+    private final ChatFriendshipRepository friendshipRepository;
 
     @GetMapping("/ping")
     public ResponseEntity<Object> ping(){
@@ -74,15 +78,12 @@ public class TestRestController {
         return new ResponseEntity<>(newProfile, HttpStatus.OK);
     }
 
-    @GetMapping("public/getToken")
-    public ResponseEntity<Object> testToken1(){
-        ChatUser user = chatUserRepository.findChatUserById(1L);
-        UserDetails ud = new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
-                user.getPasswordHash(),
-                AuthorityUtils.NO_AUTHORITIES
-        );
-        String token = tokenUtils.generateToken(ud);
-        return new ResponseEntity<>(token, HttpStatus.OK);
+    @Transactional
+    @GetMapping("public/testFriendship")
+    public ResponseEntity<Object> testFriendshipAuth(){
+        ChatUser user1 = chatUserRepository.findChatUserById(1L);
+        ChatUser user2 = chatUserRepository.findChatUserByEmail("jd2_chat@proton.me");
+        friendshipRepository.createFriendship(user1, user2);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
