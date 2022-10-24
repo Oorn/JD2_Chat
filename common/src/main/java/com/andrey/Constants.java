@@ -2,6 +2,8 @@ package com.andrey;
 
 public final class Constants {
 
+
+    //REGISTRATION
     public static final int MIN_USERNAME_LENGTH = 4;
     public static final int MAX_USERNAME_LENGTH = 100;
 
@@ -14,4 +16,18 @@ public final class Constants {
     public static final long PASSWORD_RESET_TIMEOUT_MILLIS = 3600000L; //1 hour
 
     public static final String EXTERNAL_EMAIL = "jd2_chat@mail.lv";
+
+    //PROFILES
+
+    public static final int MIN_PROFILE_NAME_LENGTH = 4;
+
+    public static final int MAX_PROFILE_NAME_LENGTH = 100;
+
+    public static final int MIN_PROFILE_DESCRIPTION_LENGTH = 4;
+
+    public static final int MAX_PROFILE_DESCRIPTION_LENGTH = 10000;
+
+    public static final int MIN_ACCEPTED_PROFILE_FORMAT = 1;
+
+    public static final int MAX_ACCEPTED_PROFILE_FORMAT = 1;
 }

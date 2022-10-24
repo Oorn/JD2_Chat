@@ -60,7 +60,7 @@ public class RegistrationServiceImpl implements RegistrationService{
         newUser = userRepository.saveAndFlush(newUser);
 
 
-        return Optional.of(newUser);
+        return Optional.ofNullable(newUser);
     }
     @Override //deprecated
     public Optional<ChatUser> createNewUser(ChatUser newUser) {
@@ -79,7 +79,7 @@ public class RegistrationServiceImpl implements RegistrationService{
 
 
         newUser = userRepository.saveAndFlush(newUser);
-        return Optional.of(newUser);
+        return Optional.ofNullable(newUser);
     }
 
     @Override

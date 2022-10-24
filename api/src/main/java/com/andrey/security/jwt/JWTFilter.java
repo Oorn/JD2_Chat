@@ -3,6 +3,7 @@ package com.andrey.security.jwt;
 import com.andrey.Constants;
 import com.andrey.db_entities.chat_user.ChatUser;
 import com.andrey.db_entities.chat_user.ChatUserRepository;
+import com.andrey.db_entities.chat_user.UserStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -47,7 +48,8 @@ public class JWTFilter extends UsernamePasswordAuthenticationFilter {
                     ChatUser user = userRepository.findChatUserByEmail(username);
                     if (user.getPasswordResetDate()
                             .before(tokenUtils
-                                    .getCreationDate(authToken))) {
+                                    .getCreationDate(authToken))
+                    && (user.getStatus().equals(UserStatus.OK))) {
                         UserDetails userDetails = new User(
                                 user.getEmail(),
                                 user.getPasswordHash(),
