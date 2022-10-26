@@ -2,6 +2,7 @@ package com.andrey.controller;
 
 import com.andrey.controller.requests.ChatUserCreateRequest;
 import com.andrey.controller.requests.profile_requests.CreateProfileRequest;
+import com.andrey.controller.requests.profile_requests.UpdateProfileRequest;
 import com.andrey.db_entities.chat_profile.ChatProfile;
 
 import com.andrey.db_entities.chat_user.ChatUser;
@@ -23,13 +24,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.security.Principal;
 import java.util.Optional;
 
@@ -56,8 +64,48 @@ public class ProfileController {
             , @Parameter(hidden = true) Authentication auth){
 
         ChatUser authUser = ((AuthenticatedChatUserDetails) auth.getPrincipal()).getChatUser();
+
         ChatProfile newProfile = converter.convert(createRequest, ChatProfile.class);
         Optional<ChatProfile> result = profilesService.createNewProfile(newProfile, authUser);
+        if (result.isEmpty())
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @PutMapping("/updateProfile")
+    @Transactional
+    @Operation(summary = "updates profile of currently authenticated user", parameters = {
+            @Parameter(in = ParameterIn.HEADER
+                    , description = "user auth token"
+                    , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
+                    , content = @Content(schema = @Schema(type = "string")))
+    })
+    public ResponseEntity<Object> updateProfile(@RequestBody @Valid UpdateProfileRequest updateRequest
+            , @Parameter(hidden = true) Authentication auth){
+
+        ChatUser authUser = ((AuthenticatedChatUserDetails) auth.getPrincipal()).getChatUser();
+        ChatProfile newProfile = converter.convert(updateRequest, ChatProfile.class);
+
+        Optional<ChatProfile> result = profilesService.updateProfile(newProfile, authUser);
+        if (result.isEmpty())
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @DeleteMapping("/deleteProfile")
+    @Transactional
+    @Operation(summary = "delete profile of currently authenticated user", parameters = {
+            @Parameter(in = ParameterIn.HEADER
+                    , description = "user auth token"
+                    , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
+                    , content = @Content(schema = @Schema(type = "string")))
+    })
+    public ResponseEntity<Object> deleteProfile(@RequestParam @NotBlank @Positive Long deleteId
+            , @Parameter(hidden = true) Authentication auth){
+
+        ChatUser authUser = ((AuthenticatedChatUserDetails) auth.getPrincipal()).getChatUser();
+
+        Optional<ChatProfile> result = profilesService.deleteProfile(deleteId, authUser);
         if (result.isEmpty())
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 

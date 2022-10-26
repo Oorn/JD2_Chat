@@ -26,8 +26,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Objects;
 
 @Getter
@@ -87,13 +89,14 @@ public class ChatBlock implements ModificationDateUpdater, Interactable {
         return getClass().hashCode();
     }
 
+    @PreUpdate
     @Override
-    public Timestamp updateModificationDate(Timestamp now) {
+    public void updateModificationDate() {
+        Timestamp now = new Timestamp(new Date().getTime());
         Timestamp then = this.getModificationDate();
         if (then.after(now))
-            return then;
+            return;
         this.setModificationDate(now);
-        return now;
     }
     @Override
     public boolean isInteractable() {

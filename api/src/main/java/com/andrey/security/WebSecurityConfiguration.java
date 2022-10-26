@@ -65,6 +65,7 @@ public class WebSecurityConfiguration {
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/registration/**").permitAll()
                 .antMatchers("/public/**").permitAll()
+                .antMatchers("/admin/**").permitAll() //todo
                 .anyRequest()
                 .authenticated();
 

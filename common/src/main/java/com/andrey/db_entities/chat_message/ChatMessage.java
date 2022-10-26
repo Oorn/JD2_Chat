@@ -27,8 +27,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Objects;
 
 @Getter
@@ -95,27 +97,14 @@ public class ChatMessage implements ModificationDateUpdater, Interactable {
         getChannel().updateLastMessageUpdateDate(getModificationDate(), getId());
     }
 
+    @PreUpdate
     @Override
-    public Timestamp updateModificationDate(Timestamp now) {
+    public void updateModificationDate() {
+        Timestamp now = new Timestamp(new Date().getTime());
         Timestamp then = this.getModificationDate();
         if (then.after(now))
-            return then;
+            return;
         this.setModificationDate(now);
-
-        /*ChannelLastUpdateInfo lastUpdate = getChannel().getLastUpdateInfo();
-        //TODO use some kind of compareAndSwap?
-        //check if last update is already more recent than now
-        if (lastUpdate.getLastUpdateDate().after(now))
-            return now;
-        if ((lastUpdate.getLastUpdateDate().equals(now))
-                && (lastUpdate.getLastUpdateMessageID() > getId()))
-            return now;
-
-        //set new last update info, using clone to avoid potentially confusing JPA
-        getChannel().setLastUpdateInfo(new ChannelLastUpdateInfo((Timestamp) now.clone(), getId().longValue()));
-        */
-        //getChannel().updateLastMessageUpdateDate(now, getId().longValue());
-        return now;
     }
     @Override
     public boolean isInteractable() {

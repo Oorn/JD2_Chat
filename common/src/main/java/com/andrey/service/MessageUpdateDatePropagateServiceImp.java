@@ -16,7 +16,8 @@ import java.util.stream.Stream;
 public class MessageUpdateDatePropagateServiceImp implements MessageUpdateDatePropagateService{
     @Override
     public Timestamp updateDateAndPropagate(ChatMessage message) {
-        Timestamp newDate = message.updateModificationDate();
+        message.updateModificationDate();
+        Timestamp newDate = message.getModificationDate();
         ChatChannel channel = message.getChannel();
         channelUpdateLastMessageUpdateDate(channel,newDate, message.getId());
         return newDate;

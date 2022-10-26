@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface ProfilesService {
 
     Optional<ChatProfile> createNewProfile(ChatProfile request, ChatUser user);
+    Optional<ChatProfile> updateProfile(ChatProfile request, ChatUser user);
+    Optional<ChatProfile> deleteProfile(Long deleteId, ChatUser user);
 }
