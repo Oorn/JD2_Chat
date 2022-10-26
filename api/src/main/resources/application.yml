@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: prod
   flyway:
     enabled: true
     baseline-on-migrate: true
@@ -36,12 +38,9 @@ spring:
           connectiontimeout: 5000
           timeout: 3000
           writetimeout: 5000
-
 server:
   port: 8080
 jwt:
   secret: 6013fba8-50ec-4830-a6b6-1c2b7ef27b3a
   expiration: 3600000
-#logging:
-#  level:
-#    root: debug
+

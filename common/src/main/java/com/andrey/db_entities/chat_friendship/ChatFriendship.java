@@ -42,11 +42,17 @@ public class ChatFriendship implements ModificationDateUpdater, Interactable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "user_id_lesser", insertable = false, updatable = false)
+    Long userIDWithLesserID;
+
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id_lesser", nullable = false)
     @JsonIgnoreProperties({"friendshipsWithLesserID"})
     @ToString.Exclude
     private ChatUser userWithLesserID;
+
+    @Column(name = "user_id_greater", insertable = false, updatable = false)
+    Long userIDWithGreaterID;
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id_greater", nullable = false)

@@ -35,10 +35,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -144,9 +146,10 @@ public class ChatUser implements ModificationDateUpdater, Interactable {
     private Set<ChatChannel> ownedChannels;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @MapKey(name = "channelID")
     @JsonIgnoreProperties({"user"})
     @ToString.Exclude
-    private Set<ChatChannelMembership> channelMemberships;
+    private Map<Long, ChatChannelMembership> channelMemberships;
 
     @OneToMany(mappedBy = "blockingUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"blockingUser"})
@@ -154,14 +157,16 @@ public class ChatUser implements ModificationDateUpdater, Interactable {
     private Set<ChatBlock> blocks;
 
     @OneToMany(mappedBy = "userWithLesserID", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @MapKey(name = "userIDWithGreaterID")
     @JsonIgnoreProperties({"userWithLesserID"})
     @ToString.Exclude
-    private Set<ChatFriendship> friendshipsWithLesserID;
+    private Map<Long, ChatFriendship> friendshipsWithLesserID;
 
     @OneToMany(mappedBy = "userWithGreaterID", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @MapKey(name = "userIDWithLesserID")
     @JsonIgnoreProperties({"userWithGreaterID"})
     @ToString.Exclude
-    private Set<ChatFriendship> friendshipsWithGreaterID;
+    private Map<Long, ChatFriendship> friendshipsWithGreaterID;
 
     @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"recipient"})
