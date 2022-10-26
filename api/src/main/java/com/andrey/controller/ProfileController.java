@@ -2,6 +2,7 @@ package com.andrey.controller;
 
 import com.andrey.controller.requests.profile_requests.CreateProfileRequest;
 import com.andrey.controller.requests.profile_requests.UpdateProfileRequest;
+import com.andrey.controller.responses.ProfileInfoFullResponse;
 import com.andrey.db_entities.chat_profile.ChatProfile;
 
 import com.andrey.db_entities.chat_user.ChatUser;
@@ -21,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,7 +34,9 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -104,4 +108,23 @@ public class ProfileController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    @GetMapping("/myProfiles")
+    @Operation(summary = "returns info about authenticated user profiles", parameters = {
+            @Parameter(in = ParameterIn.HEADER
+                    , description = "user auth token"
+                    , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
+                    , content = @Content(schema = @Schema(type = "string")))
+    })
+    public ResponseEntity<Object> myProfiles(@Parameter(hidden = true) Authentication auth){
+
+        ChatUser authUser = ((AuthenticatedChatUserDetails) auth.getPrincipal()).getChatUser();
+
+        List<ChatProfile> result = profilesService.getOwnedProfiles(authUser);
+        List<ProfileInfoFullResponse> response = result.stream()
+                .map(p -> converter.convert(p, ProfileInfoFullResponse.class))
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 }

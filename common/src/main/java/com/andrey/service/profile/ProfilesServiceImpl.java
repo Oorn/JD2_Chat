@@ -12,7 +12,11 @@ import com.andrey.service.user.ChatUserUtilsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +27,8 @@ public class ProfilesServiceImpl implements ProfilesService{
     private final ChatProfileRepository profileRepository;
 
     private final ChatUserUtilsService userUtils;
+
+    private final EntityManager entityManager;
 
     @Override
     public Optional<ChatProfile> createNewProfile(ChatProfile newProfile, ChatUser user) {
@@ -99,5 +105,21 @@ public class ProfilesServiceImpl implements ProfilesService{
                 return false;
         }
         return false;
+    }
+
+    @Override
+    public List<ChatProfile> getOwnedProfiles(ChatUser authUser) {
+        Optional<ChatUser> optionalUser = userRepository.findChatUserByIdWithProfiles(authUser.getId());
+
+        if (optionalUser.isEmpty()) //should never be true
+            return new ArrayList<>();
+        ChatUser user = optionalUser.get();
+
+        entityManager.detach(user);
+
+        return user.getOwnedProfiles().stream()
+                .filter(ChatProfile::isInteractable)
+                .collect(Collectors.toList());
+
     }
 }

@@ -9,4 +9,5 @@ public interface ChatUserService {
 
     Optional<ChatUser> getUserInfoForViewer(Long userId, ChatUser viewer);
 
+
 }
