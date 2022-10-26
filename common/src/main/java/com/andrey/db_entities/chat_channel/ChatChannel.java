@@ -5,7 +5,6 @@ import com.andrey.db_entities.ModificationDateUpdater;
 import com.andrey.db_entities.chat_channel_membership.ChatChannelMembership;
 import com.andrey.db_entities.chat_message.ChatMessage;
 import com.andrey.db_entities.chat_user.ChatUser;
-import com.andrey.db_entities.chat_user.UserStatus;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -94,6 +93,26 @@ public class ChatChannel implements ModificationDateUpdater, Interactable {
     @ToString.Exclude
     private Set<ChatMessage> messages;
 
+    public void updateLastMessageUpdateDate(Timestamp newDate, long newMessageID) {
+        ChannelLastUpdateInfo lastUpdate = getLastUpdateInfo();
+        if (lastUpdate.getLastUpdateDate().after(newDate))
+            return;
+        if ((lastUpdate.getLastUpdateDate().equals(newDate))
+                && (lastUpdate.getLastUpdateMessageID() > newMessageID))
+            return;
+
+        //set new last update info, using clone to avoid potentially confusing JPA
+        Timestamp finalNewDate = (Timestamp) newDate.clone();
+        setLastUpdateInfo(new ChannelLastUpdateInfo(finalNewDate, newMessageID));
+
+        //propagate to all users
+        getMembers().stream()
+                .filter(ChatChannelMembership::isInteractable)
+                .map(ChatChannelMembership::getUser)
+                .filter(ChatUser::isInteractable)
+                .forEach(cu -> cu.updateLastUpdateChannelDate(finalNewDate));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -108,7 +127,7 @@ public class ChatChannel implements ModificationDateUpdater, Interactable {
     }
 
     @Override
-    public Timestamp UpdateModificationDate(Timestamp now) {
+    public Timestamp updateModificationDate(Timestamp now) {
         Timestamp then = this.getModificationDate();
         if (then.after(now))
             return then;

@@ -89,7 +89,7 @@ public class ChatFriendship implements ModificationDateUpdater, Interactable {
     }
 
     @Override
-    public Timestamp UpdateModificationDate(Timestamp now) {
+    public Timestamp updateModificationDate(Timestamp now) {
         Timestamp then = this.getModificationDate();
         if (then.after(now))
             return then;

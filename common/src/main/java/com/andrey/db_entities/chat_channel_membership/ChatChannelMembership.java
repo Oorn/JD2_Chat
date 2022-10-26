@@ -98,7 +98,7 @@ public class ChatChannelMembership implements ModificationDateUpdater, Interacta
     }
 
     @Override
-    public Timestamp UpdateModificationDate(Timestamp now) {
+    public Timestamp updateModificationDate(Timestamp now) {
         Timestamp then = this.getModificationDate();
         if (then.after(now))
             return then;

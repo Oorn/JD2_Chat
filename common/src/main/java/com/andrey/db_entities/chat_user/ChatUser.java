@@ -19,15 +19,9 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
-import org.springframework.cglib.core.Block;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -39,11 +33,9 @@ import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -132,6 +124,10 @@ public class ChatUser implements ModificationDateUpdater, Interactable {
     @Column(name = "password_reset_date")
     private Timestamp passwordResetDate;
 
+    @CreationTimestamp
+    @Column(name = "last_update_channel_date")
+    private Timestamp lastUpdateChannelDate;
+
     //@Column(name = "public_profile_ID")
     //private Long publicProfileID;
 
@@ -178,6 +174,14 @@ public class ChatUser implements ModificationDateUpdater, Interactable {
     @ToString.Exclude
     private Set<ChatChannelInvite> receivedChannelInvites;
 
+    @Deprecated
+    public void updateLastUpdateChannelDate(Timestamp newDate) {
+        if (newDate.before(getLastUpdateChannelDate()))
+            return;
+        newDate = (Timestamp) newDate.clone();
+        setLastUpdateChannelDate(newDate);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -192,7 +196,7 @@ public class ChatUser implements ModificationDateUpdater, Interactable {
     }
 
     @Override
-    public Timestamp UpdateModificationDate(Timestamp now) {
+    public Timestamp updateModificationDate(Timestamp now) {
         Timestamp then = this.getModificationDate();
         if (then.after(now))
             return then;

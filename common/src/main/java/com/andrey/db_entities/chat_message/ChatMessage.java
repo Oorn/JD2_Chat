@@ -89,14 +89,20 @@ public class ChatMessage implements ModificationDateUpdater, Interactable {
         return getClass().hashCode();
     }
 
+    @Deprecated
+    public void updateParentUpdateDate() {
+        updateModificationDate();
+        getChannel().updateLastMessageUpdateDate(getModificationDate(), getId());
+    }
+
     @Override
-    public Timestamp UpdateModificationDate(Timestamp now) {
+    public Timestamp updateModificationDate(Timestamp now) {
         Timestamp then = this.getModificationDate();
         if (then.after(now))
             return then;
         this.setModificationDate(now);
 
-        ChannelLastUpdateInfo lastUpdate = getChannel().getLastUpdateInfo();
+        /*ChannelLastUpdateInfo lastUpdate = getChannel().getLastUpdateInfo();
         //TODO use some kind of compareAndSwap?
         //check if last update is already more recent than now
         if (lastUpdate.getLastUpdateDate().after(now))
@@ -107,7 +113,8 @@ public class ChatMessage implements ModificationDateUpdater, Interactable {
 
         //set new last update info, using clone to avoid potentially confusing JPA
         getChannel().setLastUpdateInfo(new ChannelLastUpdateInfo((Timestamp) now.clone(), getId().longValue()));
-
+        */
+        //getChannel().updateLastMessageUpdateDate(now, getId().longValue());
         return now;
     }
     @Override
