@@ -1,11 +1,14 @@
-package com.andrey.db_entities.chat_user;
+package com.andrey.repository;
 
+import com.andrey.db_entities.chat_user.ChatUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public interface ChatUserRepository extends CrudRepository<ChatUser, Long>
@@ -33,4 +36,9 @@ public interface ChatUserRepository extends CrudRepository<ChatUser, Long>
             " left join fetch f2.userWithGreaterID f2u" +
             " where u.email = :email ")
     ChatUser findChatUserByEmailWithFriendshipsAndChatMemberships (@Param("email") String email);
+
+    @Query(value = "select u from ChatUser u" +
+            " left join fetch u.ownedProfiles p" +
+            " where u.id = :id ")
+    Optional<ChatUser> findChatUserByIdWithProfiles (@Param("id") Long id);
 }

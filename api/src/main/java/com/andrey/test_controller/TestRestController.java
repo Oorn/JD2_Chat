@@ -1,21 +1,19 @@
 package com.andrey.test_controller;
 
-import com.andrey.db_entities.chat_friendship.ChatFriendshipRepository;
+import com.andrey.repository.ChatFriendshipRepository;
 import com.andrey.db_entities.chat_profile.ChatProfile;
-import com.andrey.db_entities.chat_profile.ChatProfileRepository;
+import com.andrey.repository.ChatProfileRepository;
 import com.andrey.db_entities.chat_profile.ProfileStatus;
 import com.andrey.db_entities.chat_profile.ProfileVisibilityMatchmaking;
 import com.andrey.db_entities.chat_profile.ProfileVisibilityUserInfo;
 import com.andrey.test_repository.user.UserRepositoryInterface;
 import com.andrey.db_entities.chat_user.ChatUser;
-import com.andrey.db_entities.chat_user.ChatUserRepository;
+import com.andrey.repository.ChatUserRepository;
 import com.andrey.db_entities.chat_user.UserStatus;
 import com.andrey.security.jwt.JWTUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

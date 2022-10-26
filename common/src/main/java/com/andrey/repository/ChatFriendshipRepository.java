@@ -1,6 +1,8 @@
-package com.andrey.db_entities.chat_friendship;
+package com.andrey.repository;
 
 import com.andrey.db_entities.chat_channel_membership.ChatChannelMembership;
+import com.andrey.db_entities.chat_friendship.ChatFriendship;
+import com.andrey.db_entities.chat_friendship.FriendshipStatus;
 import com.andrey.db_entities.chat_user.ChatUser;
 import java.util.Collections;
 import org.springframework.data.jpa.repository.JpaRepository;

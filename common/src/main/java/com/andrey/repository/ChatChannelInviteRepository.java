@@ -1,6 +1,7 @@
-package com.andrey.db_entities.chat_channel_invite;
+package com.andrey.repository;
 
 import com.andrey.db_entities.chat_channel.ChatChannel;
+import com.andrey.db_entities.chat_channel_invite.ChatChannelInvite;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;

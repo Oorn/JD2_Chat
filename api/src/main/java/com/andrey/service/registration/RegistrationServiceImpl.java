@@ -1,9 +1,8 @@
 package com.andrey.service.registration;
 
 import com.andrey.Constants;
-import com.andrey.db_entities.PasswordEncryptionConfiguration;
 import com.andrey.db_entities.chat_user.ChatUser;
-import com.andrey.db_entities.chat_user.ChatUserRepository;
+import com.andrey.repository.ChatUserRepository;
 import com.andrey.db_entities.chat_user.UserStatus;
 import com.andrey.controller.requests.ChatUserCreateRequest;
 import com.andrey.controller.requests.ConfirmEmailRequest;

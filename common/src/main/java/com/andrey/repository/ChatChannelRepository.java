@@ -1,15 +1,16 @@
-package com.andrey.db_entities.chat_message;
+package com.andrey.repository;
 
 import com.andrey.db_entities.chat_channel.ChatChannel;
+import com.andrey.db_entities.chat_profile.ChatProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ChatMessageRepository extends CrudRepository<ChatMessage, Long>
-        , JpaRepository<ChatMessage, Long>
-        , PagingAndSortingRepository<ChatMessage, Long> {
+public interface ChatChannelRepository extends CrudRepository<ChatChannel, Long>
+        , JpaRepository<ChatChannel, Long>
+        , PagingAndSortingRepository<ChatChannel, Long> {
 
-    ChatMessage findChatMessageById(Long id);
+    ChatChannel findChatChannelById(Long id);
 }

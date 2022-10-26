@@ -1,24 +1,14 @@
 package com.andrey.controller.converters;
 
-import com.andrey.Constants;
-import com.andrey.controller.requests.profile_requests.CreateProfileRequest;
 import com.andrey.controller.requests.profile_requests.UpdateProfileRequest;
 import com.andrey.db_entities.chat_profile.ChatProfile;
-import com.andrey.db_entities.chat_profile.ChatProfileRepository;
-import com.andrey.db_entities.chat_profile.ProfileStatus;
-import com.andrey.db_entities.chat_user.UserStatus;
+import com.andrey.repository.ChatProfileRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.Optional;
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor

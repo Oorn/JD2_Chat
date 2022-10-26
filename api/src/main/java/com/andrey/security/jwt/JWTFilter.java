@@ -1,8 +1,7 @@
 package com.andrey.security.jwt;
 
-import com.andrey.Constants;
 import com.andrey.db_entities.chat_user.ChatUser;
-import com.andrey.db_entities.chat_user.ChatUserRepository;
+import com.andrey.repository.ChatUserRepository;
 import com.andrey.db_entities.chat_user.UserStatus;
 
 import com.andrey.security.AuthenticatedChatUserDetails;

@@ -1,8 +1,7 @@
 package com.andrey.service.auth;
 
-import com.andrey.db_entities.PasswordEncryptionConfiguration;
 import com.andrey.db_entities.chat_user.ChatUser;
-import com.andrey.db_entities.chat_user.ChatUserRepository;
+import com.andrey.repository.ChatUserRepository;
 import com.andrey.db_entities.chat_user.UserStatus;
 import com.andrey.controller.requests.AuthenticationRequest;
 import com.andrey.security.jwt.JWTUtils;

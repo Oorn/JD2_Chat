@@ -2,18 +2,16 @@ package com.andrey.service.profile;
 
 import com.andrey.Constants;
 import com.andrey.db_entities.chat_profile.ChatProfile;
-import com.andrey.db_entities.chat_profile.ChatProfileRepository;
+import com.andrey.repository.ChatProfileRepository;
 import com.andrey.db_entities.chat_profile.ProfileStatus;
 import com.andrey.db_entities.chat_profile.ProfileVisibilityMatchmaking;
 import com.andrey.db_entities.chat_profile.ProfileVisibilityUserInfo;
 import com.andrey.db_entities.chat_user.ChatUser;
-import com.andrey.db_entities.chat_user.ChatUserRepository;
-import com.andrey.service.ChatUserUtilsService;
+import com.andrey.repository.ChatUserRepository;
+import com.andrey.service.user.ChatUserUtilsService;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
 import java.util.Optional;
 
 @Service
@@ -84,5 +82,22 @@ public class ProfilesServiceImpl implements ProfilesService{
 
         oldProfile.setStatus(ProfileStatus.REMOVED);
         return Optional.of(oldProfile);
+    }
+
+    @Override
+    public boolean checkProfileVisibility(ChatProfile profile, ChatUser viewingUser) {
+        switch (profile.getProfileVisibilityUserInfo()) {
+            case PUBLIC:
+                return true;
+            case FRIENDS:
+                return userUtils.checkFriendship(viewingUser, profile.getOwner());
+            case HIDDEN:
+                return viewingUser.getId().equals(
+                        profile.getOwner().getId()
+                );
+            case DEFAULT_PROFILE_USER_INFO_VISIBILITY:
+                return false;
+        }
+        return false;
     }
 }

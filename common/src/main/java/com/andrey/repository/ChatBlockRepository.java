@@ -1,5 +1,6 @@
-package com.andrey.db_entities.chat_block;
+package com.andrey.repository;
 
+import com.andrey.db_entities.chat_block.ChatBlock;
 import com.andrey.db_entities.chat_channel.ChatChannel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
