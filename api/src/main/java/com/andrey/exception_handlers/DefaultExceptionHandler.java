@@ -15,6 +15,12 @@ import java.util.Collections;
 @ControllerAdvice
 public class DefaultExceptionHandler {
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException e) {
+
+        return new ResponseEntity<>(Collections.singletonMap("invalid argument: ", e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(MailSendException.class)
     public ResponseEntity<Object> handleValidationViolation(MailSendException e) {
 

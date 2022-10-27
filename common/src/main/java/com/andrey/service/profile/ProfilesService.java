@@ -16,4 +16,6 @@ public interface ProfilesService {
     boolean checkProfileVisibility(ChatProfile profile, ChatUser viewingUser);
 
     List<ChatProfile> getOwnedProfiles(ChatUser authUser);
+
+    List<ChatProfile> getRandomMatchmakingProfiles(ChatUser authUser, int amount);
 }

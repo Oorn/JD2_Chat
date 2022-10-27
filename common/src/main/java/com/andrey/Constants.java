@@ -32,4 +32,6 @@ public final class Constants {
     public static final int MAX_ACCEPTED_PROFILE_FORMAT = 1;
 
     public static final int MAX_PROFILES_PER_USER = 20;
+
+    public static final int MAX_MATCHMAKING_PROFILES_PER_RESPONSE = 20;
 }

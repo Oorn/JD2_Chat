@@ -30,6 +30,8 @@ public class ProfilesServiceImpl implements ProfilesService{
 
     private final EntityManager entityManager;
 
+    private final int RANDOM_SAMPLE_SIZE = 100;
+
     @Override
     public Optional<ChatProfile> createNewProfile(ChatProfile newProfile, ChatUser user) {
 
@@ -121,5 +123,13 @@ public class ProfilesServiceImpl implements ProfilesService{
                 .filter(ChatProfile::isInteractable)
                 .collect(Collectors.toList());
 
+    }
+
+    @Override
+    public List<ChatProfile> getRandomMatchmakingProfiles(ChatUser authUser, int amount) {
+        if (amount > Constants.MAX_MATCHMAKING_PROFILES_PER_RESPONSE)
+            amount = Constants.MAX_MATCHMAKING_PROFILES_PER_RESPONSE;
+
+        return profileRepository.getRandomMatchmakingProfilesForUserWithSample(amount, authUser.getId(), RANDOM_SAMPLE_SIZE);
     }
 }

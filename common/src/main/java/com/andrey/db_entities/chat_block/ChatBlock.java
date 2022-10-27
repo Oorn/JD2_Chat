@@ -100,6 +100,6 @@ public class ChatBlock implements ModificationDateUpdater, Interactable {
     }
     @Override
     public boolean isInteractable() {
-        return !status.equals(BlockStatus.REMOVED);
+        return status.equals(BlockStatus.ACTIVE);
     }
 }

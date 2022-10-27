@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -32,16 +33,19 @@ public class TestRestController {
     private final UserRepositoryInterface userRepositoryInterface;
 
     private final ChatUserRepository chatUserRepository;
+
+    private final ChatProfileRepository profileRepository;
     private final ChatProfileRepository chatProfileRepository;
 
     private final JWTUtils tokenUtils;
 
     private final ChatFriendshipRepository friendshipRepository;
 
-    @GetMapping("/ping")
+    @GetMapping("public/ping")
     public ResponseEntity<Object> ping(){
 
-        return new ResponseEntity<>(chatUserRepository.findChatUserById(1L), HttpStatus.OK);
+        List<ChatProfile> l = profileRepository.getRandomMatchmakingProfilesForUserWithSample(5, 43L, 10);
+        return new ResponseEntity<>(l, HttpStatus.OK);
     }
     @GetMapping("/ping2")
     public ResponseEntity<Object> ping2(Principal principal){
