@@ -176,7 +176,7 @@ public class ChatUser implements ModificationDateUpdater, Interactable {
     @ToString.Exclude
     private Set<ChatChannelInvite> receivedChannelInvites;
 
-    @Deprecated
+    @Deprecated //why did I mark it as deprecated? Because service handles it
     public void updateLastUpdateChannelDate(Timestamp newDate) {
         if (newDate.before(getLastUpdateChannelDate()))
             return;

@@ -1,6 +1,9 @@
 package com.andrey.service.profile;
 
 import com.andrey.Constants;
+import com.andrey.db_entities.chat_channel.ChannelStatus;
+import com.andrey.db_entities.chat_channel.ChannelType;
+import com.andrey.db_entities.chat_channel_membership.ChatChannelMembership;
 import com.andrey.db_entities.chat_profile.ChatProfile;
 import com.andrey.repository.ChatProfileRepository;
 import com.andrey.db_entities.chat_profile.ProfileStatus;
@@ -79,7 +82,8 @@ public class ProfilesServiceImpl implements ProfilesService{
 
     @Override
     public Optional<ChatProfile> deleteProfile(Long deleteId, ChatUser user) {
-        Optional<ChatProfile> optionalOldProfile = profileRepository.findChatProfileByIdWithOwner(deleteId);
+        //Optional<ChatProfile> optionalOldProfile = profileRepository.findChatProfileByIdWithOwner(deleteId);
+        Optional<ChatProfile> optionalOldProfile = profileRepository.findChatProfileByIdWithOwnerWithMembershipsWithChannelWithProfile(deleteId);
         if (optionalOldProfile.isEmpty())
             return Optional.empty();
         ChatProfile oldProfile = optionalOldProfile.get();
@@ -89,7 +93,22 @@ public class ProfilesServiceImpl implements ProfilesService{
             return Optional.empty();
 
         oldProfile.setStatus(ProfileStatus.REMOVED);
+        removeProfileChats(oldProfile);
+        profileRepository.saveAndFlush(oldProfile);
         return Optional.of(oldProfile);
+    }
+
+    //requires loaded user owner with loaded channel memberships with channels and profiles
+    private void removeProfileChats(ChatProfile profile) {
+
+        profile.getOwner().getChannelMemberships().values().stream()
+                .filter(cm -> cm.getChannel().getChannelType() == ChannelType.PRIVATE_CHAT_FROM_PROFILE)
+                .filter(cm -> cm.getUserProfile().getId().equals(profile.getId()))
+                .map(ChatChannelMembership::getChannel)
+                .forEach(c -> {
+                    c.setStatus(ChannelStatus.REMOVED);
+                    c.setStatusReason("removed by chain remove of profile " + profile.getId());
+                });
     }
 
     @Override

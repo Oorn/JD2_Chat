@@ -19,7 +19,11 @@ public class ChatFromProfileInfoResponse {
 
     private Long channelId;
 
-    private ChannelLastUpdateInfo lastUpdateInfo;
+    //private ChannelLastUpdateInfo lastUpdateInfo;
 
-    List<ChatFromProfileUserInfoResponse> users;
+    private Timestamp lastUpdateDate;
+
+    private Long lastUpdateMessageId;
+
+    private List<ChatFromProfileUserInfoResponse> users;
 }

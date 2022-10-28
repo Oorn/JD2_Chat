@@ -38,6 +38,13 @@ public interface ChatUserRepository extends CrudRepository<ChatUser, Long>
     ChatUser findChatUserByEmailWithFriendshipsAndChatMemberships (@Param("email") String email);
 
     @Query(value = "select u from ChatUser u" +
+            " left join fetch u.channelMemberships m" +
+            " left join fetch m.channel mc" +
+            " left join fetch m.userProfile p" +
+            " where u.id = :id ")
+    Optional<ChatUser> findChatUserByIdWithChatMembershipsWithChatProfileAndChannel (@Param("id") Long id);
+
+    @Query(value = "select u from ChatUser u" +
             " left join fetch u.ownedProfiles p" +
             " where u.id = :id ")
     Optional<ChatUser> findChatUserByIdWithProfiles (@Param("id") Long id);

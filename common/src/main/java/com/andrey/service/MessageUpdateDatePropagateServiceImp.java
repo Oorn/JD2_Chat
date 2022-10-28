@@ -37,16 +37,18 @@ public class MessageUpdateDatePropagateServiceImp implements MessageUpdateDatePr
 
     }
     private void channelUpdateLastMessageUpdateDate(ChatChannel channel,Timestamp newDate, long messageID) {
-        ChannelLastUpdateInfo lastUpdate = channel.getLastUpdateInfo();
-        if (lastUpdate.getLastUpdateDate().after(newDate))
+        Timestamp lastUpdateDate = channel.getLastUpdateDate();
+        if (lastUpdateDate.after(newDate))
             return;
-        if ((lastUpdate.getLastUpdateDate().equals(newDate))
-                && (lastUpdate.getLastUpdateMessageID() > messageID))
-            return;
+        if (lastUpdateDate.equals(newDate))
+                if (channel.getLastUpdateMessageID() != null)
+                    if (channel.getLastUpdateMessageID() > messageID)
+                        return;
 
         //set new last update info, using clone to avoid potentially confusing JPA
         Timestamp finalNewDate = (Timestamp) newDate.clone();
-        channel.setLastUpdateInfo(new ChannelLastUpdateInfo(finalNewDate, messageID));
+        channel.setLastUpdateDate(finalNewDate);
+        channel.setLastUpdateMessageID(messageID);
 
         //propagate to all users
         getRecipientUserStream(channel)

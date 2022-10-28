@@ -63,12 +63,18 @@ public class ChatChannel implements ModificationDateUpdater, Interactable {
     @ToString.Exclude
     private ChatUser owner;
 
-    @Embedded
+    /*@Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "lastUpdateDate", column = @Column(name = "last_update_date")),
             @AttributeOverride(name = "lastUpdateMessageID", column = @Column(name = "last_update_message_id"))
     })
-    private ChannelLastUpdateInfo lastUpdateInfo;
+    private ChannelLastUpdateInfo lastUpdateInfo;*/
+    @CreationTimestamp
+    @Column(name = "last_update_date")
+    private Timestamp lastUpdateDate;
+
+    @Column(name = "last_update_message_id")
+    private Long lastUpdateMessageID;
 
     @CreationTimestamp
     @Column(name = "creation_date")
@@ -85,7 +91,7 @@ public class ChatChannel implements ModificationDateUpdater, Interactable {
     @Column(name = "status_reason")
     private String statusReason;
 
-    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "channel", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"channel"})
     @ToString.Exclude
     private Set<ChatChannelMembership> members;
@@ -95,17 +101,18 @@ public class ChatChannel implements ModificationDateUpdater, Interactable {
     @ToString.Exclude
     private Set<ChatMessage> messages;
 
+    @Deprecated //because service handles it
     public void updateLastMessageUpdateDate(Timestamp newDate, long newMessageID) {
-        ChannelLastUpdateInfo lastUpdate = getLastUpdateInfo();
-        if (lastUpdate.getLastUpdateDate().after(newDate))
+        if (getLastUpdateDate().after(newDate))
             return;
-        if ((lastUpdate.getLastUpdateDate().equals(newDate))
-                && (lastUpdate.getLastUpdateMessageID() > newMessageID))
+        if ((getLastUpdateDate().equals(newDate))
+                && (getLastUpdateMessageID() > newMessageID))
             return;
 
         //set new last update info, using clone to avoid potentially confusing JPA
         Timestamp finalNewDate = (Timestamp) newDate.clone();
-        setLastUpdateInfo(new ChannelLastUpdateInfo(finalNewDate, newMessageID));
+        setLastUpdateDate(finalNewDate);
+        setLastUpdateMessageID(newMessageID);
 
         //propagate to all users
         getMembers().stream()

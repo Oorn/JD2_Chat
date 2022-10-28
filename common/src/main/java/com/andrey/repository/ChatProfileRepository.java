@@ -1,6 +1,7 @@
 package com.andrey.repository;
 
 import com.andrey.db_entities.chat_profile.ChatProfile;
+import com.andrey.db_entities.chat_user.ChatUser;
 import com.andrey.db_entities.chat_user.UserStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -20,10 +21,19 @@ public interface ChatProfileRepository extends CrudRepository<ChatProfile, Long>
 
     Optional<ChatProfile> findChatProfileById(Long id);
 
+
     @Query(value = "select p from ChatProfile p" +
             " left join fetch p.owner u" +
             " where p.id = :id ")
     Optional<ChatProfile> findChatProfileByIdWithOwner(@Param("id") Long id);
+
+    @Query(value = "select p from ChatProfile p" +
+            " left join fetch p.owner u" +
+            " left join fetch u.channelMemberships cm" +
+            " left join fetch cm.channel c" +
+            " left join fetch cm.userProfile p2" +
+            " where p.id = :id ")
+    Optional<ChatProfile> findChatProfileByIdWithOwnerWithMembershipsWithChannelWithProfile (@Param("id") Long id);
 
 
     @Query (nativeQuery = true, value = "select p.* from chat.profiles as p" +

@@ -55,7 +55,7 @@ public class ChatChannelMembership implements ModificationDateUpdater, Interacta
     @Column(name = "channel_ID", insertable = false, updatable = false)
     Long channelID;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "channel_id", nullable = false)
     @JsonIgnoreProperties({"members"})
     @ToString.Exclude
