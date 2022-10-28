@@ -21,7 +21,7 @@ public class JWTAuthenticationService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         try {
             /*Find user in DB*/
-            ChatUser searchResult = userRepository.findChatUserByEmailWithFriendshipsAndChatMemberships(email);
+            ChatUser searchResult = userRepository.findChatUserByEmailWithFriendshipsAndChatMembershipsAndBlocks(email);
 
             if (searchResult != null) {
 

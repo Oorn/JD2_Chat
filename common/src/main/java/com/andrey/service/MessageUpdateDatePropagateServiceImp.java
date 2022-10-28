@@ -18,6 +18,7 @@ public class MessageUpdateDatePropagateServiceImp implements MessageUpdateDatePr
     public Timestamp updateDateAndPropagate(ChatMessage message) {
         message.updateModificationDate();
         Timestamp newDate = message.getModificationDate();
+        message.setLastUpdateDate(newDate);
         ChatChannel channel = message.getChannel();
         channelUpdateLastMessageUpdateDate(channel,newDate, message.getId());
         return newDate;

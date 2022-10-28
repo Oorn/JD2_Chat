@@ -34,4 +34,12 @@ public final class Constants {
     public static final int MAX_PROFILES_PER_USER = 20;
 
     public static final int MAX_MATCHMAKING_PROFILES_PER_RESPONSE = 20;
+
+    public static final int MIN_MESSAGE_LENGTH = 1;
+
+    public static final int MAX_MESSAGE_LENGTH = 5000;
+
+    public static final int MIN_ACCEPTED_MESSAGE_FORMAT = 1;
+
+    public static final int MAX_ACCEPTED_MESSAGE_FORMAT = 1;
 }

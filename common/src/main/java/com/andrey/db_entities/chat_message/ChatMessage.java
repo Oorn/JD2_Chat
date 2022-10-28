@@ -46,7 +46,7 @@ public class ChatMessage implements ModificationDateUpdater, Interactable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "channel_id", nullable = false)
     @JsonIgnoreProperties({"messages"})
     @ToString.Exclude
@@ -70,6 +70,10 @@ public class ChatMessage implements ModificationDateUpdater, Interactable {
     @CreationTimestamp
     @Column(name = "modification_date")
     private Timestamp modificationDate;
+
+    @CreationTimestamp
+    @Column(name = "last_update_date")
+    private Timestamp lastUpdateDate;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)

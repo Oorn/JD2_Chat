@@ -50,13 +50,13 @@ public class ChatFriendRequest implements ModificationDateUpdater, Interactable 
     @ToString.Exclude
     private ChatUser sender;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id_recipient", nullable = false)
     @JsonIgnoreProperties({"receivedFriendRequests"})
     @ToString.Exclude
     private ChatUser recipient;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id_sender", nullable = false)
     @JsonIgnoreProperties({"owner"})
     @ToString.Exclude

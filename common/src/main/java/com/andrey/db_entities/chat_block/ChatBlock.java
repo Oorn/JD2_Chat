@@ -51,12 +51,15 @@ public class ChatBlock implements ModificationDateUpdater, Interactable {
     @ToString.Exclude
     private ChatUser blockingUser;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Column(name = "blocked_user_id", insertable = false, updatable = false)
+    private Long blockedUserId;
+
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "blocked_user_id", nullable = false)
     @ToString.Exclude
     private ChatUser blockedUser;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "blocked_profile_id", nullable = false)
     @ToString.Exclude
     private ChatProfile blockedProfile;

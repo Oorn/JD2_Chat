@@ -65,6 +65,7 @@ public class ProfileChannelServiceImpl implements ProfileChannelService {
         if (blockService.fetchAndCheckIfBLockIsPresent(authProfile.getOwner(), targetProfile.getOwner()))
             return Optional.empty();
         //block check done
+        //todo authUser now carries necessary block info
 
         if (optionalExistingChannel.isPresent())
             if (optionalExistingChannel.get().getStatus().equals(ChannelStatus.ACTIVE))
@@ -127,7 +128,8 @@ public class ProfileChannelServiceImpl implements ProfileChannelService {
         return newChannel;
     }
 
-    private String generateProfileChannelName(long profileId1, long profileId2) {
+    @Override
+    public String generateProfileChannelName(long profileId1, long profileId2) {
         if (profileId1 > profileId2) {
             long t = profileId1;
             profileId1 = profileId2;

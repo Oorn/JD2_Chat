@@ -8,7 +8,8 @@ public enum ChannelMembershipRole {
     READ_WRITE_INVITE_ACCESS,
     READ_WRITE_ACCESS,
     READ_ACCESS,
+    NO_ACCESS, //banned
 
     PRIVATE_CHANNEL_ACCESS, //same as READ_WRITE for private chats
-    PROFILE_CHANNEL_ACCESS, //same as READ_WRITE for profile chats
+    PROFILE_CHANNEL_ACCESS //same as READ_WRITE for profile chats
 }

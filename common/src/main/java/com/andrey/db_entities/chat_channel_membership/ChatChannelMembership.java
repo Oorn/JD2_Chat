@@ -52,8 +52,8 @@ public class ChatChannelMembership implements ModificationDateUpdater, Interacta
     @ToString.Exclude
     private ChatUser user;
 
-    @Column(name = "channel_ID", insertable = false, updatable = false)
-    Long channelID;
+    @Column(name = "channel_id", insertable = false, updatable = false)
+    private Long channelId;
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "channel_id", nullable = false)
@@ -61,7 +61,7 @@ public class ChatChannelMembership implements ModificationDateUpdater, Interacta
     @ToString.Exclude
     private ChatChannel channel;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id", nullable = false)
     @JsonIgnoreProperties({"owner"})
     @ToString.Exclude

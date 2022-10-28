@@ -24,7 +24,7 @@ public class MembershipServiceImpl implements MembershipService{
         ChatChannelMembership res = ChatChannelMembership.builder()
                 .user(user)
                 .channel(channel)
-                .channelID(channel.getId())
+                .channelId(channel.getId())
                 .role(role)
                 .status(ChannelMembershipStatus.ACTIVE)
                 .build();

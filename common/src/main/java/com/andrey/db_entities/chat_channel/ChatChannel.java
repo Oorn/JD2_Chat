@@ -96,7 +96,7 @@ public class ChatChannel implements ModificationDateUpdater, Interactable {
     @ToString.Exclude
     private Set<ChatChannelMembership> members;
 
-    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "channel", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"channel"})
     @ToString.Exclude
     private Set<ChatMessage> messages;

@@ -7,4 +7,7 @@ import java.util.Optional;
 
 public interface ProfileChannelService {
     Optional<ChatChannel> fetchOrCrateProfileChannelInfo(ChatUser authUser, Long profileId, Long targetProfileId);
+
+     String generateProfileChannelName(long profileId1, long profileId2);
+
 }

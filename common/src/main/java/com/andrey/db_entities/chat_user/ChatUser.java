@@ -133,45 +133,46 @@ public class ChatUser implements ModificationDateUpdater, Interactable {
     //@Column(name = "public_profile_ID")
     //private Long publicProfileID;
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"owner"})
     @ToString.Exclude
     private Set<ChatProfile> ownedProfiles;
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"owner"})
     @ToString.Exclude
     private Set<ChatChannel> ownedChannels;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @MapKey(name = "channelID")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @MapKey(name = "channelId")
     @JsonIgnoreProperties({"user"})
     @ToString.Exclude
     private Map<Long, ChatChannelMembership> channelMemberships;
 
-    @OneToMany(mappedBy = "blockingUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "blockingUser", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @MapKey(name = "blockedUserId")
     @JsonIgnoreProperties({"blockingUser"})
     @ToString.Exclude
-    private Set<ChatBlock> blocks;
+    private Map<Long, ChatBlock> blocks;
 
-    @OneToMany(mappedBy = "userWithLesserID", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "userWithLesserID", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @MapKey(name = "userIDWithGreaterID")
     @JsonIgnoreProperties({"userWithLesserID"})
     @ToString.Exclude
     private Map<Long, ChatFriendship> friendshipsWithLesserID;
 
-    @OneToMany(mappedBy = "userWithGreaterID", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "userWithGreaterID", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @MapKey(name = "userIDWithLesserID")
     @JsonIgnoreProperties({"userWithGreaterID"})
     @ToString.Exclude
     private Map<Long, ChatFriendship> friendshipsWithGreaterID;
 
-    @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "recipient", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"recipient"})
     @ToString.Exclude
     private Set<ChatFriendRequest> receivedFriendRequests;
 
-    @OneToMany(mappedBy = "targetUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "targetUser", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"targetUser"})
     @ToString.Exclude
     private Set<ChatChannelInvite> receivedChannelInvites;

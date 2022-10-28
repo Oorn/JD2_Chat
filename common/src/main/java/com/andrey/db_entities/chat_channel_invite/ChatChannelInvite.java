@@ -50,7 +50,7 @@ public class ChatChannelInvite implements ModificationDateUpdater, Interactable 
     @ToString.Exclude
     private ChatUser sender;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "channel_id", nullable = false)
     @ToString.Exclude
     private ChatChannel channel;
@@ -62,7 +62,7 @@ public class ChatChannelInvite implements ModificationDateUpdater, Interactable 
     @Enumerated(EnumType.STRING)
     private ChannelInviteType inviteType;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "target_user_id", nullable = false)
     @JsonIgnoreProperties({"receivedChannelInvites"})
     @ToString.Exclude
