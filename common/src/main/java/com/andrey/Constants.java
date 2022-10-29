@@ -42,4 +42,6 @@ public final class Constants {
     public static final int MIN_ACCEPTED_MESSAGE_FORMAT = 1;
 
     public static final int MAX_ACCEPTED_MESSAGE_FORMAT = 1;
+
+    public static final int MAX_MESSAGES_PER_RESPONSE = 5; //for testing
 }
