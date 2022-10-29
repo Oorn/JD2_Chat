@@ -10,4 +10,6 @@ public interface ProfileChannelService {
 
      String generateProfileChannelName(long profileId1, long profileId2);
 
+     long[] getMemberIdsFromChannelName(String channelName);
+
 }

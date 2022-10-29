@@ -2,12 +2,15 @@ package com.andrey.service.user;
 
 import com.andrey.db_entities.chat_block.BlockStatus;
 import com.andrey.db_entities.chat_channel.ChannelStatus;
+import com.andrey.db_entities.chat_channel.ChannelType;
 import com.andrey.db_entities.chat_channel.ChatChannel;
 import com.andrey.db_entities.chat_channel_membership.ChannelMembershipStatus;
 import com.andrey.db_entities.chat_channel_membership.ChatChannelMembership;
 import com.andrey.db_entities.chat_profile.ChatProfile;
 import com.andrey.db_entities.chat_user.ChatUser;
+import com.andrey.service.channel.PrivateChannelService;
 import com.andrey.service.channel.PrivateChannelServiceImpl;
+import com.andrey.service.channel.ProfileChannelService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +18,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ChatUserUtilsServiceImpl implements ChatUserUtilsService{
 
-    //those are here only to indicate that we are strongly coupled to those services because of private channel naming conventions
-    private final PrivateChannelServiceImpl privateChannelService;
-    private final PrivateChannelServiceImpl profileChannelService;
+    private final PrivateChannelService privateChannelService;
+    private final ProfileChannelService profileChannelService;
 
     @Override
     public long getActiveProfileNumber(ChatUser user) {
@@ -63,9 +65,13 @@ public class ChatUserUtilsServiceImpl implements ChatUserUtilsService{
 
     //assuming membership and channel aren't REMOVED
     private boolean privateChannelBlockCheck(ChatUser authUser, ChatChannel channel) {
-        String[] nameTokens = channel.getChannelName().split("_");
-        long user1 = Long.parseLong(nameTokens[2]);
-        long user2 = Long.parseLong(nameTokens[3]);
+        long[] userIds;
+        if (channel.getChannelType().equals(ChannelType.PRIVATE_CHAT_FROM_PROFILE))
+            userIds = profileChannelService.getMemberIdsFromChannelName(channel.getChannelName());
+        else
+            userIds = privateChannelService.getMemberIdsFromChannelName(channel.getChannelName());
+        long user1 = userIds[0];
+        long user2 = userIds[1];
         if (authUser.getId().equals(user1))
             return checkIfBLockIsPresent(authUser, user2);
         else
