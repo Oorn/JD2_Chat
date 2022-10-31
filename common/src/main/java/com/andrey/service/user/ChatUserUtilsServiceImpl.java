@@ -100,6 +100,22 @@ public class ChatUserUtilsServiceImpl implements ChatUserUtilsService{
     }
 
     @Override
+    public boolean checkIfAuthUserCanModerateChannel(ChatUser authUser, long channelId) {
+        if (!checkIfAuthUserChannelMember(authUser, channelId))
+            return false;
+
+        ChatChannelMembership membership = authUser.getChannelMemberships().get(channelId);
+        switch (membership.getRole()) {
+            case OWNER:
+            case ADMIN:
+            case MODERATOR:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    @Override
     public boolean checkIfAuthUserChannelMember(ChatUser authUser, long channelId) {
 
         if (!authUser.getChannelMemberships().containsKey(channelId))

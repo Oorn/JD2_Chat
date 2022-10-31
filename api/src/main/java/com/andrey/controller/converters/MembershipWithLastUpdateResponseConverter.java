@@ -13,7 +13,7 @@ public class MembershipWithLastUpdateResponseConverter implements Converter<Chat
     @Override
     public MembershipWithLastUpdateResponse convert(ChatChannelMembership source) {
         MembershipWithLastUpdateResponse res = new MembershipWithLastUpdateResponse();
-        res.setChannelId(source.getId());
+        res.setChannelId(source.getChannelId());
         res.setLastUpdateTimestamp(source.getChannel().getLastUpdateDate());
         if (source.getChannel().getLastUpdateMessageID() != null)
             res.setLastUpdateMessageId(source.getChannel().getLastUpdateMessageID());

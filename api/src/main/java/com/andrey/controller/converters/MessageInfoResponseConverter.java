@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class MessageInfoResponseConverter implements Converter<ChatMessage, MessageInfoResponse> {
+    private final UserInfoShortResponseConverter userInfoConverter;
     @Override
     public MessageInfoResponse convert(ChatMessage source) {
         return MessageInfoResponse.builder()
@@ -17,6 +18,7 @@ public class MessageInfoResponseConverter implements Converter<ChatMessage, Mess
                 .messageBody(source.getMessageBody())
                 .status(source.getStatus())
                 .lastUpdateDate(source.getLastUpdateDate())
+                .sender(userInfoConverter.convert(source.getSender()))
                 .build();
     }
 }

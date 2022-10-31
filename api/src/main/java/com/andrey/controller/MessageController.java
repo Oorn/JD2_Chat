@@ -25,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -36,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.util.List;
 import java.util.Optional;
@@ -89,6 +91,26 @@ public class MessageController {
 
         ChatMessage newMessage = converter.convert(messageRequest, ChatMessage.class);
         Optional<ChatMessage> result = messagesService.updateMessage(authUser,newMessage);
+        if (result.isEmpty())
+            throw new IllegalStateException("service returned empty Optional");
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete")
+    @Transactional
+    @Operation(summary = "deletes message sent by current user, or by another user in Channel where current user has sufficient Role", parameters = {
+            @Parameter(in = ParameterIn.HEADER
+                    , description = "user auth token"
+                    , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
+                    , content = @Content(schema = @Schema(type = "string")))
+    })
+    public ResponseEntity<Object> edit(@RequestParam @Positive Long deleteId
+            , @Parameter(hidden = true) Authentication auth){
+
+        ChatUser authUser = ((AuthenticatedChatUserDetails) auth.getPrincipal()).getChatUser();
+
+        Optional<ChatMessage> result = messagesService.deleteMessage(authUser, deleteId);
         if (result.isEmpty())
             throw new IllegalStateException("service returned empty Optional");
 

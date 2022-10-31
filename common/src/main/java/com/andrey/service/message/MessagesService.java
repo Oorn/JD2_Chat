@@ -12,6 +12,8 @@ public interface MessagesService {
 
     Optional<ChatMessage> updateMessage(ChatUser authUser, ChatMessage message);
 
+    Optional<ChatMessage> deleteMessage(ChatUser authUser, long messageId);
+
     List<ChatMessage> getLatestMessages(ChatUser authUser, long channelId);
 
     List<ChatMessage> getMessagesBeforeId(ChatUser authUser, long channelId, long messageId);

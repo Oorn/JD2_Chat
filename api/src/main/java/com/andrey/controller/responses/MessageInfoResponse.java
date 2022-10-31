@@ -27,4 +27,6 @@ public class MessageInfoResponse {
     private MessageStatus status;
 
     private Timestamp lastUpdateDate;
+
+    private UserInfoShortResponse sender;
 }

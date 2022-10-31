@@ -12,6 +12,8 @@ public interface ChatUserUtilsService {
 
     boolean checkIfAuthUserCanReadInChannel(ChatUser authUser, long channelId);
 
+    boolean checkIfAuthUserCanModerateChannel(ChatUser authUser, long channelId);
+
     boolean checkIfAuthUserChannelMember(ChatUser authUser, long channelId);
 
     boolean checkIfBLockIsPresent(ChatUser authUser, long targetUserId);
