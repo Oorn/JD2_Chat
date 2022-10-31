@@ -1,6 +1,7 @@
 package com.andrey.controller;
 
 import com.andrey.controller.responses.UserInfoResponse;
+import com.andrey.controller.responses.UserMembershipsWithLastUpdateResponse;
 import com.andrey.db_entities.chat_profile.ChatProfile;
 import com.andrey.db_entities.chat_user.ChatUser;
 import com.andrey.exceptions.IllegalStateException;
@@ -22,6 +23,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,6 +36,7 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
+@Validated
 public class UserController {
 
     @Autowired
@@ -49,16 +52,32 @@ public class UserController {
                     , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
                     , content = @Content(schema = @Schema(type = "string")))
     })
-    public ResponseEntity<Object> createNewProfile(@RequestParam @NotBlank @Positive Long profileId
+    public ResponseEntity<Object> userInfo(@RequestParam @Positive Long userId
             , @Parameter(hidden = true) Authentication auth) {
 
         ChatUser authUser = ((AuthenticatedChatUserDetails) auth.getPrincipal()).getChatUser();
 
-        Optional<ChatUser> optionalResult = userService.getUserInfoForViewer(profileId, authUser);
+        Optional<ChatUser> optionalResult = userService.getUserInfoForViewer(userId, authUser);
         if (optionalResult.isEmpty())
             throw new IllegalStateException("service returned empty Optional");
 
         UserInfoResponse response = converter.convert(optionalResult.get(), UserInfoResponse.class);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/channelUpdates")
+    @Operation(summary = "returns last update dates of channels that user is member of", parameters = {
+            @Parameter(in = ParameterIn.HEADER
+                    , description = "user auth token"
+                    , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
+                    , content = @Content(schema = @Schema(type = "string")))
+    })
+    public ResponseEntity<Object> getChannelUpdates(@Parameter(hidden = true) Authentication auth) {
+
+        ChatUser authUser = ((AuthenticatedChatUserDetails) auth.getPrincipal()).getChatUser();
+
+        UserMembershipsWithLastUpdateResponse response = converter.convert(authUser, UserMembershipsWithLastUpdateResponse.class);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
