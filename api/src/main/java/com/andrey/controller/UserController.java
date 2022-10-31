@@ -3,6 +3,9 @@ package com.andrey.controller;
 import com.andrey.controller.responses.UserInfoResponse;
 import com.andrey.db_entities.chat_profile.ChatProfile;
 import com.andrey.db_entities.chat_user.ChatUser;
+import com.andrey.exceptions.IllegalStateException;
+import com.andrey.exceptions.NoSuchEntityException;
+import com.andrey.exceptions.RemovedEntityException;
 import com.andrey.security.AuthenticatedChatUserDetails;
 import com.andrey.security.jwt.JWTPropertiesConfig;
 import com.andrey.service.profile.ProfilesService;
@@ -47,13 +50,13 @@ public class UserController {
                     , content = @Content(schema = @Schema(type = "string")))
     })
     public ResponseEntity<Object> createNewProfile(@RequestParam @NotBlank @Positive Long profileId
-            , @Parameter(hidden = true) Authentication auth){
+            , @Parameter(hidden = true) Authentication auth) {
 
         ChatUser authUser = ((AuthenticatedChatUserDetails) auth.getPrincipal()).getChatUser();
 
         Optional<ChatUser> optionalResult = userService.getUserInfoForViewer(profileId, authUser);
         if (optionalResult.isEmpty())
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new IllegalStateException("service returned empty Optional");
 
         UserInfoResponse response = converter.convert(optionalResult.get(), UserInfoResponse.class);
 

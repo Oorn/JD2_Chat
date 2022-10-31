@@ -5,6 +5,12 @@ import com.andrey.db_entities.chat_channel.ChannelStatus;
 import com.andrey.db_entities.chat_channel.ChannelType;
 import com.andrey.db_entities.chat_channel_membership.ChatChannelMembership;
 import com.andrey.db_entities.chat_profile.ChatProfile;
+import com.andrey.exceptions.BadRequestException;
+import com.andrey.exceptions.IllegalStateException;
+import com.andrey.exceptions.NoPermissionException;
+import com.andrey.exceptions.NoSuchEntityException;
+import com.andrey.exceptions.RemovedEntityException;
+import com.andrey.exceptions.TooManyEntitiesException;
 import com.andrey.repository.ChatProfileRepository;
 import com.andrey.db_entities.chat_profile.ProfileStatus;
 import com.andrey.db_entities.chat_profile.ProfileVisibilityMatchmaking;
@@ -16,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,19 +38,19 @@ public class ProfilesServiceImpl implements ProfilesService{
 
     private final EntityManager entityManager;
 
-    private final int RANDOM_SAMPLE_SIZE = 100;
+    private static final int RANDOM_SAMPLE_SIZE = 100;
 
     @Override
     public Optional<ChatProfile> createNewProfile(ChatProfile newProfile, ChatUser user) {
 
         if (newProfile.getProfileVisibilityMatchmaking() == ProfileVisibilityMatchmaking.DEFAULT_PROFILE_SEARCH_VISIBILITY)
-            return Optional.empty();
+            throw new BadRequestException("invalid profileVisibilityMatchmaking");
         if (newProfile.getProfileVisibilityUserInfo() == ProfileVisibilityUserInfo.DEFAULT_PROFILE_USER_INFO_VISIBILITY)
-            return Optional.empty();
+            throw new BadRequestException("invalid ProfileVisibilityUserInfo");
 
         ChatUser persistUser = userRepository.findChatUserById(user.getId());
         if (userUtils.getActiveProfileNumber(persistUser) >= Constants.MAX_PROFILES_PER_USER)
-            return Optional.empty();
+            throw new TooManyEntitiesException("exceeding maximum allowed number if profiles per user of " + Constants.MAX_PROFILES_PER_USER);
 
         newProfile.setOwner(user);
 
@@ -56,16 +61,16 @@ public class ProfilesServiceImpl implements ProfilesService{
     @Override
     public Optional<ChatProfile> updateProfile(ChatProfile newProfile, ChatUser user) {
         if (newProfile == null)
-            return Optional.empty();
+            throw new BadRequestException("new Profile cannot be null");
         if (!newProfile.isInteractable())
-            return Optional.empty();
+            throw new RemovedEntityException("Profile with id " + newProfile.getId() + " has been removed");
         if (newProfile.getProfileVisibilityMatchmaking() == ProfileVisibilityMatchmaking.DEFAULT_PROFILE_SEARCH_VISIBILITY)
-            return Optional.empty();
+            throw new BadRequestException("invalid profileVisibilityMatchmaking");
         if (newProfile.getProfileVisibilityUserInfo() == ProfileVisibilityUserInfo.DEFAULT_PROFILE_USER_INFO_VISIBILITY)
-            return Optional.empty();
+            throw new BadRequestException("invalid ProfileVisibilityUserInfo");
 
         if (!newProfile.getOwner().getId().equals(user.getId()))
-            return Optional.empty();
+            throw new NoPermissionException("user with id " + user.getId() + " doesn't own profile with id " + newProfile.getId());
 
         //Optional<ChatProfile> oldProfile = profileRepository.findChatProfileByIdWithOwner(newProfile.getId());
         //if (oldProfile.isEmpty())
@@ -82,15 +87,14 @@ public class ProfilesServiceImpl implements ProfilesService{
 
     @Override
     public Optional<ChatProfile> deleteProfile(Long deleteId, ChatUser user) {
-        //Optional<ChatProfile> optionalOldProfile = profileRepository.findChatProfileByIdWithOwner(deleteId);
         Optional<ChatProfile> optionalOldProfile = profileRepository.findChatProfileByIdWithOwnerWithMembershipsWithChannelWithProfile(deleteId);
         if (optionalOldProfile.isEmpty())
-            return Optional.empty();
+            throw new NoSuchEntityException("Profile with id " + deleteId + " does not exist");
         ChatProfile oldProfile = optionalOldProfile.get();
         if (!oldProfile.isInteractable())
-            return Optional.empty();
+            throw new RemovedEntityException("Profile with id " + deleteId + " has been deleted");
         if (!oldProfile.getOwner().getId().equals(user.getId()))
-            return Optional.empty();
+            throw new NoPermissionException("user with id " + user.getId() + " doesn't own profile with id " + deleteId);
 
         oldProfile.setStatus(ProfileStatus.REMOVED);
         removeProfileChats(oldProfile);
@@ -133,7 +137,7 @@ public class ProfilesServiceImpl implements ProfilesService{
         Optional<ChatUser> optionalUser = userRepository.findChatUserByIdWithProfiles(authUser.getId());
 
         if (optionalUser.isEmpty()) //should never be true
-            return new ArrayList<>();
+            throw new IllegalStateException("authUser not found");
         ChatUser user = optionalUser.get();
 
         entityManager.detach(user);

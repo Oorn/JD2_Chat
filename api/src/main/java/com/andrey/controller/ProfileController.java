@@ -7,6 +7,7 @@ import com.andrey.controller.responses.ProfileInfoPartialResponse;
 import com.andrey.db_entities.chat_profile.ChatProfile;
 
 import com.andrey.db_entities.chat_user.ChatUser;
+import com.andrey.exceptions.IllegalStateException;
 import com.andrey.security.AuthenticatedChatUserDetails;
 import com.andrey.security.jwt.JWTPropertiesConfig;
 import com.andrey.service.profile.ProfilesService;
@@ -70,7 +71,7 @@ public class ProfileController {
         ChatProfile newProfile = converter.convert(createRequest, ChatProfile.class);
         Optional<ChatProfile> result = profilesService.createNewProfile(newProfile, authUser);
         if (result.isEmpty())
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new IllegalStateException("service returned empty Optional");
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -90,7 +91,7 @@ public class ProfileController {
 
         Optional<ChatProfile> result = profilesService.updateProfile(newProfile, authUser);
         if (result.isEmpty())
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new IllegalStateException("service returned empty Optional");
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -109,7 +110,7 @@ public class ProfileController {
 
         Optional<ChatProfile> result = profilesService.deleteProfile(deleteId, authUser);
         if (result.isEmpty())
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new IllegalStateException("service returned empty Optional");
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

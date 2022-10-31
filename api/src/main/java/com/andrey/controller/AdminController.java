@@ -3,6 +3,7 @@ package com.andrey.controller;
 import com.andrey.controller.requests.ChatUserCreateRequest;
 import com.andrey.controller.requests.ConfirmEmailRequest;
 import com.andrey.db_entities.chat_user.ChatUser;
+import com.andrey.exceptions.IllegalStateException;
 import com.andrey.service.mail.MailSenderService;
 import com.andrey.service.registration.RegistrationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,7 +42,7 @@ public class AdminController {
         Optional<ChatUser> optionalUser = registrationService.createNewUser(newUser);
 
         if (optionalUser.isEmpty())
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new IllegalStateException("service returned empty Optional");
         ChatUser user = optionalUser.get();
         registrationService.confirmEmail(new ConfirmEmailRequest(user.getEmail(),  user.getEmailConfirmationToken()));
 

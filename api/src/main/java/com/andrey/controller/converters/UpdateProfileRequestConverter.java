@@ -2,8 +2,10 @@ package com.andrey.controller.converters;
 
 import com.andrey.controller.requests.profile_requests.UpdateProfileRequest;
 import com.andrey.db_entities.chat_profile.ChatProfile;
+import com.andrey.exceptions.NoSuchEntityException;
 import com.andrey.repository.ChatProfileRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +24,7 @@ public class UpdateProfileRequestConverter implements Converter<UpdateProfileReq
 
         Optional<ChatProfile> oldProfile = profileRepository.findChatProfileByIdWithOwner(source.getId());
         if (oldProfile.isEmpty())
-            return null;
+            throw new NoSuchEntityException("profile with id " + source.getId() + " does not exist");
         entityManager.detach(oldProfile.get());
 
         oldProfile.get().setProfileName(source.getProfileName());

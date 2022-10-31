@@ -1,15 +1,12 @@
 package com.andrey.controller;
 
 import com.andrey.controller.requests.channel_requests.FetchProfileChannelRequest;
-import com.andrey.controller.requests.profile_requests.CreateProfileRequest;
 import com.andrey.controller.responses.ChatFromProfileInfoResponse;
 import com.andrey.db_entities.chat_channel.ChatChannel;
-import com.andrey.db_entities.chat_profile.ChatProfile;
 import com.andrey.db_entities.chat_user.ChatUser;
 import com.andrey.security.AuthenticatedChatUserDetails;
 import com.andrey.security.jwt.JWTPropertiesConfig;
 import com.andrey.service.channel.ProfileChannelService;
-import com.andrey.service.profile.ProfilesService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -57,7 +54,7 @@ public class ChannelController {
 
         ChatUser authUser = ((AuthenticatedChatUserDetails) auth.getPrincipal()).getChatUser();
 
-        Optional<ChatChannel> result = profileChannelService.fetchOrCrateProfileChannelInfo(authUser, fetchRequest.getAuthUserProfileId(), fetchRequest.getTargetProfileId());
+        Optional<ChatChannel> result = profileChannelService.fetchOrCreateProfileChannelInfo(authUser, fetchRequest.getAuthUserProfileId(), fetchRequest.getTargetProfileId());
         if (result.isEmpty())
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         ChatFromProfileInfoResponse response = converter.convert(result.get(), ChatFromProfileInfoResponse.class);

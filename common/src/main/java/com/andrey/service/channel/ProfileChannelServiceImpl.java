@@ -8,6 +8,11 @@ import com.andrey.db_entities.chat_channel_membership.ChatChannelMembership;
 import com.andrey.db_entities.chat_profile.ChatProfile;
 import com.andrey.db_entities.chat_profile.ProfileVisibilityMatchmaking;
 import com.andrey.db_entities.chat_user.ChatUser;
+import com.andrey.exceptions.BadTargetException;
+import com.andrey.exceptions.InteractionWithSelfException;
+import com.andrey.exceptions.NoPermissionException;
+import com.andrey.exceptions.NoSuchEntityException;
+import com.andrey.exceptions.RemovedEntityException;
 import com.andrey.repository.ChatChannelRepository;
 import com.andrey.repository.ChatProfileRepository;
 import com.andrey.service.blocks.BlockService;
@@ -32,20 +37,20 @@ public class ProfileChannelServiceImpl implements ProfileChannelService {
     private final EntityManager entityManager;
 
     @Override
-    public Optional<ChatChannel> fetchOrCrateProfileChannelInfo(ChatUser authUser, Long authProfileId, Long targetProfileId) {
+    public Optional<ChatChannel> fetchOrCreateProfileChannelInfo(ChatUser authUser, Long authProfileId, Long targetProfileId) {
 
         if (authProfileId.equals(targetProfileId))
-            return Optional.empty();
+            throw new InteractionWithSelfException("cannot start profile channel with yourself");
 
         //auth profile check for validity
         Optional<ChatProfile> optionalAuthProfile = profilesRepository.findChatProfileByIdWithOwner(authProfileId);
         if (optionalAuthProfile.isEmpty())
-            return Optional.empty();
+            throw new NoSuchEntityException("profile " + authProfileId + " does not exist");
         ChatProfile authProfile = optionalAuthProfile.get();
         if (!authProfile.getOwner().getId().equals(authUser.getId()))
-            return Optional.empty();
+            throw new NoPermissionException("profile " + authProfileId + " does not belong to user " + authUser.getId());
         if (!authProfile.isInteractable())
-            return Optional.empty();
+           throw new RemovedEntityException("profile " + authProfileId + " has been removed");
 
         Optional<ChatChannel> optionalExistingChannel = getExistingProfileChannelNoChecks(authUser, authProfileId, targetProfileId);
         //if optional exists and is OK, check for blocks and return
@@ -54,16 +59,16 @@ public class ProfileChannelServiceImpl implements ProfileChannelService {
 
         Optional<ChatProfile> optionalTargetProfile = profilesRepository.findChatProfileByIdWithOwner(targetProfileId);
         if (optionalTargetProfile.isEmpty())
-            return Optional.empty();
+            throw new NoSuchEntityException("profile " + targetProfileId + " does not exist");
         ChatProfile targetProfile = optionalTargetProfile.get();
         //target existence
 
         if(authProfile.getOwner().getId().equals(targetProfile.getOwner().getId()))
-            return Optional.empty();
+            throw new InteractionWithSelfException("cannot start profile channel with yourself");
         //same user check
 
         if (blockService.fetchAndCheckIfBLockIsPresent(authProfile.getOwner(), targetProfile.getOwner()))
-            return Optional.empty();
+            throw new NoPermissionException("user " + authProfile.getId() + " is blocked by user " + targetProfile.getOwner().getId());
         //block check done
         //todo authUser now carries necessary block info
 
@@ -73,11 +78,11 @@ public class ProfileChannelServiceImpl implements ProfileChannelService {
         //existing active return
 
         if (!targetProfile.isInteractable())
-            return Optional.empty();
+            throw new RemovedEntityException("profile " + targetProfileId + " has been removed");
         if (!targetProfile.getProfileVisibilityMatchmaking().equals(ProfileVisibilityMatchmaking.VISIBLE))
-            return Optional.empty();
+            throw new BadTargetException("profile " + targetProfileId + " does not accept profile channels");
         if (!targetProfile.getOwner().isInteractable())
-            return Optional.empty();
+            throw new RemovedEntityException("owner of profile " + targetProfileId + " has been removed");
         //target validity done
 
         if (optionalExistingChannel.isPresent()) {

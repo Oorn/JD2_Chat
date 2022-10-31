@@ -4,6 +4,9 @@ import com.andrey.Constants;
 import com.andrey.db_entities.chat_channel.ChatChannel;
 import com.andrey.db_entities.chat_message.ChatMessage;
 import com.andrey.db_entities.chat_user.ChatUser;
+import com.andrey.exceptions.NoPermissionException;
+import com.andrey.exceptions.NoSuchEntityException;
+import com.andrey.exceptions.RemovedEntityException;
 import com.andrey.repository.ChatMessageRepository;
 import com.andrey.service.MessageUpdateDatePropagateService;
 import com.andrey.service.user.ChatUserUtilsService;
@@ -12,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import java.sql.Timestamp;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +31,7 @@ public class MessagesServiceImpl implements MessagesService{
     @Override
     public Optional<ChatMessage> createMessage(ChatUser authUser, ChatMessage message, long channelId) {
         if (!userUtils.checkIfAuthUserCanPostInChannel(authUser, channelId))
-            return Optional.empty();
+            throw new NoPermissionException("user " + authUser.getId() + " cannot post in channel " + channelId);
 
         ChatChannel channel = authUser.getChannelMemberships().get(channelId).getChannel();
         message.setChannel(channel);
@@ -49,14 +51,14 @@ public class MessagesServiceImpl implements MessagesService{
 
         Optional<ChatMessage> optionalOldMessage = messageRepository.findChatMessageByIdWithChannelWithMembersWithUsers(message.getId());
         if (optionalOldMessage.isEmpty())
-            return Optional.empty();
+            throw new NoSuchEntityException("message " + message.getId() + " does not exist");
         ChatMessage oldMessage = optionalOldMessage.get();
         if (!oldMessage.getSender().getId().equals(authUser.getId()))
-            return Optional.empty();
+            throw new NoPermissionException("user " + authUser.getId() + " does not own message " + message.getId());
         if (!oldMessage.isInteractable())
-            return Optional.empty();
+            throw new RemovedEntityException("message " + message.getId() + " has been removed");
         if (!userUtils.checkIfAuthUserCanPostInChannel(authUser, oldMessage.getChannel().getId()))
-            return Optional.empty();
+            throw new NoPermissionException("user " + authUser.getId() + "cannot post in channel " + oldMessage.getChannel().getId());
 
         oldMessage.setFormatVersion(message.getFormatVersion());
         oldMessage.setMessageBody(message.getMessageBody());
@@ -70,7 +72,7 @@ public class MessagesServiceImpl implements MessagesService{
     @Override
     public List<ChatMessage> getLatestMessages(ChatUser authUser, long channelId) {
         if (!userUtils.checkIfAuthUserCanReadInChannel(authUser, channelId))
-            return Collections.emptyList(); //todo exception needed
+            throw new NoPermissionException("user "+ authUser.getId() + " cannot read messages in channel " + channelId);
 
         return messageRepository.getLatestChatMessagesByChannelId(channelId, Constants.MAX_MESSAGES_PER_RESPONSE);
     }
@@ -78,7 +80,7 @@ public class MessagesServiceImpl implements MessagesService{
     @Override
     public List<ChatMessage> getMessagesBeforeId(ChatUser authUser, long channelId, long messageId) {
         if (!userUtils.checkIfAuthUserCanReadInChannel(authUser, channelId))
-            return Collections.emptyList(); //todo exception needed
+            throw new NoPermissionException("user "+ authUser.getId() + " cannot read messages in channel " + channelId);
 
         return messageRepository.getChatMessagesBeforeMessageIdByChannelId(channelId, messageId, Constants.MAX_MESSAGES_PER_RESPONSE);
     }
@@ -86,7 +88,7 @@ public class MessagesServiceImpl implements MessagesService{
     @Override
     public List<ChatMessage> getMessagesAfterId(ChatUser authUser, long channelId, long messageId) {
         if (!userUtils.checkIfAuthUserCanReadInChannel(authUser, channelId))
-            return Collections.emptyList(); //todo exception needed
+            throw new NoPermissionException("user "+ authUser.getId() + " cannot read messages in channel " + channelId);
 
         return messageRepository.getChatMessagesAfterMessageIdByChannelId(channelId, messageId, Constants.MAX_MESSAGES_PER_RESPONSE);
     }
@@ -94,7 +96,7 @@ public class MessagesServiceImpl implements MessagesService{
     @Override
     public List<ChatMessage> getMessagesUpdatesAfterIdTimestamp(ChatUser authUser, long channelId, long messageId, Timestamp timestamp) {
         if (!userUtils.checkIfAuthUserCanReadInChannel(authUser, channelId))
-            return Collections.emptyList(); //todo exception needed
+            throw new NoPermissionException("user "+ authUser.getId() + " cannot read messages in channel " + channelId);
 
         return messageRepository.getChatUpdatesAfterMessageIdAndTimestampByChannelId(channelId, messageId, timestamp, Constants.MAX_MESSAGES_PER_RESPONSE);
     }

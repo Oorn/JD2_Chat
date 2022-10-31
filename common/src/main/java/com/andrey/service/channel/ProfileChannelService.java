@@ -6,7 +6,7 @@ import com.andrey.db_entities.chat_user.ChatUser;
 import java.util.Optional;
 
 public interface ProfileChannelService {
-    Optional<ChatChannel> fetchOrCrateProfileChannelInfo(ChatUser authUser, Long profileId, Long targetProfileId);
+    Optional<ChatChannel> fetchOrCreateProfileChannelInfo(ChatUser authUser, Long profileId, Long targetProfileId);
 
      String generateProfileChannelName(long profileId1, long profileId2);
 

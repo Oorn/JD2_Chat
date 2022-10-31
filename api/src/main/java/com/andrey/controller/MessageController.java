@@ -8,6 +8,7 @@ import com.andrey.controller.responses.MessageInfoResponse;
 import com.andrey.db_entities.chat_message.ChatMessage;
 import com.andrey.db_entities.chat_profile.ChatProfile;
 import com.andrey.db_entities.chat_user.ChatUser;
+import com.andrey.exceptions.IllegalStateException;
 import com.andrey.security.AuthenticatedChatUserDetails;
 import com.andrey.security.jwt.JWTPropertiesConfig;
 import com.andrey.service.message.MessagesService;
@@ -68,7 +69,7 @@ public class MessageController {
         ChatMessage newMessage = converter.convert(messageRequest, ChatMessage.class);
         Optional<ChatMessage> result = messagesService.createMessage(authUser, newMessage, messageRequest.getChannelId());
         if (result.isEmpty())
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new IllegalStateException("service returned empty Optional");
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -89,7 +90,7 @@ public class MessageController {
         ChatMessage newMessage = converter.convert(messageRequest, ChatMessage.class);
         Optional<ChatMessage> result = messagesService.updateMessage(authUser,newMessage);
         if (result.isEmpty())
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new IllegalStateException("service returned empty Optional");
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -108,7 +109,7 @@ public class MessageController {
 
         List<ChatMessage> result = messagesService.getLatestMessages(authUser, channelId);
         if (result == null)
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new IllegalStateException("service returned null");
         List<MessageInfoResponse> response =
                 result.stream().map(m -> converter.convert(m, MessageInfoResponse.class))
                         .collect(Collectors.toList());
@@ -131,7 +132,7 @@ public class MessageController {
 
         List<ChatMessage> result = messagesService.getMessagesBeforeId(authUser, channelId, beforeId);
         if (result == null)
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new IllegalStateException("service returned null");
         List<MessageInfoResponse> response =
                 result.stream().map(m -> converter.convert(m, MessageInfoResponse.class))
                         .collect(Collectors.toList());
@@ -154,7 +155,7 @@ public class MessageController {
 
         List<ChatMessage> result = messagesService.getMessagesAfterId(authUser, channelId, afterId);
         if (result == null)
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new IllegalStateException("service returned null");
         List<MessageInfoResponse> response =
                 result.stream().map(m -> converter.convert(m, MessageInfoResponse.class))
                         .collect(Collectors.toList());
@@ -178,7 +179,7 @@ public class MessageController {
                 , updateRequest.getAfterMessageId()
                 , updateRequest.getAfterMessageTimestamp());
         if (result == null)
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new IllegalStateException("service returned null");
         List<MessageInfoResponse> response =
                 result.stream().map(m -> converter.convert(m, MessageInfoResponse.class))
                         .collect(Collectors.toList());
