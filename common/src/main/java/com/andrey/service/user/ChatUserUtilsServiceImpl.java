@@ -8,6 +8,7 @@ import com.andrey.db_entities.chat_channel_membership.ChannelMembershipStatus;
 import com.andrey.db_entities.chat_channel_membership.ChatChannelMembership;
 import com.andrey.db_entities.chat_profile.ChatProfile;
 import com.andrey.db_entities.chat_user.ChatUser;
+import com.andrey.service.channel.ChannelNamingService;
 import com.andrey.service.channel.PrivateChannelService;
 import com.andrey.service.channel.PrivateChannelServiceImpl;
 import com.andrey.service.channel.ProfileChannelService;
@@ -18,8 +19,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ChatUserUtilsServiceImpl implements ChatUserUtilsService{
 
-    private final PrivateChannelService privateChannelService;
-    private final ProfileChannelService profileChannelService;
+    private final ChannelNamingService channelNamingService;
 
     @Override
     public long getActiveProfileNumber(ChatUser user) {
@@ -67,9 +67,9 @@ public class ChatUserUtilsServiceImpl implements ChatUserUtilsService{
     private boolean privateChannelBlockCheck(ChatUser authUser, ChatChannel channel) {
         long[] userIds;
         if (channel.getChannelType().equals(ChannelType.PRIVATE_CHAT_FROM_PROFILE))
-            userIds = profileChannelService.getMemberIdsFromChannelName(channel.getChannelName());
+            userIds = channelNamingService.getMemberIdsFromChannelName(channel.getChannelName());
         else
-            userIds = privateChannelService.getMemberIdsFromChannelName(channel.getChannelName());
+            userIds = channelNamingService.getMemberIdsFromChannelName(channel.getChannelName());
         long user1 = userIds[0];
         long user2 = userIds[1];
         if (authUser.getId().equals(user1))

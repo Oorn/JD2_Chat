@@ -63,6 +63,7 @@ public class ChatBlock implements ModificationDateUpdater, Interactable {
     @JoinColumn(name = "blocked_profile_id", nullable = false)
     @ToString.Exclude
     private ChatProfile blockedProfile;
+    //TODO remove blocked profile from here and DB
 
     @CreationTimestamp
     @Column(name = "creation_date")

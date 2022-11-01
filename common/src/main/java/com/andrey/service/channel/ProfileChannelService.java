@@ -8,8 +8,6 @@ import java.util.Optional;
 public interface ProfileChannelService {
     Optional<ChatChannel> fetchOrCreateProfileChannelInfo(ChatUser authUser, Long profileId, Long targetProfileId);
 
-     String generateProfileChannelName(long profileId1, long profileId2);
 
-     long[] getMemberIdsFromChannelName(String channelName);
 
 }

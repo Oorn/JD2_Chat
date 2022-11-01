@@ -50,4 +50,9 @@ public interface ChatUserRepository extends CrudRepository<ChatUser, Long>
             " left join fetch u.ownedProfiles p" +
             " where u.id = :id ")
     Optional<ChatUser> findChatUserByIdWithProfiles (@Param("id") Long id);
+
+    @Query(value = "select u from ChatUser u" +
+            " left join fetch u.blocks b" +
+            " where u.id = :id ")
+    Optional<ChatUser> findChatUserByIdWithBlocks (@Param("id") Long id);
 }

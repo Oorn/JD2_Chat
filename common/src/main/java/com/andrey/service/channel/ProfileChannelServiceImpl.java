@@ -17,6 +17,7 @@ import com.andrey.repository.ChatChannelRepository;
 import com.andrey.repository.ChatProfileRepository;
 import com.andrey.service.blocks.BlockService;
 import com.andrey.service.membership.MembershipService;
+import com.andrey.service.user.ChatUserUtilsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,11 +31,13 @@ public class ProfileChannelServiceImpl implements ProfileChannelService {
 
     private final ChatChannelRepository channelRepository;
 
-    private final BlockService blockService;
-
     private final MembershipService membershipService;
 
     private final EntityManager entityManager;
+
+    private final ChatUserUtilsService userUtils;
+
+    private final ChannelNamingService namingService;
 
     @Override
     public Optional<ChatChannel> fetchOrCreateProfileChannelInfo(ChatUser authUser, Long authProfileId, Long targetProfileId) {
@@ -67,10 +70,11 @@ public class ProfileChannelServiceImpl implements ProfileChannelService {
             throw new InteractionWithSelfException("cannot start profile channel with yourself");
         //same user check
 
-        if (blockService.fetchAndCheckIfBLockIsPresent(authProfile.getOwner(), targetProfile.getOwner()))
+        //todo authUser now carries necessary block info if (blockService.fetchAndCheckIfBLockIsPresent(authProfile.getOwner(), targetProfile.getOwner()))
+        if (userUtils.checkIfBLockIsPresent(authUser, targetProfile.getOwner().getId()))
             throw new NoPermissionException("user " + authProfile.getId() + " is blocked by user " + targetProfile.getOwner().getId());
         //block check done
-        //todo authUser now carries necessary block info
+
 
         if (optionalExistingChannel.isPresent())
             if (optionalExistingChannel.get().getStatus().equals(ChannelStatus.ACTIVE))
@@ -105,7 +109,7 @@ public class ProfileChannelServiceImpl implements ProfileChannelService {
                 .map(ChatChannelMembership::getChannel)
                 .filter(c -> c.getChannelType().equals(ChannelType.PRIVATE_CHAT_FROM_PROFILE))
                 .filter(c ->
-                        c.getChannelName().equals(generateProfileChannelName(authProfileId, targetProfileId)))
+                        c.getChannelName().equals(namingService.generateProfileChannelName(authProfileId, targetProfileId)))
                 .map(ChatChannel::getId)
                 .findFirst();
         if (channelId.isEmpty())
@@ -116,7 +120,7 @@ public class ProfileChannelServiceImpl implements ProfileChannelService {
     }
     private ChatChannel createNewProfileChannel(ChatProfile profile1, ChatProfile profile2) {
         ChatChannel newChannel = ChatChannel.builder()
-                .channelName(generateProfileChannelName(profile1.getId(), profile2.getId()))
+                .channelName(namingService.generateProfileChannelName(profile1.getId(), profile2.getId()))
                 .channelType(ChannelType.PRIVATE_CHAT_FROM_PROFILE)
                 .owner(profile1.getOwner())
                 .status(ChannelStatus.EMPTY)
@@ -133,23 +137,5 @@ public class ProfileChannelServiceImpl implements ProfileChannelService {
         return newChannel;
     }
 
-    @Override
-    public String generateProfileChannelName(long profileId1, long profileId2) {
-        if (profileId1 > profileId2) {
-            long t = profileId1;
-            profileId1 = profileId2;
-            profileId2 = t;
-        }
-        return "profile_chat_" + profileId1 + "_" + profileId2;
-    }
 
-    @Override
-    public long[] getMemberIdsFromChannelName(String channelName) {
-
-        String[] nameTokens = channelName.split("_");
-        long[] res = new long[2];
-        res[0] = Long.parseLong(nameTokens[2]);
-        res[1] = Long.parseLong(nameTokens[3]);
-        return res;
-    }
 }
