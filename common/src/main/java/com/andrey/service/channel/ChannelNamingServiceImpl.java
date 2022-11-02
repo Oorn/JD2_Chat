@@ -7,13 +7,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ChannelNamingServiceImpl implements ChannelNamingService{
     @Override
-    public String generatePrivateChannelName(long profileId1, long profileId2) {
-        if (profileId1 > profileId2) {
-            long t = profileId1;
-            profileId1 = profileId2;
-            profileId2 = t;
+    public String generatePrivateChannelName(long userId1, long userId2) {
+        if (userId1 > userId2) {
+            long t = userId1;
+            userId1 = userId2;
+            userId2 = t;
         }
-        return "private_chat_" + profileId1 + "_" + profileId2;
+        return "private_chat_" + userId1 + "_" + userId2;
     }
 
     @Override

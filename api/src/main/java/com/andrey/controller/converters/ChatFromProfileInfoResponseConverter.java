@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
+@Deprecated
 public class ChatFromProfileInfoResponseConverter implements Converter<ChatChannel, ChatFromProfileInfoResponse> {
 
     private final ChatFromProfileUserInfoResponseConverter userInfoConverter;

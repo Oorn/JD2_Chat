@@ -44,14 +44,16 @@ public class ChannelInfoResponseConverter implements Converter<ChatChannel, Chan
                 res.setChannelProfiles(
                         source.getMembers().stream()
                                 .map(ChatChannelMembership::getUserProfile)
-                                .map(profileConverter::convert)
-                                .collect(Collectors.toList())
+                                .collect(Collectors.toMap(p -> p.getOwner().getId()
+                                        , profileConverter::convert))
                 );
                 break;
             case PRIVATE_CHAT_BETWEEN_FRIENDS:
                 res.setChannelOwner(null);
                 res.setChannelName("");
                 res.setChannelProfiles(null);
+                break;
+            default:
 
         }
         return res;

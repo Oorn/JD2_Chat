@@ -68,7 +68,7 @@ public class TestRestController {
     @PostMapping("/postTestProfile")
     public ResponseEntity<Object> postProfileT(@RequestBody String testBody){
         ChatProfile newProfile= ChatProfile.builder()
-                .owner(chatUserRepository.findChatUserById(1L))
+                .owner(chatUserRepository.findChatUserById(1L).get())
                 .profileName("testname "+testBody)
                 .profileDescription("testdescription "+testBody)
                 .formatVersion(1)
@@ -83,7 +83,7 @@ public class TestRestController {
     @Transactional
     @GetMapping("public/testFriendship")
     public ResponseEntity<Object> testFriendshipAuth(){
-        ChatUser user1 = chatUserRepository.findChatUserById(1L);
+        ChatUser user1 = chatUserRepository.findChatUserById(1L).get();
         ChatUser user2 = chatUserRepository.findChatUserByEmail("jd2_chat@proton.me");
         friendshipRepository.createFriendship(user1, user2);
         return new ResponseEntity<>(HttpStatus.OK);

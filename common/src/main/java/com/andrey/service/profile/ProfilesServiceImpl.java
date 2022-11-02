@@ -48,7 +48,7 @@ public class ProfilesServiceImpl implements ProfilesService{
         if (newProfile.getProfileVisibilityUserInfo() == ProfileVisibilityUserInfo.DEFAULT_PROFILE_USER_INFO_VISIBILITY)
             throw new BadRequestException("invalid ProfileVisibilityUserInfo");
 
-        ChatUser persistUser = userRepository.findChatUserById(user.getId());
+        ChatUser persistUser = userRepository.findChatUserByIdWithProfiles(user.getId()).get();
         if (userUtils.getActiveProfileNumber(persistUser) >= Constants.MAX_PROFILES_PER_USER)
             throw new TooManyEntitiesException("exceeding maximum allowed number if profiles per user of " + Constants.MAX_PROFILES_PER_USER);
 

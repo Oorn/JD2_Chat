@@ -15,6 +15,7 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Deprecated
 public class ChatFromProfileInfoResponse {
 
     private Long channelId;

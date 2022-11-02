@@ -70,7 +70,7 @@ public class ProfileChannelServiceImpl implements ProfileChannelService {
             throw new InteractionWithSelfException("cannot start profile channel with yourself");
         //same user check
 
-        //todo authUser now carries necessary block info if (blockService.fetchAndCheckIfBLockIsPresent(authProfile.getOwner(), targetProfile.getOwner()))
+        //authUser now carries necessary block info if (blockService.fetchAndCheckIfBLockIsPresent(authProfile.getOwner(), targetProfile.getOwner()))
         if (userUtils.checkIfBLockIsPresent(authUser, targetProfile.getOwner().getId()))
             throw new NoPermissionException("user " + authProfile.getId() + " is blocked by user " + targetProfile.getOwner().getId());
         //block check done
@@ -91,6 +91,7 @@ public class ProfileChannelServiceImpl implements ProfileChannelService {
 
         if (optionalExistingChannel.isPresent()) {
             if (!optionalExistingChannel.get().getStatus().equals(ChannelStatus.EMPTY)) {
+                //TODO this is probably illegal state
                 optionalExistingChannel.get().setStatus(ChannelStatus.ACTIVE); //EMPTY channels do not become active from fetch, only when posting
                 channelRepository.saveAndFlush(optionalExistingChannel.get());
             }

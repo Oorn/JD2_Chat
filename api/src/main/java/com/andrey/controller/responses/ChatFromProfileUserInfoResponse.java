@@ -10,6 +10,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Deprecated
 public class ChatFromProfileUserInfoResponse {
     private ProfileInfoPartialResponse profile;
 

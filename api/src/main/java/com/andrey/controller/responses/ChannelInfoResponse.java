@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Builder
@@ -28,7 +29,8 @@ public class ChannelInfoResponse {
     private String channelName;
 
     //optional
-    private List<ProfileInfoPartialResponse> channelProfiles;
+    //private List<ProfileInfoPartialResponse> channelProfiles;
+    private Map<Long, ProfileInfoPartialResponse> channelProfiles;
 
 
 }

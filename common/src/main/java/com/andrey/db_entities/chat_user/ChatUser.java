@@ -211,7 +211,8 @@ public class ChatUser implements ModificationDateUpdater, Interactable {
     @Override
     public boolean isInteractable() {
         return !(status.equals(UserStatus.REMOVED)
-        || status.equals(UserStatus.DEFAULT_STATUS)
-        || status.equals(UserStatus.REQUIRES_EMAIL_CONFIRMATION));
+            || status.equals(UserStatus.DEFAULT_STATUS)
+            || status.equals(UserStatus.REQUIRES_EMAIL_CONFIRMATION)
+            || status.equals(UserStatus.EMAIL_RECLAIMED));
     }
 }

@@ -10,6 +10,7 @@ import com.andrey.exceptions.IllegalStateException;
 import com.andrey.security.AuthenticatedChatUserDetails;
 import com.andrey.security.jwt.JWTPropertiesConfig;
 import com.andrey.service.channel.GeneralChannelService;
+import com.andrey.service.channel.PrivateChannelService;
 import com.andrey.service.channel.ProfileChannelService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -49,6 +50,8 @@ public class ChannelController {
 
     private final ProfileChannelService profileChannelService;
 
+    private final PrivateChannelService privateChannelService;
+
     private final GeneralChannelService channelService;
 
     @PostMapping("/fetchProfileChannel")
@@ -66,8 +69,30 @@ public class ChannelController {
 
         Optional<ChatChannel> result = profileChannelService.fetchOrCreateProfileChannelInfo(authUser, fetchRequest.getAuthUserProfileId(), fetchRequest.getTargetProfileId());
         if (result.isEmpty())
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        ChatFromProfileInfoResponse response = converter.convert(result.get(), ChatFromProfileInfoResponse.class);
+            throw new IllegalStateException("service returned empty Optional");
+        //ChatFromProfileInfoResponse response = converter.convert(result.get(), ChatFromProfileInfoResponse.class);
+        ChannelInfoResponse response = converter.convert(result.get(), ChannelInfoResponse.class);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/fetchPrivateChannel")
+    @Transactional
+    @Operation(summary = "fetches, and creates if needed, info of private channel between 2 users", parameters = {
+            @Parameter(in = ParameterIn.HEADER
+                    , description = "user auth token"
+                    , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
+                    , content = @Content(schema = @Schema(type = "string")))
+    })
+    public ResponseEntity<Object> fetchProfileChannel(@RequestParam @Positive Long targetUserId
+            , @Parameter(hidden = true) Authentication auth){
+
+        ChatUser authUser = ((AuthenticatedChatUserDetails) auth.getPrincipal()).getChatUser();
+
+        Optional<ChatChannel> result = privateChannelService.fetchOrCreatePrivateChannelInfo(authUser, targetUserId);
+        if (result.isEmpty())
+            throw new IllegalStateException("service returned empty Optional");
+        ChannelInfoResponse response = converter.convert(result.get(), ChannelInfoResponse.class);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

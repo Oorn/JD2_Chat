@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Deprecated
 public class ChatFromProfileUserInfoResponseConverter  implements Converter<ChatChannelMembership, ChatFromProfileUserInfoResponse> {
 
     private final UserInfoShortResponseConverter userInfoConverter;

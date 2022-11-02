@@ -1,6 +1,7 @@
 package com.andrey.service.message;
 
 import com.andrey.Constants;
+import com.andrey.db_entities.chat_channel.ChannelStatus;
 import com.andrey.db_entities.chat_channel.ChatChannel;
 import com.andrey.db_entities.chat_message.ChatMessage;
 import com.andrey.db_entities.chat_message.MessageStatus;
@@ -8,6 +9,7 @@ import com.andrey.db_entities.chat_user.ChatUser;
 import com.andrey.exceptions.NoPermissionException;
 import com.andrey.exceptions.NoSuchEntityException;
 import com.andrey.exceptions.RemovedEntityException;
+import com.andrey.repository.ChatChannelRepository;
 import com.andrey.repository.ChatMessageRepository;
 import com.andrey.service.MessageUpdateDatePropagateService;
 import com.andrey.service.user.ChatUserUtilsService;
@@ -27,6 +29,8 @@ public class MessagesServiceImpl implements MessagesService{
     private final MessageUpdateDatePropagateService propagateService;
     private final ChatMessageRepository messageRepository;
 
+    private final ChatChannelRepository channelRepository;
+
     private final EntityManager entityManager;
 
     @Override
@@ -36,6 +40,10 @@ public class MessagesServiceImpl implements MessagesService{
 
         ChatChannel channel = authUser.getChannelMemberships().get(channelId).getChannel();
         message.setChannel(channel);
+        if (channel.getStatus().equals(ChannelStatus.EMPTY)) {
+            channel.setStatus(ChannelStatus.ACTIVE);
+            channelRepository.saveAndFlush(channel);
+        }
         message.setSender(authUser);
 
         messageRepository.saveAndFlush(message);

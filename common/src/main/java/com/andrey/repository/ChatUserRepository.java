@@ -15,7 +15,7 @@ public interface ChatUserRepository extends CrudRepository<ChatUser, Long>
         , JpaRepository<ChatUser, Long>
         , PagingAndSortingRepository<ChatUser, Long> {
 
-    ChatUser findChatUserById(Long id);
+    Optional<ChatUser> findChatUserById(Long id);
     ChatUser findChatUserByEmail(String email);
     Boolean existsByEmail(String email);
 
