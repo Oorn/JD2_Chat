@@ -1,5 +1,6 @@
 package com.andrey.exception_handlers;
 
+import com.andrey.exceptions.BadEnumValueException;
 import com.andrey.exceptions.BadRequestException;
 import com.andrey.exceptions.BadTargetException;
 import com.andrey.exceptions.InteractionWithSelfException;
@@ -93,6 +94,12 @@ public class DefaultExceptionHandler {
     public ResponseEntity<Object> handleTooManyEntities(TooManyEntitiesException e) {
 
         return new ResponseEntity<>(Collections.singletonMap("limit reached: ", e.getMessage()), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(BadEnumValueException.class)
+    public ResponseEntity<Object> handleBadEnumValue(BadEnumValueException e) {
+
+        return new ResponseEntity<>(Collections.singletonMap("bad request: ", e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
 

@@ -5,16 +5,12 @@ import com.andrey.db_entities.chat_channel.ChannelType;
 import com.andrey.db_entities.chat_channel.ChatChannel;
 import com.andrey.db_entities.chat_channel_membership.ChannelMembershipRole;
 import com.andrey.db_entities.chat_channel_membership.ChatChannelMembership;
-import com.andrey.db_entities.chat_profile.ChatProfile;
-import com.andrey.db_entities.chat_profile.ProfileVisibilityMatchmaking;
 import com.andrey.db_entities.chat_user.ChatUser;
-import com.andrey.exceptions.BadTargetException;
 import com.andrey.exceptions.InteractionWithSelfException;
 import com.andrey.exceptions.NoPermissionException;
 import com.andrey.exceptions.NoSuchEntityException;
 import com.andrey.exceptions.RemovedEntityException;
 import com.andrey.repository.ChatChannelRepository;
-import com.andrey.repository.ChatProfileRepository;
 import com.andrey.repository.ChatUserRepository;
 import com.andrey.service.membership.MembershipService;
 import com.andrey.service.user.ChatUserUtilsService;
@@ -56,7 +52,7 @@ public class PrivateChannelServiceImpl implements PrivateChannelService{
         //target existence
 
 
-        if (userUtils.checkIfBLockIsPresent(authUser, targetUserId))
+        if (userUtils.checkIfBlockIsPresent(authUser, targetUserId))
             throw new NoPermissionException("user " + authUser.getId() + " is blocked by user " + targetUserId);
         //block check done
 

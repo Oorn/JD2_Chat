@@ -1,6 +1,7 @@
 package com.andrey.controller.responses;
 
 import com.andrey.db_entities.chat_channel.ChannelType;
+import com.andrey.db_entities.chat_channel_membership.ChannelMembershipRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,10 +21,13 @@ public class ChannelInfoResponse {
 
     private ChannelType channelType;
 
-    private List<UserInfoShortResponse> members;
+    private List<ChannelMemberInfoResponse> members;
 
     //optional
     private UserInfoShortResponse channelOwner;
+
+    //optional
+    private ChannelMembershipRole defaultRole;
 
     //optional
     private String channelName;

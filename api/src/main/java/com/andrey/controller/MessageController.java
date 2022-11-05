@@ -105,7 +105,7 @@ public class MessageController {
                     , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
                     , content = @Content(schema = @Schema(type = "string")))
     })
-    public ResponseEntity<Object> edit(@RequestParam @Positive Long deleteId
+    public ResponseEntity<Object> delete(@RequestParam @Positive Long deleteId
             , @Parameter(hidden = true) Authentication auth){
 
         ChatUser authUser = ((AuthenticatedChatUserDetails) auth.getPrincipal()).getChatUser();

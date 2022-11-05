@@ -15,7 +15,12 @@ public interface ChatChannelRepository extends CrudRepository<ChatChannel, Long>
         , JpaRepository<ChatChannel, Long>
         , PagingAndSortingRepository<ChatChannel, Long> {
 
-    ChatChannel findChatChannelById(Long id);
+    Optional<ChatChannel> findChatChannelById(Long id);
+
+    @Query(value = "select c from ChatChannel c" +
+            " left join fetch c.owner own" +
+            " where c.id = :id ")
+    Optional<ChatChannel> findChatChannelByIdWithOwner(Long id);
 
     @Query(value = "select c from ChatChannel c" +
             " left join fetch c.members mem" +

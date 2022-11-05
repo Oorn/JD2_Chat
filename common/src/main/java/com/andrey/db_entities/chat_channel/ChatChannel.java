@@ -2,6 +2,7 @@ package com.andrey.db_entities.chat_channel;
 
 import com.andrey.db_entities.Interactable;
 import com.andrey.db_entities.ModificationDateUpdater;
+import com.andrey.db_entities.chat_channel_membership.ChannelMembershipRole;
 import com.andrey.db_entities.chat_channel_membership.ChatChannelMembership;
 import com.andrey.db_entities.chat_message.ChatMessage;
 import com.andrey.db_entities.chat_user.ChatUser;
@@ -90,6 +91,10 @@ public class ChatChannel implements ModificationDateUpdater, Interactable {
 
     @Column(name = "status_reason")
     private String statusReason;
+
+    @Column(name = "default_role")
+    @Enumerated(EnumType.STRING)
+    private ChannelMembershipRole defaultRole;
 
     @OneToMany(mappedBy = "channel", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"channel"})

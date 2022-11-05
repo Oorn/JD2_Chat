@@ -1,5 +1,6 @@
 package com.andrey.controller;
 
+import com.andrey.controller.responses.PendingInvitesListResponse;
 import com.andrey.controller.responses.UserInfoResponse;
 import com.andrey.controller.responses.UserMembershipsWithLastUpdateResponse;
 import com.andrey.db_entities.chat_profile.ChatProfile;
@@ -9,6 +10,7 @@ import com.andrey.exceptions.NoSuchEntityException;
 import com.andrey.exceptions.RemovedEntityException;
 import com.andrey.security.AuthenticatedChatUserDetails;
 import com.andrey.security.jwt.JWTPropertiesConfig;
+import com.andrey.service.channel_invite.ChannelInviteService;
 import com.andrey.service.profile.ProfilesService;
 import com.andrey.service.user.ChatUserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,6 +44,8 @@ public class UserController {
     @Autowired
     @Lazy
     private final ConversionService converter;
+
+    private final ChannelInviteService inviteService;
 
     private final ChatUserService userService;
 
@@ -78,6 +82,22 @@ public class UserController {
         ChatUser authUser = ((AuthenticatedChatUserDetails) auth.getPrincipal()).getChatUser();
 
         UserMembershipsWithLastUpdateResponse response = converter.convert(authUser, UserMembershipsWithLastUpdateResponse.class);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/myInvites")
+    @Operation(summary = "returns currently pending invites to multiuser channels", parameters = {
+            @Parameter(in = ParameterIn.HEADER
+                    , description = "user auth token"
+                    , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
+                    , content = @Content(schema = @Schema(type = "string")))
+    })
+    public ResponseEntity<Object> getChannelInvites(@Parameter(hidden = true) Authentication auth) {
+
+        ChatUser authUser = ((AuthenticatedChatUserDetails) auth.getPrincipal()).getChatUser();
+
+        PendingInvitesListResponse response = converter.convert(inviteService.getPendingChannelInvites(authUser), PendingInvitesListResponse.class);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

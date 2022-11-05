@@ -15,9 +15,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ChannelInfoResponseConverter implements Converter<ChatChannel, ChannelInfoResponse> {
 
-    private final UserInfoShortResponseConverter userConverter;
+    private final ChannelMemberInfoResponseConverter memberConverter;
 
     private final ProfileInfoPartialResponseConverter profileConverter;
+
+    private final UserInfoShortResponseConverter userConverter;
 
     @Override
     public ChannelInfoResponse convert(ChatChannel source) {
@@ -27,9 +29,8 @@ public class ChannelInfoResponseConverter implements Converter<ChatChannel, Chan
         res.setMembers(
                 source.getMembers().stream()
                         .filter(ChatChannelMembership::isInteractable)
-                        .map(ChatChannelMembership::getUser)
-                        .filter(ChatUser::isInteractable)
-                        .map(userConverter::convert)
+                        .filter(m -> m.getUser().isInteractable())
+                        .map(memberConverter::convert)
                         .collect(Collectors.toList())
         );
         switch (res.getChannelType()) {
@@ -37,6 +38,7 @@ public class ChannelInfoResponseConverter implements Converter<ChatChannel, Chan
                 res.setChannelOwner(userConverter.convert(source.getOwner()));
                 res.setChannelName(source.getChannelName());
                 res.setChannelProfiles(null);
+                res.setDefaultRole(source.getDefaultRole());
                 break;
             case PRIVATE_CHAT_FROM_PROFILE:
                 res.setChannelOwner(null);

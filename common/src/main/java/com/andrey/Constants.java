@@ -46,4 +46,14 @@ public final class Constants {
     public static final int MAX_ACCEPTED_MESSAGE_FORMAT = 1;
 
     public static final int MAX_MESSAGES_PER_RESPONSE = 5; //for testing
+
+    //CHANNELS
+
+    public static final int MAX_OWNED_MULTIUSER_CHANNELS = 5;
+
+    public static final int MIN_MULTIUSER_CHANNEL_NAME_LENGTH = 4;
+
+    public static final int MAX_MULTIUSER_CHANNEL_NAME_LENGTH = 100;
+
+    public static final long PRIVATE_INVITE_TO_CHANNEL_EXPIRE_MILLIS = 86400000L; //1 day
 }

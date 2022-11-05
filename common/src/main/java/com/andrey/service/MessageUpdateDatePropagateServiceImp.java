@@ -26,6 +26,14 @@ public class MessageUpdateDatePropagateServiceImp implements MessageUpdateDatePr
     }
 
     @Override
+    public Timestamp updateDateAndPropagate(ChatChannel channel) {
+        channel.updateModificationDate();
+        Timestamp newDate = channel.getModificationDate();
+        channelUpdateLastMessageUpdateDate(channel, newDate, 0);
+        return newDate;
+    }
+
+    @Override
     public List<ChatUser> getRecipientUserList(ChatMessage message) {
         return getRecipientUserStream(message.getChannel()).collect(Collectors.toList());
     }

@@ -15,7 +15,6 @@ import com.andrey.exceptions.NoSuchEntityException;
 import com.andrey.exceptions.RemovedEntityException;
 import com.andrey.repository.ChatChannelRepository;
 import com.andrey.repository.ChatProfileRepository;
-import com.andrey.service.blocks.BlockService;
 import com.andrey.service.membership.MembershipService;
 import com.andrey.service.user.ChatUserUtilsService;
 import lombok.RequiredArgsConstructor;
@@ -71,7 +70,7 @@ public class ProfileChannelServiceImpl implements ProfileChannelService {
         //same user check
 
         //authUser now carries necessary block info if (blockService.fetchAndCheckIfBLockIsPresent(authProfile.getOwner(), targetProfile.getOwner()))
-        if (userUtils.checkIfBLockIsPresent(authUser, targetProfile.getOwner().getId()))
+        if (userUtils.checkIfBlockIsPresent(authUser, targetProfile.getOwner().getId()))
             throw new NoPermissionException("user " + authProfile.getId() + " is blocked by user " + targetProfile.getOwner().getId());
         //block check done
 
