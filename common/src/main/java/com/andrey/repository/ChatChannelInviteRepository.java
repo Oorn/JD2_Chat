@@ -32,6 +32,6 @@ public interface ChatChannelInviteRepository extends CrudRepository<ChatChannelI
             " left join fetch i.sender s" +
             " left join fetch i.channel c" +
             " where t.id = :userId and i.expirationDate > :expire" +
-            " and t.status = :status")
+            " and i.status = :status")
     List<ChatChannelInvite> findInvitesByTargetAndStatusWithSenderAndTargetAndChannel(@Param("userId") long userId, @Param("expire") Timestamp expireAfter, @Param("status") ChannelInviteStatus status);
 }

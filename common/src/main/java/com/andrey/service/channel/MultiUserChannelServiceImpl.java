@@ -4,6 +4,7 @@ import com.andrey.Constants;
 import com.andrey.db_entities.chat_channel.ChannelStatus;
 import com.andrey.db_entities.chat_channel.ChannelType;
 import com.andrey.db_entities.chat_channel.ChatChannel;
+import com.andrey.db_entities.chat_channel_invite.ChannelInviteStatus;
 import com.andrey.db_entities.chat_channel_invite.ChannelInviteType;
 import com.andrey.db_entities.chat_channel_invite.ChatChannelInvite;
 import com.andrey.db_entities.chat_channel_membership.ChannelMembershipRole;
@@ -166,7 +167,8 @@ public class MultiUserChannelServiceImpl implements MultiUserChannelService{
                 .targetUser(inviteUser)
                 .maxUses(1)
                 .timesUsed(0)
-                .creationDate(new Timestamp(new Date().getTime() + Constants.PRIVATE_INVITE_TO_CHANNEL_EXPIRE_MILLIS))
+                .status(ChannelInviteStatus.ACTIVE)
+                .expirationDate(new Timestamp(new Date().getTime() + Constants.PRIVATE_INVITE_TO_CHANNEL_EXPIRE_MILLIS))
                 .build();
 
         inviteRepository.saveAndFlush(invite);

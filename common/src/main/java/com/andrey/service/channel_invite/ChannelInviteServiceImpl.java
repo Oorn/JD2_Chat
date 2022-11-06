@@ -85,7 +85,7 @@ public class ChannelInviteServiceImpl implements  ChannelInviteService{
     }
 
     private void incrementInviteAndSave(ChatChannelInvite invite) {
-        invite.setTimesUsed(invite.getMaxUses() + 1);
+        invite.setTimesUsed(invite.getTimesUsed() + 1);
         if (invite.getTimesUsed() >= invite.getMaxUses())
             invite.setStatus(ChannelInviteStatus.MAX_USES_REACHED);
         inviteRepository.saveAndFlush(invite);

@@ -56,4 +56,14 @@ public final class Constants {
     public static final int MAX_MULTIUSER_CHANNEL_NAME_LENGTH = 100;
 
     public static final long PRIVATE_INVITE_TO_CHANNEL_EXPIRE_MILLIS = 86400000L; //1 day
+
+    //CACHE
+
+    public static final String AUTH_USER_CACHE_NAME = "authUserCache";
+
+    public static final int AUTH_USER_CACHE_START_SIZE = 100;
+
+    public static final int AUTH_USER_CACHE_MAX_SIZE = 200;
+
+    public static final int AUTH_USER_CACHE_LIFETIME = 10000; //millis
 }
