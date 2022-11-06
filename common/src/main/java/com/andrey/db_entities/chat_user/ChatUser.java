@@ -130,8 +130,9 @@ public class ChatUser implements ModificationDateUpdater, Interactable {
     @Column(name = "last_update_channel_date")
     private Timestamp lastUpdateChannelDate;
 
-    //@Column(name = "public_profile_ID")
-    //private Long publicProfileID;
+    @Column(name = "service_role")
+    @Enumerated(EnumType.STRING)
+    private UserServiceRole userServiceRole;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"owner"})

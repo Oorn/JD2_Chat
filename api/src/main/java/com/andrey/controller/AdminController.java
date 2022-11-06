@@ -4,15 +4,21 @@ import com.andrey.controller.requests.ChatUserCreateRequest;
 import com.andrey.controller.requests.ConfirmEmailRequest;
 import com.andrey.db_entities.chat_user.ChatUser;
 import com.andrey.exceptions.IllegalStateException;
+import com.andrey.security.jwt.JWTPropertiesConfig;
 import com.andrey.service.mail.MailSenderService;
 import com.andrey.service.registration.RegistrationService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,8 +40,13 @@ public class AdminController {
 
     @PostMapping("/createNewUser")
     @Transactional
-    @Operation(summary = "creates user with given credentials and skips verification")
-    public ResponseEntity<Object> createNewUser(@RequestBody @Valid ChatUserCreateRequest createRequest){
+    @Operation(summary = "creates user with given credentials and skips verification", parameters = {
+            @Parameter(in = ParameterIn.HEADER
+                    , description = "user auth token"
+                    , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
+                    , content = @Content(schema = @Schema(type = "string")))})
+    public ResponseEntity<Object> createNewUser(@RequestBody @Valid ChatUserCreateRequest createRequest
+            , @Parameter(hidden = true) Authentication auth){
 
         ChatUser newUser = converter.convert(createRequest, ChatUser.class);
 
