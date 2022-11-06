@@ -13,6 +13,7 @@ import com.andrey.exceptions.NoSuchEntityException;
 import com.andrey.exceptions.RemovedEntityException;
 import com.andrey.repository.ChatChannelInviteRepository;
 import com.andrey.repository.ChatChannelMembershipRepository;
+import com.andrey.service.cached_user_details.CachedUserDetailsService;
 import com.andrey.service.membership.MembershipService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,8 @@ public class ChannelInviteServiceImpl implements  ChannelInviteService{
 
     private final ChatChannelMembershipRepository membershipRepository;
     private final MembershipService membershipService;
+
+    private final CachedUserDetailsService cacheUserService;
 
     @Override
     public Optional<ChatChannelMembership> acceptPersonalChannelInvite(ChatUser authUser, Long inviteId) {
@@ -59,7 +62,9 @@ public class ChannelInviteServiceImpl implements  ChannelInviteService{
             return Optional.of(membershipRepository.saveAndFlush(oldMembership));
 
         }
-        return Optional.ofNullable(membershipService.createNewMembershipAndSaveNoCheck(authUser, invite.getChannel(), Optional.empty(), invite.getChannel().getDefaultRole()));
+        Optional<ChatChannelMembership> result = Optional.ofNullable(membershipService.createNewMembershipAndSaveNoCheck(authUser, invite.getChannel(), Optional.empty(), invite.getChannel().getDefaultRole()));
+        cacheUserService.evictUserFromCache(authUser);
+        return result;
 
     }
 
@@ -85,7 +90,7 @@ public class ChannelInviteServiceImpl implements  ChannelInviteService{
     }
 
     private void incrementInviteAndSave(ChatChannelInvite invite) {
-        invite.setTimesUsed(invite.getMaxUses() + 1);
+        invite.setTimesUsed(invite.getTimesUsed() + 1);
         if (invite.getTimesUsed() >= invite.getMaxUses())
             invite.setStatus(ChannelInviteStatus.MAX_USES_REACHED);
         inviteRepository.saveAndFlush(invite);

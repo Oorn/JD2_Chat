@@ -13,6 +13,7 @@ import com.andrey.exceptions.NoSuchEntityException;
 import com.andrey.exceptions.RemovedEntityException;
 import com.andrey.repository.ChatBlockRepository;
 import com.andrey.repository.ChatUserRepository;
+import com.andrey.service.cached_user_details.CachedUserDetailsService;
 import com.andrey.service.user.ChatUserUtilsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,8 @@ public class BlockServiceImpl implements BlockService{
     private final ChatUserRepository userRepository;
 
     private final ChatUserUtilsService userUtils;
+
+    private final CachedUserDetailsService cacheUserService;
 
     private final EntityManager entityManager;
 
@@ -95,6 +98,8 @@ public class BlockServiceImpl implements BlockService{
 
         //create new blocks
         ChatBlock directBlock = createNewBlockNoCheck(authUser, targetUser);
+        cacheUserService.evictUserFromCache(authUser);
+        cacheUserService.evictUserFromCache(targetUser);
         return Optional.of(directBlock);
     }
 
@@ -166,6 +171,8 @@ public class BlockServiceImpl implements BlockService{
                 break;
         }
 
+        cacheUserService.evictUserFromCache(authUser);
+        cacheUserService.evictUserFromCache(targetUser);
         return Optional.of(authBlock);
 
     }

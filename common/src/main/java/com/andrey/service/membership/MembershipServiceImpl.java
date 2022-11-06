@@ -7,6 +7,7 @@ import com.andrey.db_entities.chat_channel_membership.ChatChannelMembership;
 import com.andrey.db_entities.chat_profile.ChatProfile;
 import com.andrey.db_entities.chat_user.ChatUser;
 import com.andrey.repository.ChatChannelMembershipRepository;
+import com.andrey.service.cached_user_details.CachedUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,8 @@ import java.util.Optional;
 public class MembershipServiceImpl implements MembershipService{
 
     private final ChatChannelMembershipRepository membershipRepository;
+
+    private final CachedUserDetailsService cacheUserService;
 
     @Override
     public ChatChannelMembership createNewMembershipAndSaveNoCheck(ChatUser user, ChatChannel channel, Optional<ChatProfile> optionalProfile, ChannelMembershipRole role) {
@@ -30,6 +33,8 @@ public class MembershipServiceImpl implements MembershipService{
                 .build();
         optionalProfile.ifPresent(res::setUserProfile);
 
-        return membershipRepository.saveAndFlush(res);
+        ChatChannelMembership result = membershipRepository.saveAndFlush(res);
+        cacheUserService.evictUserFromCache(user);
+        return result;
     }
 }

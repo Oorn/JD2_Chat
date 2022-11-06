@@ -4,6 +4,7 @@ import com.andrey.Constants;
 import com.andrey.db_entities.chat_channel.ChannelStatus;
 import com.andrey.db_entities.chat_channel.ChannelType;
 import com.andrey.db_entities.chat_channel.ChatChannel;
+import com.andrey.db_entities.chat_channel_invite.ChannelInviteStatus;
 import com.andrey.db_entities.chat_channel_invite.ChannelInviteType;
 import com.andrey.db_entities.chat_channel_invite.ChatChannelInvite;
 import com.andrey.db_entities.chat_channel_membership.ChannelMembershipRole;
@@ -20,6 +21,7 @@ import com.andrey.repository.ChatChannelMembershipRepository;
 import com.andrey.repository.ChatChannelRepository;
 import com.andrey.repository.ChatUserRepository;
 import com.andrey.service.MessageUpdateDatePropagateService;
+import com.andrey.service.cached_user_details.CachedUserDetailsService;
 import com.andrey.service.membership.MembershipService;
 import com.andrey.service.user.ChatUserUtilsService;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +48,8 @@ public class MultiUserChannelServiceImpl implements MultiUserChannelService{
 
     private final MessageUpdateDatePropagateService propagateService;
 
+    private final CachedUserDetailsService cacheUserService;
+
     @Override
     public Optional<ChatChannel> createMultiuserChannel(ChatUser authUser, ChatChannel newChannel) {
 
@@ -56,6 +60,7 @@ public class MultiUserChannelServiceImpl implements MultiUserChannelService{
         channelRepository.save(newChannel);
         membershipService.createNewMembershipAndSaveNoCheck(authUser, newChannel, Optional.empty(), ChannelMembershipRole.OWNER);
 
+        cacheUserService.evictUserFromCache(authUser);
         return Optional.of(newChannel);
 
     }
@@ -143,6 +148,7 @@ public class MultiUserChannelServiceImpl implements MultiUserChannelService{
 
         membership.setRole(newRole);
         membershipRepository.saveAndFlush(membership);
+        cacheUserService.evictUserFromCache(membership.getUser());
         return Optional.of(membership);
     }
 
@@ -166,7 +172,8 @@ public class MultiUserChannelServiceImpl implements MultiUserChannelService{
                 .targetUser(inviteUser)
                 .maxUses(1)
                 .timesUsed(0)
-                .creationDate(new Timestamp(new Date().getTime() + Constants.PRIVATE_INVITE_TO_CHANNEL_EXPIRE_MILLIS))
+                .status(ChannelInviteStatus.ACTIVE)
+                .expirationDate(new Timestamp(new Date().getTime() + Constants.PRIVATE_INVITE_TO_CHANNEL_EXPIRE_MILLIS))
                 .build();
 
         inviteRepository.saveAndFlush(invite);

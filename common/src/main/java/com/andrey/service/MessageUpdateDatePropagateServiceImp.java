@@ -5,6 +5,8 @@ import com.andrey.db_entities.chat_channel.ChatChannel;
 import com.andrey.db_entities.chat_channel_membership.ChatChannelMembership;
 import com.andrey.db_entities.chat_message.ChatMessage;
 import com.andrey.db_entities.chat_user.ChatUser;
+import com.andrey.service.cached_user_details.CachedUserDetailsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -13,7 +15,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
+@RequiredArgsConstructor
 public class MessageUpdateDatePropagateServiceImp implements MessageUpdateDatePropagateService{
+
+    private final CachedUserDetailsService cacheUserService;
     @Override
     public Timestamp updateDateAndPropagate(ChatMessage message) {
         message.updateModificationDate();
@@ -68,5 +73,7 @@ public class MessageUpdateDatePropagateServiceImp implements MessageUpdateDatePr
             return;
         newDate = (Timestamp) newDate.clone();
         user.setLastUpdateChannelDate(newDate);
+        cacheUserService.evictUserFromCache(user);
+
     }
 }
