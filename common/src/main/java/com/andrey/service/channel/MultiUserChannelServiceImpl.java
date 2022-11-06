@@ -21,6 +21,7 @@ import com.andrey.repository.ChatChannelMembershipRepository;
 import com.andrey.repository.ChatChannelRepository;
 import com.andrey.repository.ChatUserRepository;
 import com.andrey.service.MessageUpdateDatePropagateService;
+import com.andrey.service.cached_user_details.CachedUserDetailsService;
 import com.andrey.service.membership.MembershipService;
 import com.andrey.service.user.ChatUserUtilsService;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,8 @@ public class MultiUserChannelServiceImpl implements MultiUserChannelService{
 
     private final MessageUpdateDatePropagateService propagateService;
 
+    private final CachedUserDetailsService cacheUserService;
+
     @Override
     public Optional<ChatChannel> createMultiuserChannel(ChatUser authUser, ChatChannel newChannel) {
 
@@ -57,6 +60,7 @@ public class MultiUserChannelServiceImpl implements MultiUserChannelService{
         channelRepository.save(newChannel);
         membershipService.createNewMembershipAndSaveNoCheck(authUser, newChannel, Optional.empty(), ChannelMembershipRole.OWNER);
 
+        cacheUserService.evictUserFromCache(authUser);
         return Optional.of(newChannel);
 
     }
@@ -144,6 +148,7 @@ public class MultiUserChannelServiceImpl implements MultiUserChannelService{
 
         membership.setRole(newRole);
         membershipRepository.saveAndFlush(membership);
+        cacheUserService.evictUserFromCache(membership.getUser());
         return Optional.of(membership);
     }
 

@@ -39,7 +39,7 @@ public class CachedUserDetailsServiceImpl implements CachedUserDetailsService {
                 .initialCapacity(Constants.AUTH_USER_CACHE_START_SIZE)
                 .maximumSize(Constants.AUTH_USER_CACHE_MAX_SIZE)
                 .expireAfterAccess(Constants.AUTH_USER_CACHE_LIFETIME, TimeUnit.MILLISECONDS)
-                .weakKeys()
+                //.weakKeys()
                 .recordStats());
         return cacheManager;
     }

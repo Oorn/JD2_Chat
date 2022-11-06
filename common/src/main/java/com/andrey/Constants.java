@@ -65,5 +65,5 @@ public final class Constants {
 
     public static final int AUTH_USER_CACHE_MAX_SIZE = 200;
 
-    public static final int AUTH_USER_CACHE_LIFETIME = 10000; //millis
+    public static final int AUTH_USER_CACHE_LIFETIME = 100000; //millis
 }
