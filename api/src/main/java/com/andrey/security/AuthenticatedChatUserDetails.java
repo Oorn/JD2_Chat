@@ -1,6 +1,7 @@
 package com.andrey.security;
 
 import com.andrey.db_entities.chat_user.ChatUser;
+import com.andrey.db_entities.chat_user.UserServiceRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,7 +29,12 @@ public class AuthenticatedChatUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return AuthorityUtils.NO_AUTHORITIES;
+        switch (chatUser.getUserServiceRole()) {
+            case ADMIN:
+                return AuthorityUtils.createAuthorityList(UserServiceRole.ADMIN.name());
+            default:
+                return AuthorityUtils.NO_AUTHORITIES;
+        }
     }
 
     @Override
