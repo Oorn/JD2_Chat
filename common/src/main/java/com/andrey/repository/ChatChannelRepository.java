@@ -1,7 +1,6 @@
 package com.andrey.repository;
 
 import com.andrey.db_entities.chat_channel.ChatChannel;
-import com.andrey.db_entities.chat_profile.ChatProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

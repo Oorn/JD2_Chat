@@ -1,6 +1,5 @@
 package com.andrey.service;
 
-import com.andrey.db_entities.chat_channel.ChannelLastUpdateInfo;
 import com.andrey.db_entities.chat_channel.ChatChannel;
 import com.andrey.db_entities.chat_channel_membership.ChatChannelMembership;
 import com.andrey.db_entities.chat_message.ChatMessage;

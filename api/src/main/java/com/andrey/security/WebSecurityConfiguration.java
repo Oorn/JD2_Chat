@@ -12,8 +12,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -26,12 +24,10 @@ public class WebSecurityConfiguration {
 
     private final JWTUtils jwtUtils;
 
-    private final UserDetailsService userProvider;
     private final ChatUserRepository userRepository;
 
     private final JWTAuthenticationService jwtAuthenticationService;
 
-    private final PasswordEncoder passwordEncoder;
 
     @Bean
     //configure method replacement after deprecation
@@ -41,12 +37,10 @@ public class WebSecurityConfiguration {
                 .disable()
                 .exceptionHandling()
                 .authenticationEntryPoint(
-                        (request, response, ex) -> {
-                            response.sendError(
-                                    HttpServletResponse.SC_UNAUTHORIZED,
-                                    ex.getMessage()
-                            );
-                        }
+                        (request, response, ex) -> response.sendError(
+                                HttpServletResponse.SC_UNAUTHORIZED,
+                                ex.getMessage()
+                        )
                 )
                 .and()
                 .sessionManagement()
@@ -54,7 +48,7 @@ public class WebSecurityConfiguration {
                 .and()
                 .authorizeRequests()
                 //ant matchers
-                .antMatchers("/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**","/swagger-ui/**", "/v3/api-docs/**","/configuration/ui/**", "/configuration/security/**", "/webjars/**").permitAll()
+                .antMatchers("/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**","/configuration/ui/**", "/configuration/security/**", "/webjars/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/registration/**").permitAll()

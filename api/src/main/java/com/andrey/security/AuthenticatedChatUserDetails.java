@@ -5,15 +5,11 @@ import com.andrey.db_entities.chat_user.UserServiceRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import org.springframework.data.annotation.Transient;
 import org.springframework.security.core.GrantedAuthority;
-
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Collections;
 
 @Data
 @EqualsAndHashCode

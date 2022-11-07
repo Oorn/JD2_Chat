@@ -1,7 +1,5 @@
 package com.andrey.repository;
 
-import com.andrey.Constants;
-import com.andrey.db_entities.chat_channel.ChatChannel;
 import com.andrey.db_entities.chat_message.ChatMessage;
 import com.andrey.db_entities.chat_message.MessageStatus;
 import org.springframework.data.domain.PageRequest;
@@ -22,8 +20,6 @@ import java.util.Optional;
 public interface ChatMessageRepository extends CrudRepository<ChatMessage, Long>
         , JpaRepository<ChatMessage, Long>
         , PagingAndSortingRepository<ChatMessage, Long> {
-
-    ChatMessage findChatMessageById(Long id);
 
 
     @Query(value = "select m from ChatMessage m" +

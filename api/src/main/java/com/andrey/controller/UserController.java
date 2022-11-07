@@ -8,8 +8,6 @@ import com.andrey.controller.responses.UserMembershipsWithLastUpdateResponse;
 import com.andrey.db_entities.chat_profile.ChatProfile;
 import com.andrey.db_entities.chat_user.ChatUser;
 import com.andrey.exceptions.IllegalStateException;
-import com.andrey.exceptions.NoSuchEntityException;
-import com.andrey.exceptions.RemovedEntityException;
 import com.andrey.security.AuthenticatedChatUserDetails;
 import com.andrey.security.jwt.JWTPropertiesConfig;
 import com.andrey.service.channel_invite.ChannelInviteService;
@@ -33,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import java.util.List;
 import java.util.Optional;

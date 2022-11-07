@@ -9,7 +9,6 @@ import com.andrey.exceptions.NoSuchEntityException;
 import com.andrey.exceptions.RemovedEntityException;
 import com.andrey.exceptions.TooManyEntitiesException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailSendException;
@@ -17,7 +16,6 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.validation.ConstraintViolationException;
 import java.util.Collections;

@@ -2,13 +2,10 @@ package com.andrey.service.blocks;
 
 import com.andrey.db_entities.chat_block.BlockStatus;
 import com.andrey.db_entities.chat_block.ChatBlock;
-import com.andrey.db_entities.chat_channel.ChatChannel;
-import com.andrey.db_entities.chat_profile.ChatProfile;
 import com.andrey.db_entities.chat_user.ChatUser;
 import com.andrey.exceptions.BadTargetException;
 import com.andrey.exceptions.IllegalStateException;
 import com.andrey.exceptions.InteractionWithSelfException;
-import com.andrey.exceptions.NoPermissionException;
 import com.andrey.exceptions.NoSuchEntityException;
 import com.andrey.exceptions.RemovedEntityException;
 import com.andrey.repository.ChatBlockRepository;
@@ -136,8 +133,6 @@ public class BlockServiceImpl implements BlockService{
             throw new IllegalStateException("user " + targetUserId + " exists in ChatBlocks, but not ChatUsers");
         ChatUser targetUser = optionalTargetUser.get();
 
-        //dupe block fix, dirty but works
-        //authUser = userRepository.findChatUserByIdWithBlocks(authUser.getId()).get();
         //dupe block fix 2, a bit cleaner
         entityManager.merge(authUser);
 
@@ -177,10 +172,4 @@ public class BlockServiceImpl implements BlockService{
 
     }
 
-    @Override
-    public Map<Long, ChatBlock> getAuthUserBlocks(ChatUser authUser) {
-        return authUser.getBlocks().entrySet().stream()
-                .filter(e -> !e.getValue().getStatus().equals(BlockStatus.REMOVED))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-    }
 }

@@ -11,8 +11,6 @@ import com.andrey.service.channel.ChannelNamingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class ChatUserUtilsServiceImpl implements ChatUserUtilsService{
@@ -79,11 +77,7 @@ public class ChatUserUtilsServiceImpl implements ChatUserUtilsService{
 
     //assuming membership and channel aren't REMOVED
     private boolean privateChannelBlockCheck(ChatUser authUser, ChatChannel channel) {
-        long[] userIds;
-        if (channel.getChannelType().equals(ChannelType.PRIVATE_CHAT_FROM_PROFILE))
-            userIds = channelNamingService.getMemberIdsFromChannelName(channel.getChannelName());
-        else
-            userIds = channelNamingService.getMemberIdsFromChannelName(channel.getChannelName());
+        long[] userIds = channelNamingService.getMemberIdsFromChannelName(channel.getChannelName());
         long user1 = userIds[0];
         long user2 = userIds[1];
         if (authUser.getId().equals(user1))

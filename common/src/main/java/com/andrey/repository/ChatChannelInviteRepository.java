@@ -1,6 +1,5 @@
 package com.andrey.repository;
 
-import com.andrey.db_entities.chat_channel.ChatChannel;
 import com.andrey.db_entities.chat_channel_invite.ChannelInviteStatus;
 import com.andrey.db_entities.chat_channel_invite.ChatChannelInvite;
 import org.springframework.data.jpa.repository.JpaRepository;

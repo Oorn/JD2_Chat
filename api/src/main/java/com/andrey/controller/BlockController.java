@@ -1,11 +1,6 @@
 package com.andrey.controller;
 
-import com.andrey.controller.responses.BlockListResponse;
-import com.andrey.controller.responses.ChannelInfoResponse;
-import com.andrey.controller.responses.ProfileInfoPartialResponse;
 import com.andrey.db_entities.chat_block.ChatBlock;
-import com.andrey.db_entities.chat_channel.ChatChannel;
-import com.andrey.db_entities.chat_profile.ChatProfile;
 import com.andrey.db_entities.chat_user.ChatUser;
 import com.andrey.exceptions.IllegalStateException;
 import com.andrey.security.AuthenticatedChatUserDetails;
@@ -24,18 +19,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.transaction.Transactional;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor

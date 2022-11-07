@@ -1,6 +1,5 @@
 package com.andrey.controller.converters;
 
-import com.andrey.controller.responses.PendingInviteResponse;
 import com.andrey.controller.responses.PendingInvitesListResponse;
 import com.andrey.db_entities.chat_channel_invite.ChatChannelInvite;
 import lombok.RequiredArgsConstructor;

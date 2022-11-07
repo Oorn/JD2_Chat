@@ -55,14 +55,6 @@ public class ChatUser implements ModificationDateUpdater, Interactable {
     @Column(name = "username")
     private String userName;
 
-    /*
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "email", column = @Column(name = "email")),
-            @AttributeOverride(name = "passwordHash", column = @Column(name = "password_hash"))
-    })
-    private UserCredentials credentials;*/
-    //not used because Spring Data doesn't see fields of embedded objects :(
 
     @Column(name = "email")
     private String email;
@@ -70,23 +62,6 @@ public class ChatUser implements ModificationDateUpdater, Interactable {
     @JsonIgnore
     @Column(name = "password_hash")
     private String passwordHash;
-
-    //TODO more not working UUID experiments?
-    /*@Column(name = "uuid", unique = true, insertable = false, updatable = false, nullable = false)
-    //@GeneratedValue(generator="system-uuid")
-    //@GenericGenerator(name="system-uuid", strategy = "uuid")
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
-    @Type(type = "uuid-char")
-    private String uuid;*/
-    /*@GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(name = "uuid", updatable = false, nullable = false, columnDefinition = "VARCHAR(36)")
-    @Type(type = "uuid-char")
-    private UUID uuid;*/
 
     @Column(name = "uuid")
     private String uuid;
@@ -200,7 +175,6 @@ public class ChatUser implements ModificationDateUpdater, Interactable {
     @Override
     public boolean isInteractable() {
         return !(status.equals(UserStatus.REMOVED)
-            || status.equals(UserStatus.DEFAULT_STATUS)
             || status.equals(UserStatus.REQUIRES_EMAIL_CONFIRMATION)
             || status.equals(UserStatus.EMAIL_RECLAIMED));
     }

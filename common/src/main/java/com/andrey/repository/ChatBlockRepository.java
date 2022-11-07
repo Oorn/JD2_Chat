@@ -1,7 +1,6 @@
 package com.andrey.repository;
 
 import com.andrey.db_entities.chat_block.ChatBlock;
-import com.andrey.db_entities.chat_channel.ChatChannel;
 import com.andrey.db_entities.chat_user.ChatUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
@@ -15,7 +14,6 @@ public interface ChatBlockRepository extends CrudRepository<ChatBlock, Long>
         , JpaRepository<ChatBlock, Long>
         , PagingAndSortingRepository<ChatBlock, Long> {
 
-    ChatBlock findChatBlockById(Long id);
 
     Optional<ChatBlock> findChatBlockByBlockingUserAndBlockedUser (ChatUser blockingUser, ChatUser blockedUser);
 }

@@ -1,6 +1,5 @@
 package com.andrey.service.channel_invite;
 
-import com.andrey.db_entities.chat_channel.ChatChannel;
 import com.andrey.db_entities.chat_channel_invite.ChannelInviteStatus;
 import com.andrey.db_entities.chat_channel_invite.ChannelInviteType;
 import com.andrey.db_entities.chat_channel_invite.ChatChannelInvite;

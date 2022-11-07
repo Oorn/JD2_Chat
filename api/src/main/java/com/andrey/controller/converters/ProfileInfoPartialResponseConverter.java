@@ -1,6 +1,5 @@
 package com.andrey.controller.converters;
 
-import com.andrey.controller.responses.ProfileInfoFullResponse;
 import com.andrey.controller.responses.ProfileInfoPartialResponse;
 import com.andrey.db_entities.chat_profile.ChatProfile;
 import lombok.RequiredArgsConstructor;

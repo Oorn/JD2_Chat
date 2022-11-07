@@ -1,6 +1,5 @@
 package com.andrey.controller.responses;
 
-import com.andrey.Constants;
 import com.andrey.db_entities.chat_message.MessageStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,12 +1,9 @@
 package com.andrey.security.jwt;
 
 import com.andrey.db_entities.chat_user.ChatUser;
-import com.andrey.repository.ChatUserRepository;
-
 import com.andrey.security.AuthenticatedChatUserDetails;
 import com.andrey.service.cached_user_details.CachedUserDetailsService;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

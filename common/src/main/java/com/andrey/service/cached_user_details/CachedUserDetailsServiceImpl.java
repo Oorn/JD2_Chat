@@ -30,7 +30,7 @@ public class CachedUserDetailsServiceImpl implements CachedUserDetailsService {
     @Override
     @CacheEvict(value = Constants.AUTH_USER_CACHE_NAME, key = "#user.email")
     public void evictUserFromCache(ChatUser user) {
-
+        // This method exists only as entry point for AOP cache evict
     }
     @Bean
     public CacheManager cacheManager() {

@@ -1,6 +1,5 @@
 package com.andrey.repository;
 
-import com.andrey.db_entities.chat_channel_membership.ChatChannelMembership;
 import com.andrey.db_entities.chat_friend_request.ChatFriendRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;

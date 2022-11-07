@@ -5,7 +5,6 @@ import com.andrey.db_entities.ModificationDateUpdater;
 import com.andrey.db_entities.chat_channel.ChatChannel;
 import com.andrey.db_entities.chat_profile.ChatProfile;
 import com.andrey.db_entities.chat_user.ChatUser;
-import com.andrey.db_entities.chat_user.UserStatus;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

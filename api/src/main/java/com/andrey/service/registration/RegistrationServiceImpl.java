@@ -1,12 +1,11 @@
 package com.andrey.service.registration;
 
 import com.andrey.Constants;
-import com.andrey.db_entities.chat_user.ChatUser;
-import com.andrey.repository.ChatUserRepository;
-import com.andrey.db_entities.chat_user.UserStatus;
-import com.andrey.controller.requests.ChatUserCreateRequest;
 import com.andrey.controller.requests.ConfirmEmailRequest;
 import com.andrey.controller.requests.ResetPasswordRequest;
+import com.andrey.db_entities.chat_user.ChatUser;
+import com.andrey.db_entities.chat_user.UserStatus;
+import com.andrey.repository.ChatUserRepository;
 import com.andrey.service.cached_user_details.CachedUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,39 +32,8 @@ public class RegistrationServiceImpl implements RegistrationService{
         userRepository.saveAndFlush(oldUser);
     }
 
-    @Override //deprecated
-    public Optional<ChatUser> createNewUser(ChatUserCreateRequest request) {
 
-        ChatUser newUser;
-
-        if (Boolean.TRUE.equals(userRepository.existsByEmail(request.getEmail()))) {
-            newUser = userRepository.findChatUserByEmail(request.getEmail());
-            if (newUser.getStatus().equals(UserStatus.REMOVED) //registering from previously deleted email
-            || (newUser.getStatus().equals(UserStatus.REQUIRES_EMAIL_CONFIRMATION) &&
-                    newUser.getEmailConfirmationTokenExpires().before(new Date()))) //registering from email that wasn't confirmed in time
-                reclaimUserEmail(newUser);
-            else
-                return Optional.empty(); //registering from active email impossible
-            //TODO more verbose response for registering on active email
-        }
-
-        newUser =
-                ChatUser.builder()
-                        .userName(request.getUsername())
-                        .email(request.getEmail())
-                        .passwordHash(encryptor.encode(request.getPassword()))
-                        .status(UserStatus.REQUIRES_EMAIL_CONFIRMATION)
-                        .uuid(String.valueOf(UUID.randomUUID()))
-                        .emailConfirmationToken(String.valueOf(UUID.randomUUID()))
-                        .emailConfirmationTokenExpires(new Timestamp(new Date().getTime() + Constants.EMAIL_CONFIRM_TIMEOUT_MILLIS))
-                        .build();
-        newUser = userRepository.saveAndFlush(newUser);
-        cachedUserDetailsService.evictUserFromCache(newUser);
-
-
-        return Optional.ofNullable(newUser);
-    }
-    @Override //deprecated
+    @Override
     public Optional<ChatUser> createNewUser(ChatUser newUser) {
 
 
@@ -82,7 +50,7 @@ public class RegistrationServiceImpl implements RegistrationService{
 
 
         newUser = userRepository.saveAndFlush(newUser);
-        return Optional.ofNullable(newUser);
+        return Optional.of(newUser);
     }
 
     @Override

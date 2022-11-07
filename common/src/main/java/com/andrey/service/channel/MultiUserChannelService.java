@@ -6,7 +6,6 @@ import com.andrey.db_entities.chat_channel_membership.ChannelMembershipRole;
 import com.andrey.db_entities.chat_channel_membership.ChatChannelMembership;
 import com.andrey.db_entities.chat_user.ChatUser;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface MultiUserChannelService {

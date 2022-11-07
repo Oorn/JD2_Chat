@@ -1,7 +1,6 @@
 package com.andrey.controller.converters;
 
 import com.andrey.controller.responses.MembershipWithLastUpdateResponse;
-import com.andrey.db_entities.chat_channel.ChatChannel;
 import com.andrey.db_entities.chat_channel_membership.ChatChannelMembership;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;

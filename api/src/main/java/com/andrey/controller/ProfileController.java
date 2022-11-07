@@ -2,10 +2,8 @@ package com.andrey.controller;
 
 import com.andrey.controller.requests.profile_requests.CreateProfileRequest;
 import com.andrey.controller.requests.profile_requests.UpdateProfileRequest;
-import com.andrey.controller.responses.ProfileInfoFullResponse;
 import com.andrey.controller.responses.ProfileInfoPartialResponse;
 import com.andrey.db_entities.chat_profile.ChatProfile;
-
 import com.andrey.db_entities.chat_user.ChatUser;
 import com.andrey.exceptions.IllegalStateException;
 import com.andrey.security.AuthenticatedChatUserDetails;
@@ -35,8 +33,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.util.List;

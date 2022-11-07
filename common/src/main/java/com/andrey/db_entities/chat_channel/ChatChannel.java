@@ -16,11 +16,8 @@ import lombok.ToString;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -64,12 +61,6 @@ public class ChatChannel implements ModificationDateUpdater, Interactable {
     @ToString.Exclude
     private ChatUser owner;
 
-    /*@Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "lastUpdateDate", column = @Column(name = "last_update_date")),
-            @AttributeOverride(name = "lastUpdateMessageID", column = @Column(name = "last_update_message_id"))
-    })
-    private ChannelLastUpdateInfo lastUpdateInfo;*/
     @CreationTimestamp
     @Column(name = "last_update_date")
     private Timestamp lastUpdateDate;

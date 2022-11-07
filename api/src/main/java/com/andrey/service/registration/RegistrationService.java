@@ -9,8 +9,6 @@ import java.util.Optional;
 
 public interface RegistrationService {
 
-    @Deprecated
-    Optional<ChatUser> createNewUser(ChatUserCreateRequest request);
 
     Optional<ChatUser> createNewUser(ChatUser request);
     boolean confirmEmail(ConfirmEmailRequest request);
