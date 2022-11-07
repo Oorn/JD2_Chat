@@ -30,6 +30,7 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
+@Validated
 @RequestMapping("/registration")
 public class RegistrationController implements WebMvcConfigurer {
 

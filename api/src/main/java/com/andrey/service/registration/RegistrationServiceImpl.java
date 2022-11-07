@@ -7,6 +7,7 @@ import com.andrey.db_entities.chat_user.UserStatus;
 import com.andrey.controller.requests.ChatUserCreateRequest;
 import com.andrey.controller.requests.ConfirmEmailRequest;
 import com.andrey.controller.requests.ResetPasswordRequest;
+import com.andrey.service.cached_user_details.CachedUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,8 @@ public class RegistrationServiceImpl implements RegistrationService{
     private final ChatUserRepository userRepository;
 
     private final PasswordEncoder encryptor;
+
+    private final CachedUserDetailsService cachedUserDetailsService;
 
     private void reclaimUserEmail(ChatUser oldUser) {
         oldUser.setEmail(oldUser.getEmail() + " " + UUID.randomUUID());
@@ -57,6 +60,7 @@ public class RegistrationServiceImpl implements RegistrationService{
                         .emailConfirmationTokenExpires(new Timestamp(new Date().getTime() + Constants.EMAIL_CONFIRM_TIMEOUT_MILLIS))
                         .build();
         newUser = userRepository.saveAndFlush(newUser);
+        cachedUserDetailsService.evictUserFromCache(newUser);
 
 
         return Optional.ofNullable(newUser);
@@ -94,6 +98,7 @@ public class RegistrationServiceImpl implements RegistrationService{
 
             user.setStatus(UserStatus.OK);
             user.setStatusReason("confirmed email at " + new Date());
+            cachedUserDetailsService.evictUserFromCache(user);
 
             return true;
         }
@@ -133,6 +138,7 @@ public class RegistrationServiceImpl implements RegistrationService{
             user.setPasswordHash(encryptor.encode(request.getNewPassword()));
             user.setPasswordResetToken(null);
             user.setPasswordResetDate(new Timestamp(new Date().getTime()));
+            cachedUserDetailsService.evictUserFromCache(user);
 
             return true;
         }
