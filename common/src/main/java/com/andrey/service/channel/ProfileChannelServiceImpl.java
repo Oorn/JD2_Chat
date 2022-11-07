@@ -54,10 +54,7 @@ public class ProfileChannelServiceImpl implements ProfileChannelService {
         if (!authProfile.isInteractable())
            throw new RemovedEntityException("profile " + authProfileId + " has been removed");
 
-        Optional<ChatChannel> optionalExistingChannel = getExistingProfileChannelNoChecks(authUser, authProfileId, targetProfileId);
-        //if optional exists and is OK, check for blocks and return
-        //if optional exists but is not active, check for target profile and user validity, then blocks, then return
-        //if optional doesn't exist, check for target profile and user validity, then blocks, then create and return
+
 
         Optional<ChatProfile> optionalTargetProfile = profilesRepository.findChatProfileByIdWithOwner(targetProfileId);
         if (optionalTargetProfile.isEmpty())
@@ -73,6 +70,11 @@ public class ProfileChannelServiceImpl implements ProfileChannelService {
         if (userUtils.checkIfBlockIsPresent(authUser, targetProfile.getOwner().getId()))
             throw new NoPermissionException("user " + authProfile.getId() + " is blocked by user " + targetProfile.getOwner().getId());
         //block check done
+
+        Optional<ChatChannel> optionalExistingChannel = getExistingProfileChannelNoChecks(authUser, authProfileId, targetProfile.getOwner().getId(), targetProfileId);
+        //if optional exists and is OK, check for blocks and return
+        //if optional exists but is not active, check for target profile and user validity, then blocks, then return
+        //if optional doesn't exist, check for target profile and user validity, then blocks, then create and return
 
 
         if (optionalExistingChannel.isPresent())
@@ -103,13 +105,13 @@ public class ProfileChannelServiceImpl implements ProfileChannelService {
         return channelRepository.findChatChannelByIdWithMembershipsWithProfileAndUser(newChannel.getId());
     }
 
-    private Optional<ChatChannel> getExistingProfileChannelNoChecks(ChatUser authUser, Long authProfileId, Long targetProfileId) {
+    private Optional<ChatChannel> getExistingProfileChannelNoChecks(ChatUser authUser,  Long authProfileId, Long targetUserId, Long targetProfileId) {
 
         Optional<Long> channelId =  authUser.getChannelMemberships().values().stream()
                 .map(ChatChannelMembership::getChannel)
                 .filter(c -> c.getChannelType().equals(ChannelType.PRIVATE_CHAT_FROM_PROFILE))
                 .filter(c ->
-                        c.getChannelName().equals(namingService.generateProfileChannelName(authProfileId, targetProfileId)))
+                        c.getChannelName().equals(namingService.generateProfileChannelName(authUser.getId(), targetUserId, authProfileId, targetProfileId)))
                 .map(ChatChannel::getId)
                 .findFirst();
         if (channelId.isEmpty())
@@ -120,7 +122,7 @@ public class ProfileChannelServiceImpl implements ProfileChannelService {
     }
     private ChatChannel createNewProfileChannel(ChatProfile profile1, ChatProfile profile2) {
         ChatChannel newChannel = ChatChannel.builder()
-                .channelName(namingService.generateProfileChannelName(profile1.getId(), profile2.getId()))
+                .channelName(namingService.generateProfileChannelName(profile1.getOwner().getId(), profile2.getOwner().getId(), profile1.getId(), profile2.getId()))
                 .channelType(ChannelType.PRIVATE_CHAT_FROM_PROFILE)
                 .owner(profile1.getOwner())
                 .status(ChannelStatus.EMPTY)

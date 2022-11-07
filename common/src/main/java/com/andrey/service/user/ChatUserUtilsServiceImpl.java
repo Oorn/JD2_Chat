@@ -11,6 +11,8 @@ import com.andrey.service.channel.ChannelNamingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ChatUserUtilsServiceImpl implements ChatUserUtilsService{

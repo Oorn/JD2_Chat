@@ -89,20 +89,6 @@ public class BlockController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/myBlocks")
-    @Operation(summary = "returns information about users you are currently blocked from interacting with", parameters = {
-            @Parameter(in = ParameterIn.HEADER
-                    , description = "user auth token"
-                    , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
-                    , content = @Content(schema = @Schema(type = "string")))
-    })
-    public ResponseEntity<Object> userInfo(@Parameter(hidden = true) Authentication auth) {
 
-        ChatUser authUser = ((AuthenticatedChatUserDetails) auth.getPrincipal()).getChatUser();
-
-        BlockListResponse response = converter.convert(authUser, BlockListResponse.class);
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
 
 }

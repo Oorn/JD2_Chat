@@ -1,5 +1,6 @@
 package com.andrey.security;
 
+import com.andrey.db_entities.chat_user.UserServiceRole;
 import com.andrey.repository.ChatUserRepository;
 import com.andrey.security.jwt.JWTAuthenticationService;
 import com.andrey.security.jwt.JWTFilter;
@@ -58,7 +59,7 @@ public class WebSecurityConfiguration {
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/registration/**").permitAll()
                 .antMatchers("/public/**").permitAll()
-                .antMatchers("/admin/**").permitAll() //todo
+                .antMatchers("/admin/**").hasAuthority(UserServiceRole.ADMIN.name())
                 .anyRequest()
                 .authenticated();
 

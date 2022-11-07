@@ -1,7 +1,6 @@
 package com.andrey.db_entities.chat_channel_membership;
 
 public enum ChannelMembershipRole {
-    DEFAULT_ROLE,
     OWNER,
     ADMIN,
     MODERATOR,

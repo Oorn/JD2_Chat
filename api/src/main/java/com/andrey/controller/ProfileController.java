@@ -114,24 +114,7 @@ public class ProfileController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    @GetMapping("/myProfiles")
-    @Operation(summary = "returns info about authenticated user profiles", parameters = {
-            @Parameter(in = ParameterIn.HEADER
-                    , description = "user auth token"
-                    , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
-                    , content = @Content(schema = @Schema(type = "string")))
-    })
-    public ResponseEntity<Object> myProfiles(@Parameter(hidden = true) Authentication auth){
 
-        ChatUser authUser = ((AuthenticatedChatUserDetails) auth.getPrincipal()).getChatUser();
-
-        List<ChatProfile> result = profilesService.getOwnedProfiles(authUser);
-        List<ProfileInfoFullResponse> response = result.stream()
-                .map(p -> converter.convert(p, ProfileInfoFullResponse.class))
-                .collect(Collectors.toList());
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
 
     @GetMapping("/randomMatchmaking")
     @Operation(summary = "get random profiles of other users with whom private chat can be started", parameters = {

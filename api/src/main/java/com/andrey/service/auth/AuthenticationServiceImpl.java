@@ -5,6 +5,7 @@ import com.andrey.repository.ChatUserRepository;
 import com.andrey.db_entities.chat_user.UserStatus;
 import com.andrey.controller.requests.AuthenticationRequest;
 import com.andrey.security.jwt.JWTUtils;
+import com.andrey.service.cached_user_details.CachedUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +20,7 @@ import java.util.Optional;
 public class AuthenticationServiceImpl implements AuthenticationService{
 
     private final ChatUserRepository userRepository;
+    private final CachedUserDetailsService cachedUserDetailsService;
 
     private final PasswordEncoder encryptor;
 
@@ -27,7 +29,8 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     private boolean checkIfTokenCanBeRefreshedForEmail(String email) throws UsernameNotFoundException {
         try {
             /*Find user in DB*/
-            ChatUser searchResult = userRepository.findChatUserByEmail(email);
+            //ChatUser searchResult = userRepository.findChatUserByEmail(email);
+            ChatUser searchResult = cachedUserDetailsService.cachedFindChatUserByEmailWithFriendshipsAndChatMembershipsAndBlocks(email);
             return searchResult.getStatus() == UserStatus.OK;
 
         } catch (Exception e) {
@@ -40,6 +43,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
         ChatUser user;
         try {
             user = userRepository.findChatUserByEmail(request.getEmail());
+
         }
         catch (Exception e)//TODO - add sensible exceptions and deny reason tracking
         {

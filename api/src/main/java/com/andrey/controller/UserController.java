@@ -1,6 +1,8 @@
 package com.andrey.controller;
 
+import com.andrey.controller.responses.BlockListResponse;
 import com.andrey.controller.responses.PendingInvitesListResponse;
+import com.andrey.controller.responses.ProfileInfoFullResponse;
 import com.andrey.controller.responses.UserInfoResponse;
 import com.andrey.controller.responses.UserMembershipsWithLastUpdateResponse;
 import com.andrey.db_entities.chat_profile.ChatProfile;
@@ -33,7 +35,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -48,6 +52,8 @@ public class UserController {
     private final ChannelInviteService inviteService;
 
     private final ChatUserService userService;
+
+    private final ProfilesService profilesService;
 
     @GetMapping("/info")
     @Operation(summary = "returns user information visible for currently authenticated user", parameters = {
@@ -70,8 +76,8 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/channelUpdates")
-    @Operation(summary = "returns last update dates of channels that user is member of", parameters = {
+    @GetMapping("/myChannelInfo")
+    @Operation(summary = "returns information about channels that user is member of, including update dates", parameters = {
             @Parameter(in = ParameterIn.HEADER
                     , description = "user auth token"
                     , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
@@ -98,6 +104,39 @@ public class UserController {
         ChatUser authUser = ((AuthenticatedChatUserDetails) auth.getPrincipal()).getChatUser();
 
         PendingInvitesListResponse response = converter.convert(inviteService.getPendingChannelInvites(authUser), PendingInvitesListResponse.class);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/myProfiles")
+    @Operation(summary = "returns info about authenticated user profiles", parameters = {
+            @Parameter(in = ParameterIn.HEADER
+                    , description = "user auth token"
+                    , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
+                    , content = @Content(schema = @Schema(type = "string")))
+    })
+    public ResponseEntity<Object> myProfiles(@Parameter(hidden = true) Authentication auth){
+
+        ChatUser authUser = ((AuthenticatedChatUserDetails) auth.getPrincipal()).getChatUser();
+
+        List<ChatProfile> result = profilesService.getOwnedProfiles(authUser);
+        List<ProfileInfoFullResponse> response = result.stream()
+                .map(p -> converter.convert(p, ProfileInfoFullResponse.class))
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/myBlocks")
+    @Operation(summary = "returns information about users you are currently blocked from interacting with", parameters = {
+            @Parameter(in = ParameterIn.HEADER
+                    , description = "user auth token"
+                    , name = JWTPropertiesConfig.AUTH_TOKEN_HEADER
+                    , content = @Content(schema = @Schema(type = "string")))
+    })
+    public ResponseEntity<Object> userInfo(@Parameter(hidden = true) Authentication auth) {
+
+        ChatUser authUser = ((AuthenticatedChatUserDetails) auth.getPrincipal()).getChatUser();
+
+        BlockListResponse response = converter.convert(authUser, BlockListResponse.class);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

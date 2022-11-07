@@ -43,10 +43,10 @@ public class ProfilesServiceImpl implements ProfilesService{
     @Override
     public Optional<ChatProfile> createNewProfile(ChatProfile newProfile, ChatUser user) {
 
-        if (newProfile.getProfileVisibilityMatchmaking() == ProfileVisibilityMatchmaking.DEFAULT_PROFILE_SEARCH_VISIBILITY)
-            throw new BadRequestException("invalid profileVisibilityMatchmaking");
-        if (newProfile.getProfileVisibilityUserInfo() == ProfileVisibilityUserInfo.DEFAULT_PROFILE_USER_INFO_VISIBILITY)
-            throw new BadRequestException("invalid ProfileVisibilityUserInfo");
+        //if (newProfile.getProfileVisibilityMatchmaking() == ProfileVisibilityMatchmaking.DEFAULT_PROFILE_SEARCH_VISIBILITY)
+        //    throw new BadRequestException("invalid profileVisibilityMatchmaking");
+        //if (newProfile.getProfileVisibilityUserInfo() == ProfileVisibilityUserInfo.DEFAULT_PROFILE_USER_INFO_VISIBILITY)
+        //    throw new BadRequestException("invalid ProfileVisibilityUserInfo");
 
         ChatUser persistUser = userRepository.findChatUserByIdWithProfiles(user.getId()).get();
         if (userUtils.getActiveProfileNumber(persistUser) >= Constants.MAX_PROFILES_PER_USER)
@@ -64,10 +64,10 @@ public class ProfilesServiceImpl implements ProfilesService{
             throw new BadRequestException("new Profile cannot be null");
         if (!newProfile.isInteractable())
             throw new RemovedEntityException("Profile with id " + newProfile.getId() + " has been removed");
-        if (newProfile.getProfileVisibilityMatchmaking() == ProfileVisibilityMatchmaking.DEFAULT_PROFILE_SEARCH_VISIBILITY)
-            throw new BadRequestException("invalid profileVisibilityMatchmaking");
-        if (newProfile.getProfileVisibilityUserInfo() == ProfileVisibilityUserInfo.DEFAULT_PROFILE_USER_INFO_VISIBILITY)
-            throw new BadRequestException("invalid ProfileVisibilityUserInfo");
+        //if (newProfile.getProfileVisibilityMatchmaking() == ProfileVisibilityMatchmaking.DEFAULT_PROFILE_SEARCH_VISIBILITY)
+        //    throw new BadRequestException("invalid profileVisibilityMatchmaking");
+        //if (newProfile.getProfileVisibilityUserInfo() == ProfileVisibilityUserInfo.DEFAULT_PROFILE_USER_INFO_VISIBILITY)
+        //    throw new BadRequestException("invalid ProfileVisibilityUserInfo");
 
         if (!newProfile.getOwner().getId().equals(user.getId()))
             throw new NoPermissionException("user with id " + user.getId() + " doesn't own profile with id " + newProfile.getId());
@@ -126,8 +126,8 @@ public class ProfilesServiceImpl implements ProfilesService{
                 return viewingUser.getId().equals(
                         profile.getOwner().getId()
                 );
-            case DEFAULT_PROFILE_USER_INFO_VISIBILITY:
-                return false;
+            //case DEFAULT_PROFILE_USER_INFO_VISIBILITY:
+            //    return false;
         }
         return false;
     }

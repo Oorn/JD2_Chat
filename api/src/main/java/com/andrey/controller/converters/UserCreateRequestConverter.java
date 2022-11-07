@@ -3,6 +3,7 @@ package com.andrey.controller.converters;
 import com.andrey.Constants;
 import com.andrey.controller.requests.ChatUserCreateRequest;
 import com.andrey.db_entities.chat_user.ChatUser;
+import com.andrey.db_entities.chat_user.UserServiceRole;
 import com.andrey.db_entities.chat_user.UserStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
@@ -29,6 +30,7 @@ public class UserCreateRequestConverter implements Converter<ChatUserCreateReque
                         .uuid(String.valueOf(UUID.randomUUID()))
                         .emailConfirmationToken(String.valueOf(UUID.randomUUID()))
                         .emailConfirmationTokenExpires(new Timestamp(new Date().getTime() + Constants.EMAIL_CONFIRM_TIMEOUT_MILLIS))
+                        .userServiceRole(UserServiceRole.USER)
                         .build();
     }
 }
