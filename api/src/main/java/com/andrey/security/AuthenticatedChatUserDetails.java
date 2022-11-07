@@ -29,6 +29,8 @@ public class AuthenticatedChatUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (chatUser.getUserServiceRole() == null)
+            return AuthorityUtils.NO_AUTHORITIES;
         switch (chatUser.getUserServiceRole()) {
             case ADMIN:
                 return AuthorityUtils.createAuthorityList(UserServiceRole.ADMIN.name());

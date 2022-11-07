@@ -29,7 +29,7 @@ public interface ChatMessageRepository extends CrudRepository<ChatMessage, Long>
     @Query(value = "select m from ChatMessage m" +
             " left join fetch m.channel c" +
             " left join fetch c.members mem" +
-            " left join fetch mem.userProfile p" +
+            " left join fetch mem.user u" +
             " where m.id = :id ")
     Optional<ChatMessage> findChatMessageByIdWithChannelWithMembersWithUsers(Long id);
 

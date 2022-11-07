@@ -95,11 +95,6 @@ public class ChatMessage implements ModificationDateUpdater, Interactable {
         return getClass().hashCode();
     }
 
-    @Deprecated
-    public void updateParentUpdateDate() {
-        updateModificationDate();
-        getChannel().updateLastMessageUpdateDate(getModificationDate(), getId());
-    }
 
     @PreUpdate
     @Override

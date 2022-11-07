@@ -66,14 +66,7 @@ public class MessageUpdateDatePropagateServiceImp implements MessageUpdateDatePr
 
         //propagate to all users
         getRecipientUserStream(channel)
-                .forEach(cu -> userUpdateLastChannelUpdateDate(cu,finalNewDate));
+                .forEach(cacheUserService::evictUserFromCache);
     }
-    private void userUpdateLastChannelUpdateDate(ChatUser user, Timestamp newDate) {
-        if (newDate.before(user.getLastUpdateChannelDate()))
-            return;
-        newDate = (Timestamp) newDate.clone();
-        user.setLastUpdateChannelDate(newDate);
-        cacheUserService.evictUserFromCache(user);
 
-    }
 }

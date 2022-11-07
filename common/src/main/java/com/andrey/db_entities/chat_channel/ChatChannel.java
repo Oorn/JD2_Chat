@@ -106,27 +106,6 @@ public class ChatChannel implements ModificationDateUpdater, Interactable {
     @ToString.Exclude
     private Set<ChatMessage> messages;
 
-    @Deprecated //because service handles it
-    public void updateLastMessageUpdateDate(Timestamp newDate, long newMessageID) {
-        if (getLastUpdateDate().after(newDate))
-            return;
-        if ((getLastUpdateDate().equals(newDate))
-                && (getLastUpdateMessageID() > newMessageID))
-            return;
-
-        //set new last update info, using clone to avoid potentially confusing JPA
-        Timestamp finalNewDate = (Timestamp) newDate.clone();
-        setLastUpdateDate(finalNewDate);
-        setLastUpdateMessageID(newMessageID);
-
-        //propagate to all users
-        getMembers().stream()
-                .filter(ChatChannelMembership::isInteractable)
-                .map(ChatChannelMembership::getUser)
-                .filter(ChatUser::isInteractable)
-                .forEach(cu -> cu.updateLastUpdateChannelDate(finalNewDate));
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

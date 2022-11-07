@@ -126,10 +126,6 @@ public class ChatUser implements ModificationDateUpdater, Interactable {
     @Column(name = "password_reset_date")
     private Timestamp passwordResetDate;
 
-    @CreationTimestamp
-    @Column(name = "last_update_channel_date")
-    private Timestamp lastUpdateChannelDate;
-
     @Column(name = "service_role")
     @Enumerated(EnumType.STRING)
     private UserServiceRole userServiceRole;
@@ -177,14 +173,6 @@ public class ChatUser implements ModificationDateUpdater, Interactable {
     @JsonIgnoreProperties({"targetUser"})
     @ToString.Exclude
     private Set<ChatChannelInvite> receivedChannelInvites;
-
-    @Deprecated //why did I mark it as deprecated? Because service handles it
-    public void updateLastUpdateChannelDate(Timestamp newDate) {
-        if (newDate.before(getLastUpdateChannelDate()))
-            return;
-        newDate = (Timestamp) newDate.clone();
-        setLastUpdateChannelDate(newDate);
-    }
 
     @Override
     public boolean equals(Object o) {
