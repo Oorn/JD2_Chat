@@ -1,6 +1,7 @@
 package com.andrey.controller.converters;
 
 import com.andrey.controller.responses.UserMembershipsWithLastUpdateResponse;
+import com.andrey.db_entities.chat_channel.ChannelStatus;
 import com.andrey.db_entities.chat_channel_membership.ChatChannelMembership;
 import com.andrey.db_entities.chat_user.ChatUser;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class UserMembershipsWithLastUpdateResponseConverter implements Converter
         res.setChannelResponses(
                 source.getChannelMemberships().values().stream()
                         .filter(ChatChannelMembership::isInteractable)
-                        .filter(mem -> mem.getChannel().isInteractable())
+                        .filter(mem -> mem.getChannel().getStatus().equals(ChannelStatus.ACTIVE))
                         .map(membershipConverter::convert)
                         .collect(Collectors.toList())
 
