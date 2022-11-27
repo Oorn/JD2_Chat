@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -18,6 +19,9 @@ import java.util.stream.Stream;
 public class MessageUpdateDatePropagateServiceImp implements MessageUpdateDatePropagateService{
 
     private final CachedUserDetailsService cacheUserService;
+
+    private Consumer<String> userNotifier = null;
+
     @Override
     public Timestamp updateDateAndPropagate(ChatMessage message) {
         message.updateModificationDate();
@@ -40,6 +44,11 @@ public class MessageUpdateDatePropagateServiceImp implements MessageUpdateDatePr
     @Override
     public List<ChatUser> getRecipientUserList(ChatMessage message) {
         return getRecipientUserStream(message.getChannel()).collect(Collectors.toList());
+    }
+
+    @Override
+    public void setUserNotificationService(Consumer<String> usernameConsumer) {
+        userNotifier = usernameConsumer;
     }
 
     private Stream<ChatUser> getRecipientUserStream(ChatChannel channel) {
@@ -66,6 +75,12 @@ public class MessageUpdateDatePropagateServiceImp implements MessageUpdateDatePr
         //propagate to all users
         getRecipientUserStream(channel)
                 .forEach(cacheUserService::evictUserFromCache);
+
+        //notify
+        if (userNotifier != null)
+            getRecipientUserStream(channel)
+                    .map(ChatUser::getEmail)
+                    .forEach(userNotifier);
     }
 
 }

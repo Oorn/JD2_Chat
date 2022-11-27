@@ -38,6 +38,11 @@ public class JWTFilter extends UsernamePasswordAuthenticationFilter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         String authToken = httpRequest.getHeader(JWTPropertiesConfig.AUTH_TOKEN_HEADER);
+        //for websockets
+        String authTokenParam = httpRequest.getParameter(JWTPropertiesConfig.AUTH_TOKEN_HEADER);
+        if ((authTokenParam != null) && (authToken == null))
+            authToken = authTokenParam;
+
 
         if (authToken != null) {
             if (tokenUtils.validateToken(authToken)) {

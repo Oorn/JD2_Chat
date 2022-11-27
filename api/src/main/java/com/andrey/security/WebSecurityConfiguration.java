@@ -61,6 +61,9 @@ public class WebSecurityConfiguration {
         http
                 .addFilterBefore(new JWTFilter(jwtUtils, jwtAuthenticationService, userRepository), BasicAuthenticationFilter.class);
 
+        //CORS for testing STOMP
+        http.cors();
+
         return http.build();
     }
 }
