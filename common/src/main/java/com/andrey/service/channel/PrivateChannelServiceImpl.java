@@ -68,7 +68,7 @@ public class PrivateChannelServiceImpl implements PrivateChannelService{
 
         if (optionalExistingChannel.isPresent()) {
             if (!optionalExistingChannel.get().getStatus().equals(ChannelStatus.EMPTY)) {
-                //TODO this is probably illegal state
+                //TODO this is probably now illegal state
                 optionalExistingChannel.get().setStatus(ChannelStatus.ACTIVE); //EMPTY channels do not become active from fetch, only when posting
                 channelRepository.saveAndFlush(optionalExistingChannel.get());
             }

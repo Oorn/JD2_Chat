@@ -1,7 +1,5 @@
 package com.andrey.controller.responses;
 
-import com.andrey.db_entities.chat_profile.ProfileVisibilityMatchmaking;
-import com.andrey.db_entities.chat_profile.ProfileVisibilityUserInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

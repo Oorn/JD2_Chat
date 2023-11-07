@@ -16,8 +16,7 @@ public interface BlockService {
 
     Optional<ChatBlock> removeBlock(ChatUser authUser, long targetUserId);
 
-    @Deprecated //is now handled at converter level from ChatUser
-    Map<Long, ChatBlock> getAuthUserBlocks(ChatUser authUser);
+
 
 
 }

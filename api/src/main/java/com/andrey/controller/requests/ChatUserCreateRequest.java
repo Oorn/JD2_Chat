@@ -1,16 +1,12 @@
 package com.andrey.controller.requests;
 
 import com.andrey.Constants;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.apache.commons.validator.routines.EmailValidator;
-import org.springframework.context.annotation.Bean;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

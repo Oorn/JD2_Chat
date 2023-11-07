@@ -1,10 +1,8 @@
 package com.andrey.controller.converters;
 
 import com.andrey.controller.responses.BlockListResponse;
-import com.andrey.controller.responses.ChannelInfoResponse;
 import com.andrey.db_entities.chat_block.BlockStatus;
 import com.andrey.db_entities.chat_block.ChatBlock;
-import com.andrey.db_entities.chat_channel.ChatChannel;
 import com.andrey.db_entities.chat_user.ChatUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;

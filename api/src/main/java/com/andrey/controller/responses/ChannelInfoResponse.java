@@ -33,7 +33,6 @@ public class ChannelInfoResponse {
     private String channelName;
 
     //optional
-    //private List<ProfileInfoPartialResponse> channelProfiles;
     private Map<Long, ProfileInfoPartialResponse> channelProfiles;
 
 

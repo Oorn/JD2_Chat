@@ -66,7 +66,6 @@ public class ProfileChannelServiceImpl implements ProfileChannelService {
             throw new InteractionWithSelfException("cannot start profile channel with yourself");
         //same user check
 
-        //authUser now carries necessary block info if (blockService.fetchAndCheckIfBLockIsPresent(authProfile.getOwner(), targetProfile.getOwner()))
         if (userUtils.checkIfBlockIsPresent(authUser, targetProfile.getOwner().getId()))
             throw new NoPermissionException("user " + authProfile.getId() + " is blocked by user " + targetProfile.getOwner().getId());
         //block check done

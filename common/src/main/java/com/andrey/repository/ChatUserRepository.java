@@ -19,14 +19,6 @@ public interface ChatUserRepository extends CrudRepository<ChatUser, Long>
     ChatUser findChatUserByEmail(String email);
     Boolean existsByEmail(String email);
 
-    /*@Query(value = "select u from ChatUser u" +
-            " join fetch u.channelMemberships m" +
-            " join fetch m.channel mc" +
-            " join fetch u.friendshipsWithGreaterID f1" +
-            " join fetch f1.userWithLesserID f1u" +
-            " join fetch u.friendshipsWithLesserID f2" +
-            " join fetch f2.userWithGreaterID f2u" +
-            " where u.email = :email ")*/
     @Query(value = "select u from ChatUser u" +
             " left join fetch u.channelMemberships m" +
             " left join fetch m.channel mc" +

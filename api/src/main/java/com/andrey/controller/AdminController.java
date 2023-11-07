@@ -5,7 +5,6 @@ import com.andrey.controller.requests.ConfirmEmailRequest;
 import com.andrey.db_entities.chat_user.ChatUser;
 import com.andrey.exceptions.IllegalStateException;
 import com.andrey.security.jwt.JWTPropertiesConfig;
-import com.andrey.service.mail.MailSenderService;
 import com.andrey.service.registration.RegistrationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

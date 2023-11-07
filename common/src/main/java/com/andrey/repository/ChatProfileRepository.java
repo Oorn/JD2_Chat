@@ -1,10 +1,7 @@
 package com.andrey.repository;
 
 import com.andrey.db_entities.chat_profile.ChatProfile;
-import com.andrey.db_entities.chat_user.ChatUser;
-import com.andrey.db_entities.chat_user.UserStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;

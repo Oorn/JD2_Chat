@@ -28,8 +28,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 
     private boolean checkIfTokenCanBeRefreshedForEmail(String email) throws UsernameNotFoundException {
         try {
-            /*Find user in DB*/
-            //ChatUser searchResult = userRepository.findChatUserByEmail(email);
+
             ChatUser searchResult = cachedUserDetailsService.cachedFindChatUserByEmailWithFriendshipsAndChatMembershipsAndBlocks(email);
             return searchResult.getStatus() == UserStatus.OK;
 

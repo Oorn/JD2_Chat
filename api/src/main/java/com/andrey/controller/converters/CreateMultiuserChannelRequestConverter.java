@@ -1,12 +1,9 @@
 package com.andrey.controller.converters;
 
 import com.andrey.controller.requests.channel_requests.CreateMultiuserChannelRequest;
-import com.andrey.controller.requests.profile_requests.CreateProfileRequest;
 import com.andrey.db_entities.chat_channel.ChannelStatus;
 import com.andrey.db_entities.chat_channel.ChannelType;
 import com.andrey.db_entities.chat_channel.ChatChannel;
-import com.andrey.db_entities.chat_profile.ChatProfile;
-import com.andrey.db_entities.chat_profile.ProfileStatus;
 import com.andrey.exceptions.BadEnumValueException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;

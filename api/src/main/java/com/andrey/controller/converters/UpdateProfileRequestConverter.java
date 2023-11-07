@@ -5,7 +5,6 @@ import com.andrey.db_entities.chat_profile.ChatProfile;
 import com.andrey.exceptions.NoSuchEntityException;
 import com.andrey.repository.ChatProfileRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -35,18 +34,6 @@ public class UpdateProfileRequestConverter implements Converter<UpdateProfileReq
 
         return oldProfile.get();
     }
-/*
-    @Autowired
-    @Lazy
-    private final CreateProfileRequestConverter createConverter;
 
-    @Override
-    public ChatProfile convert(UpdateProfileRequest source) {
-        ChatProfile res = createConverter.convert(source);
-        res.setId(source.getId());
-        return res;
-    }
-
- */
 
 }

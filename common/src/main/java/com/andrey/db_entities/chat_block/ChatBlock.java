@@ -2,9 +2,7 @@ package com.andrey.db_entities.chat_block;
 
 import com.andrey.db_entities.Interactable;
 import com.andrey.db_entities.ModificationDateUpdater;
-import com.andrey.db_entities.chat_profile.ChatProfile;
 import com.andrey.db_entities.chat_user.ChatUser;
-import com.andrey.db_entities.chat_user.UserStatus;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -58,12 +56,6 @@ public class ChatBlock implements ModificationDateUpdater, Interactable {
     @JoinColumn(name = "blocked_user_id", nullable = false)
     @ToString.Exclude
     private ChatUser blockedUser;
-
-    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-    @JoinColumn(name = "blocked_profile_id", nullable = false)
-    @ToString.Exclude
-    private ChatProfile blockedProfile;
-    //TODO remove blocked profile from here and DB
 
     @CreationTimestamp
     @Column(name = "creation_date")

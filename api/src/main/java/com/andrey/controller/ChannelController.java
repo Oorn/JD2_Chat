@@ -9,7 +9,6 @@ import com.andrey.controller.responses.ChannelInfoResponse;
 import com.andrey.db_entities.chat_channel.ChatChannel;
 import com.andrey.db_entities.chat_channel_invite.ChatChannelInvite;
 import com.andrey.db_entities.chat_channel_membership.ChatChannelMembership;
-import com.andrey.db_entities.chat_message.ChatMessage;
 import com.andrey.db_entities.chat_user.ChatUser;
 import com.andrey.exceptions.IllegalStateException;
 import com.andrey.security.AuthenticatedChatUserDetails;
@@ -82,7 +81,6 @@ public class ChannelController {
         Optional<ChatChannel> result = profileChannelService.fetchOrCreateProfileChannelInfo(authUser, fetchRequest.getAuthUserProfileId(), fetchRequest.getTargetProfileId());
         if (result.isEmpty())
             throw new IllegalStateException("service returned empty Optional");
-        //ChatFromProfileInfoResponse response = converter.convert(result.get(), ChatFromProfileInfoResponse.class);
         ChannelInfoResponse response = converter.convert(result.get(), ChannelInfoResponse.class);
 
         return new ResponseEntity<>(response, HttpStatus.OK);

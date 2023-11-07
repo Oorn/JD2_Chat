@@ -5,6 +5,8 @@ import com.andrey.db_entities.chat_channel.ChannelStatus;
 import com.andrey.db_entities.chat_channel.ChannelType;
 import com.andrey.db_entities.chat_channel_membership.ChatChannelMembership;
 import com.andrey.db_entities.chat_profile.ChatProfile;
+import com.andrey.db_entities.chat_profile.ProfileStatus;
+import com.andrey.db_entities.chat_user.ChatUser;
 import com.andrey.exceptions.BadRequestException;
 import com.andrey.exceptions.IllegalStateException;
 import com.andrey.exceptions.NoPermissionException;
@@ -12,10 +14,6 @@ import com.andrey.exceptions.NoSuchEntityException;
 import com.andrey.exceptions.RemovedEntityException;
 import com.andrey.exceptions.TooManyEntitiesException;
 import com.andrey.repository.ChatProfileRepository;
-import com.andrey.db_entities.chat_profile.ProfileStatus;
-import com.andrey.db_entities.chat_profile.ProfileVisibilityMatchmaking;
-import com.andrey.db_entities.chat_profile.ProfileVisibilityUserInfo;
-import com.andrey.db_entities.chat_user.ChatUser;
 import com.andrey.repository.ChatUserRepository;
 import com.andrey.service.user.ChatUserUtilsService;
 import lombok.RequiredArgsConstructor;
@@ -43,10 +41,6 @@ public class ProfilesServiceImpl implements ProfilesService{
     @Override
     public Optional<ChatProfile> createNewProfile(ChatProfile newProfile, ChatUser user) {
 
-        //if (newProfile.getProfileVisibilityMatchmaking() == ProfileVisibilityMatchmaking.DEFAULT_PROFILE_SEARCH_VISIBILITY)
-        //    throw new BadRequestException("invalid profileVisibilityMatchmaking");
-        //if (newProfile.getProfileVisibilityUserInfo() == ProfileVisibilityUserInfo.DEFAULT_PROFILE_USER_INFO_VISIBILITY)
-        //    throw new BadRequestException("invalid ProfileVisibilityUserInfo");
 
         ChatUser persistUser = userRepository.findChatUserByIdWithProfiles(user.getId()).get();
         if (userUtils.getActiveProfileNumber(persistUser) >= Constants.MAX_PROFILES_PER_USER)
@@ -64,21 +58,10 @@ public class ProfilesServiceImpl implements ProfilesService{
             throw new BadRequestException("new Profile cannot be null");
         if (!newProfile.isInteractable())
             throw new RemovedEntityException("Profile with id " + newProfile.getId() + " has been removed");
-        //if (newProfile.getProfileVisibilityMatchmaking() == ProfileVisibilityMatchmaking.DEFAULT_PROFILE_SEARCH_VISIBILITY)
-        //    throw new BadRequestException("invalid profileVisibilityMatchmaking");
-        //if (newProfile.getProfileVisibilityUserInfo() == ProfileVisibilityUserInfo.DEFAULT_PROFILE_USER_INFO_VISIBILITY)
-        //    throw new BadRequestException("invalid ProfileVisibilityUserInfo");
 
         if (!newProfile.getOwner().getId().equals(user.getId()))
             throw new NoPermissionException("user with id " + user.getId() + " doesn't own profile with id " + newProfile.getId());
 
-        //Optional<ChatProfile> oldProfile = profileRepository.findChatProfileByIdWithOwner(newProfile.getId());
-        //if (oldProfile.isEmpty())
-        //    return Optional.empty();
-        //if (!oldProfile.get().getOwner().getId().equals(user.getId()))
-        //    return Optional.empty();
-
-        //newProfile.setOwner(user);
 
         newProfile = profileRepository.saveAndFlush(newProfile);
         return Optional.of(newProfile);
@@ -126,8 +109,6 @@ public class ProfilesServiceImpl implements ProfilesService{
                 return viewingUser.getId().equals(
                         profile.getOwner().getId()
                 );
-            //case DEFAULT_PROFILE_USER_INFO_VISIBILITY:
-            //    return false;
         }
         return false;
     }
