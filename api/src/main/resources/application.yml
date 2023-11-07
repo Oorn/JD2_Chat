@@ -24,7 +24,7 @@ spring:
     host: mail.inbox.lv
     port: 587
     username: jd2_chat@mail.lv
-    password: UJb!zTcU21
+    password: HsuZqX5Y49
     properties:
       mail:
         debug: true
@@ -35,6 +35,8 @@ spring:
           starttls:
             enable: true
             required: true
+          ssl:
+            protocols: TLSv1.2
           connectiontimeout: 5000
           timeout: 3000
           writetimeout: 5000

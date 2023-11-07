@@ -1,5 +1,6 @@
 package com.andrey.controller;
 
+import com.andrey.Constants;
 import com.andrey.db_entities.chat_user.ChatUser;
 import com.andrey.controller.requests.ChatUserCreateRequest;
 import com.andrey.controller.requests.ConfirmEmailRequest;
@@ -56,7 +57,8 @@ public class RegistrationController implements WebMvcConfigurer {
         ChatUser user = optionalUser.get();
 
         mailSenderService.sendMail(user.getEmail(), "JD2_Chat Registration", "confirmation link: "
-                + "http://localhost:8080/registration/confirmEmail"
+                + Constants.SERVER_ADDRESS
+                + "/registration/confirmEmail"
                 + "?email=" + user.getEmail()
                 + "&token=" + user.getEmailConfirmationToken());
 
