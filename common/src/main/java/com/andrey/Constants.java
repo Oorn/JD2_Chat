@@ -18,7 +18,7 @@ public final class Constants {
     public static final String EXTERNAL_EMAIL = "jd2_chat@mail.lv";
 
     //public static final String SERVER_ADDRESS = "http://localhost:8081";
-    public static final String SERVER_ADDRESS = "http://13.49.138.46:8081";
+    public static final String SERVER_ADDRESS = "http://16.170.161.208:8081";
 
     //PROFILES
 
