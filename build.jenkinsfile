@@ -1,14 +1,14 @@
 pipeline {
   agent any
   stages {
-    stage('Build') {
+    stage('Build Project') {
         steps {
             sh 'mvn clean'
 	        sh 'mvn install'
             sh 'mvn spring-boot:repackage'
         }
     }
-    stage('Deploy') {
+    stage('Deploy Project') {
         steps {
             build wait: false, job: 'deploy'
         }
