@@ -1,0 +1,17 @@
+pipeline {
+  agent any
+  stages {
+    stage('Build') {
+        steps {
+            sh 'mvn clean'
+	        sh 'mvn install'
+            sh 'mvn spring-boot:repackage'
+        }
+    }
+    stage('Deploy') {
+        steps {
+            build wait: false, job: 'deploy'
+        }
+    }
+  }
+}

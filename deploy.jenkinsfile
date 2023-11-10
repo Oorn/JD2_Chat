@@ -1,0 +1,15 @@
+pipeline {
+  agent any
+  stages {
+    stage('Install Jar') {
+        steps {
+            copyArtifacts filter: '**/JD2_Chat_api_repackage.jar', projectName: 'ChatApp_test'
+        }
+    }
+    stage('Run Jar') {
+        steps {
+            sh "java -jar ${WORKSPACE}/api/target/JD2_Chat_api_repackage.jar"
+        }
+    }
+  }
+}
