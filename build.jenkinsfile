@@ -1,14 +1,18 @@
 pipeline {
   agent any
+  tools {
+          maven 'default-maven'
+          jdk 'default-jdk'
+      }
   stages {
-    stage('Build Project') {
+    stage('Build') {
         steps {
             sh 'mvn clean'
 	        sh 'mvn install'
             sh 'mvn spring-boot:repackage'
         }
     }
-    stage('Deploy Project') {
+    stage('Deploy') {
         steps {
             build wait: false, job: 'deploy'
         }
