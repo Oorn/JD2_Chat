@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Install Jar') {
         steps {
-            copyArtifacts filter: '**/JD2_Chat_api_repackage.jar', projectName: 'ChatApp_test'
+            copyArtifacts filter: '**/JD2_Chat_api_repackage.jar', projectName: 'build'
         }
     }
     stage('Run Jar') {
