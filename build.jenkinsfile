@@ -10,6 +10,11 @@ pipeline {
             sh 'mvn clean package spring-boot:repackage'
         }
     }
+    stage ('Archive') {
+        steps {
+            archiveArtifacts artifacts: '**/*.jar', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
+        }
+    }
     stage('Deploy') {
         steps {
             build wait: false, job: 'deploy'
