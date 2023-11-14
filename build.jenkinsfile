@@ -6,11 +6,9 @@ pipeline {
       }
   stages {
     stage('Build') {
-        tools {
-            hudson.plugins.sonar.SonarRunnerInstallation "sonar"
-        }
-        withSonarQubeEnv('sonar') {
-            steps {
+        steps {
+            def scannerHome = tool 'sonar-scanner'
+            withSonarQubeEnv('sonar-server') {
                 sh 'mvn clean package spring-boot:repackage sonar:sonar'
             }
         }
