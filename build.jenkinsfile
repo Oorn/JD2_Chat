@@ -7,7 +7,7 @@ pipeline {
   stages {
     stage('Build') {
         steps {
-            sh 'mvn clean package spring-boot:repackage'
+            sh 'mvn clean jacoco:prepare-agent package jacoco:report spring-boot:repackage'
         }
     }
     stage('SonarQube analysis') {
