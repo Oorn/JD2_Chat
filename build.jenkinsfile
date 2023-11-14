@@ -7,7 +7,7 @@ pipeline {
   stages {
     stage('Build') {
         tools {
-            hudson.plugins.sonar.SonarRunnerInstallation
+            hudson.plugins.sonar.SonarRunnerInstallation "sonar"
         }
         withSonarQubeEnv('sonar') {
             steps {
