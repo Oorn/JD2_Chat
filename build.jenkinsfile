@@ -7,7 +7,7 @@ pipeline {
   stages {
     stage('Build') {
         tools {
-            sonarQube
+            sonarQube 'SonarScanner 5.0'
         }
         withSonarQubeEnv('sonar') {
             steps {
