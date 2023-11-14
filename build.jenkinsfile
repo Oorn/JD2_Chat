@@ -6,6 +6,9 @@ pipeline {
       }
   stages {
     stage('Build') {
+        tools {
+            sonarQube 'sonar'
+        }
         withSonarQubeEnv('sonar') {
             steps {
                 sh 'mvn clean package spring-boot:repackage sonar:sonar'
