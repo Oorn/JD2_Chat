@@ -29,10 +29,11 @@ pipeline {
     }
     stage('Sonar Quality Gate') {
          steps {
-           timeout(time: 5, unit: 'MINUTES') {
-           waitForQualityGate abortPipeline: true
-           }
-      }
+            timeout(time: 5, unit: 'MINUTES') {
+                waitForQualityGate abortPipeline: true
+            }
+         }
+    }
     stage ('Archive') {
         steps {
             archiveArtifacts artifacts: '**/*.jar', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
