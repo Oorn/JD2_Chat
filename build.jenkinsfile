@@ -7,11 +7,25 @@ pipeline {
   stages {
     stage('Build') {
         steps {
-            def scannerHome = tool 'sonar-scanner'
-            withSonarQubeEnv('sonar-server') {
-                sh 'mvn clean package spring-boot:repackage sonar:sonar'
-            }
+            sh 'mvn clean package spring-boot:repackage'
         }
+    }
+    stage('SonarQube analysis') {
+        environment {
+          SCANNER_HOME = tool 'sonar-scanner'
+        }
+        steps {
+        withSonarQubeEnv(credentialsId: '022985f2-255c-41a3-9c8a-56019b0bccdb', installationName: 'sonar-server') {
+             sh '''$SCANNER_HOME/bin/sonar-scanner \
+             -Dsonar.projectKey=projectKey \
+             -Dsonar.projectName=projectName \
+             -Dsonar.sources=src/ \
+             -Dsonar.java.binaries=target/classes/ \
+             -Dsonar.exclusions=src/test/java/****/*.java \
+             -Dsonar.java.libraries=/var/lib/jenkins/.m2/**/*.jar \
+             -Dsonar.projectVersion=${BUILD_NUMBER}-${GIT_COMMIT_SHORT}'''
+           }
+         }
     }
     stage ('Archive') {
         steps {
