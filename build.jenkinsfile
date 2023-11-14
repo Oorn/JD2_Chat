@@ -7,7 +7,7 @@ pipeline {
   stages {
     stage('Build') {
         tools {
-            sonarQube 'sonar'
+            sonarQube
         }
         withSonarQubeEnv('sonar') {
             steps {
